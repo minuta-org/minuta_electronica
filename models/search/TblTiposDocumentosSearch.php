@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models;
+namespace app\models\search;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\TblBarrios;
+use app\models\TblTiposDocumentos;
 
 /**
- * TblBarriosSearch represents the model behind the search form about `app\models\TblBarrios`.
+ * TblTiposDocumentosSearch represents the model behind the search form about `app\models\TblTiposDocumentos`.
  */
-class TblBarriosSearch extends TblBarrios
+class TblTiposDocumentosSearch extends TblTiposDocumentos
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class TblBarriosSearch extends TblBarrios
     public function rules()
     {
         return [
-            [['id_barrio', 'id_municipio_fk'], 'integer'],
-            [['nombre_barrio', 'codigo_barrio'], 'safe'],
+            [['id_tipo_documento'], 'integer'],
+            [['nombre'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TblBarriosSearch extends TblBarrios
      */
     public function search($params)
     {
-        $query = TblBarrios::find();
+        $query = TblTiposDocumentos::find();
 
         // add conditions that should always apply here
 
@@ -59,12 +59,10 @@ class TblBarriosSearch extends TblBarrios
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_barrio' => $this->id_barrio,
-            'id_municipio_fk' => $this->id_municipio_fk,
+            'id_tipo_documento' => $this->id_tipo_documento,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre_barrio', $this->nombre_barrio])
-            ->andFilterWhere(['like', 'codigo_barrio', $this->codigo_barrio]);
+        $query->andFilterWhere(['like', 'nombre', $this->nombre]);
 
         return $dataProvider;
     }

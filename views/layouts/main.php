@@ -42,6 +42,8 @@ AppAsset::register($this);
                 ['label' => 'Municipios', 'url' => ['/municipios/index']],
                 ['label' => 'Barrios', 'url' => ['/barrios/index']],
                 ['label' => 'Matricula', 'url' => ['/matricula/index']],
+                ['label' => 'Tipos de documento', 'url' => ['/tiposDocumentos/index']],
+                ['label' => 'Supervisores', 'url' => ['/supervisores/index']],
             ]],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]

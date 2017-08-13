@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models;
+namespace app\models\search;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\TblDepartamentos;
+use app\models\TblSectoresEconomicos;
 
 /**
- * TblDepartamentosSearch represents the model behind the search form about `app\models\TblDepartamentos`.
+ * TblSectoresEconomicosSearch represents the model behind the search form about `app\models\TblSectoresEconomicos`.
  */
-class TblDepartamentosSearch extends TblDepartamentos
+class TblSectoresEconomicosSearch extends TblSectoresEconomicos
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class TblDepartamentosSearch extends TblDepartamentos
     public function rules()
     {
         return [
-            [['id_departamento'], 'integer'],
-            [['codigo_departamento', 'nombre_departamento'], 'safe'],
+            [['id_sector_economico'], 'integer'],
+            [['nombre_sector_economico'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TblDepartamentosSearch extends TblDepartamentos
      */
     public function search($params)
     {
-        $query = TblDepartamentos::find();
+        $query = TblSectoresEconomicos::find();
 
         // add conditions that should always apply here
 
@@ -59,11 +59,10 @@ class TblDepartamentosSearch extends TblDepartamentos
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_departamento' => $this->id_departamento,
+            'id_sector_economico' => $this->id_sector_economico,
         ]);
 
-        $query->andFilterWhere(['like', 'codigo_departamento', $this->codigo_departamento])
-            ->andFilterWhere(['like', 'nombre_departamento', $this->nombre_departamento]);
+        $query->andFilterWhere(['like', 'nombre_sector_economico', $this->nombre_sector_economico]);
 
         return $dataProvider;
     }

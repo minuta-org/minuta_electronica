@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models;
+namespace app\models\search;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\TblMunicipios;
+use app\models\TblSectoresComerciales;
 
 /**
- * TblMunicipiosSearch represents the model behind the search form about `app\models\TblMunicipios`.
+ * TblSectoresComercialesSearch represents the model behind the search form about `app\models\TblSectoresComerciales`.
  */
-class TblMunicipiosSearch extends TblMunicipios
+class TblSectoresComercialesSearch extends TblSectoresComerciales
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class TblMunicipiosSearch extends TblMunicipios
     public function rules()
     {
         return [
-            [['id_municipio', 'id_departamento_fk'], 'integer'],
-            [['codigo_municipio', 'nombre_municipio'], 'safe'],
+            [['id_sector_comercial'], 'integer'],
+            [['nombre_sector_comercial'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TblMunicipiosSearch extends TblMunicipios
      */
     public function search($params)
     {
-        $query = TblMunicipios::find();
+        $query = TblSectoresComerciales::find();
 
         // add conditions that should always apply here
 
@@ -59,12 +59,10 @@ class TblMunicipiosSearch extends TblMunicipios
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_municipio' => $this->id_municipio,
-            'id_departamento_fk' => $this->id_departamento_fk,
+            'id_sector_comercial' => $this->id_sector_comercial,
         ]);
 
-        $query->andFilterWhere(['like', 'codigo_municipio', $this->codigo_municipio])
-            ->andFilterWhere(['like', 'nombre_municipio', $this->nombre_municipio]);
+        $query->andFilterWhere(['like', 'nombre_sector_comercial', $this->nombre_sector_comercial]);
 
         return $dataProvider;
     }
