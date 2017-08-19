@@ -1,13 +1,14 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+#use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\TblClientesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Tbl Clientes';
+$this->title = 'Clientes';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tbl-clientes-index">
@@ -15,14 +16,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Tbl Clientes', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+	<div class="text-right">
+        <?= Html::a('Crear Clientes', ['create'], ['class' => 'btn btn-success']) ?>
+    </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
             'id_cliente',
             'id_tipo_documento_fk',
@@ -52,5 +52,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
+		'summary' => '<h4><span class="label label-default">Total: {totalCount}</span></h4>',
+        'responsive'=>true,
+        'hover'=>true
     ]); ?>
 </div>
