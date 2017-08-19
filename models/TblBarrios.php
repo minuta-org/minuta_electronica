@@ -11,6 +11,7 @@ use Yii;
  * @property string $nombre_barrio
  * @property integer $id_municipio_fk
  * @property string $codigo_barrio
+ * @property string $barrioMunicipio
  *
  * @property TblMunicipios $idMunicipioFk
  * @property TblClientes[] $tblClientes

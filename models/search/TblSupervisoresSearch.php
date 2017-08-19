@@ -12,6 +12,8 @@ use app\models\TblSupervisores;
  */
 class TblSupervisoresSearch extends TblSupervisores
 {
+    public $nombreCompleto;
+    
     /**
      * @inheritdoc
      */
@@ -19,7 +21,7 @@ class TblSupervisoresSearch extends TblSupervisores
     {
         return [
             [['id_supervisor', 'id_tipo_documento_fk', 'id_barrio_fk', 'id_matricula_fk'], 'integer'],
-            [['codigo_supervisor', 'documento_supervisor', 'primer_nombre_supervisor', 'segundo_nombre_supervisor', 'primer_apellido_supervisor', 'segundo_apellido_supervisor', 'telefono_supervisor', 'celular_supervisor', 'email_supervisor', 'direccion_supervisor'], 'safe'],
+            [['nombreCompleto', 'codigo_supervisor', 'documento_supervisor', 'primer_nombre_supervisor', 'segundo_nombre_supervisor', 'primer_apellido_supervisor', 'segundo_apellido_supervisor', 'telefono_supervisor', 'celular_supervisor', 'email_supervisor', 'direccion_supervisor'], 'safe'],
         ];
     }
 
@@ -60,12 +62,13 @@ class TblSupervisoresSearch extends TblSupervisores
         // grid filtering conditions
         $query->andFilterWhere([
             'id_supervisor' => $this->id_supervisor,
+            'codigo_supervisor' => $this->codigo_supervisor,
             'id_tipo_documento_fk' => $this->id_tipo_documento_fk,
             'id_barrio_fk' => $this->id_barrio_fk,
             'id_matricula_fk' => $this->id_matricula_fk,
         ]);
-
-        $query->andFilterWhere(['like', 'codigo_supervisor', $this->codigo_supervisor])
+        
+        $query->andFilterWhere(['like', 'codigo_supervisor', $this->codigo_supervisor])            
             ->andFilterWhere(['like', 'documento_supervisor', $this->documento_supervisor])
             ->andFilterWhere(['like', 'primer_nombre_supervisor', $this->primer_nombre_supervisor])
             ->andFilterWhere(['like', 'segundo_nombre_supervisor', $this->segundo_nombre_supervisor])
@@ -75,7 +78,12 @@ class TblSupervisoresSearch extends TblSupervisores
             ->andFilterWhere(['like', 'celular_supervisor', $this->celular_supervisor])
             ->andFilterWhere(['like', 'email_supervisor', $this->email_supervisor])
             ->andFilterWhere(['like', 'direccion_supervisor', $this->direccion_supervisor]);
-
+        
+        # ToDo: Corregir filtros.
+        if(count($_POST) > 0){
+            $nombreCompleto = $_POST['TblSupervisoresSearch']['nombreCompleto'];
+            $query->andFilterWhere(['like', "CONCAT_WS(' ', primer_nombre_supervisor, segundo_nombre_supervisor, primer_apellido_supervisor, segundo_apellido_supervisor)", $nombreCompleto]);
+        }
         return $dataProvider;
     }
 }

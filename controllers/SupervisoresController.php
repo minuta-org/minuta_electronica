@@ -8,6 +8,7 @@ use app\models\search\TblSupervisoresSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * SupervisoresController implements the CRUD actions for TblSupervisores model.
@@ -37,7 +38,7 @@ class SupervisoresController extends Controller
     {
         $searchModel = new TblSupervisoresSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination->pageSize = 30;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -64,14 +65,47 @@ class SupervisoresController extends Controller
     public function actionCreate()
     {
         $model = new TblSupervisores();
-
+        $tiposDocumento = \app\models\TblTiposDocumentos::find()->all();
+        $departamentos = \app\models\TblDepartamentos::find()->all();
+        $model->id_matricula_fk = 1;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_supervisor]);
+            return $this->redirect(['index', 'id' => $model->id_supervisor]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'tiposDocumento' => ArrayHelper::map($tiposDocumento, 'id_tipo_documento', 'nombre'),
+                'departamentos' => ArrayHelper::map($departamentos, 'id_departamento', 'nombre_departamento'),
             ]);
         }
+    }
+    
+    public function actionAjax(){
+        $post = Yii::$app->request->post();
+        if(count($post) == 0 || !isset($post['ajx_rqst'])){
+            return $this->redirect(['index', 'id' => $model->id_supervisor]);
+        }
+        
+        $opciones = [];        
+        
+        if($post['type'] == 'mun'){
+            $municipios = \app\models\TblMunicipios::findAll(['id_departamento_fk' => $post['id']]);
+            $opciones[] = \yii\helpers\Html::tag('option', 'Seleccione un municipio', ['value' => null]);
+            foreach($municipios AS $barrio){
+                $opciones[] = \yii\helpers\Html::tag('option', $barrio->nombre_municipio, ['value' => $barrio->id_municipio]);
+            }
+        } else if($post['type'] == 'bar'){
+            $barrios = \app\models\TblBarrios::findAll(['id_municipio_fk' => $post['id']]);
+            $opciones[] = \yii\helpers\Html::tag('option', 'Seleccione un barrio', ['value' => null]);
+            foreach($barrios AS $barrio){
+                $opciones[] = \yii\helpers\Html::tag('option', $barrio->nombre_barrio, ['value' => $barrio->id_barrio]);
+            }
+        }
+        
+        header("Content-type:application/json");
+        echo json_encode([
+            'html' => implode('', $opciones)
+        ]);
+        exit();
     }
 
     /**
@@ -83,12 +117,14 @@ class SupervisoresController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $tiposDocumento = \app\models\TblTiposDocumentos::find()->all();
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_supervisor]);
+            return $this->redirect(['index', 'id' => $model->id_supervisor]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'tiposDocumento' => ArrayHelper::map($tiposDocumento, 'id_tipo_documento', 'nombre'),
             ]);
         }
     }

@@ -6,16 +6,17 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\TblSupervisores */
 
-$this->title = 'Create Tbl Supervisores';
-$this->params['breadcrumbs'][] = ['label' => 'Tbl Supervisores', 'url' => ['index']];
+$this->title = 'Nuevo Supervisor';
+$this->params['breadcrumbs'][] = ['label' => 'Supervisores', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="tbl-supervisores-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="tbl-supervisores-create">
 
     <?= $this->render('_form', [
         'model' => $model,
+        'tiposDocumento' => $tiposDocumento,
+        'departamentos' => $departamentos,
     ]) ?>
 
 </div>

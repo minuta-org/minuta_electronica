@@ -116,3 +116,41 @@ a.desc:after {
 .btn{
     min-width: 90px;
 }
+/* Estilos personalizados. */
+table.kv-grid-table th{
+    background-color: #286090;    
+}
+table.kv-grid-table th, table.kv-grid-table th a {
+    color: white;
+}
+.panel-success .panel-heading{
+    background-color: rgba(92, 184, 92, 0.6);
+    border-color: rgba(92, 184, 92, 0.6);
+}
+.panel-success, .panel-success .panel-footer{
+    border-color: rgba(92, 184, 92, 0.6);
+}
+.panel-success .panel-heading h3{
+    margin-top: 5px;    
+    margin-bottom: 5px;
+    font-size: 20px !important;
+    font-weight: 600;    
+    color: white;
+    text-shadow: 0px 0px 1.2px rgba(0,0,0,0.4);
+}
+.has-error .help-block, .has-error .control-label, .has-error .radio, .has-error .checkbox, .has-error .radio-inline, .has-error .checkbox-inline, .has-error.radio label, .has-error.checkbox label, .has-error.radio-inline label, .has-error.checkbox-inline label {
+    color: rgba(169, 78, 76, 0.72);
+}
+.pagination {
+    margin: 0px 0;
+}
+
+.summary{
+    width: 100%;
+    display: block;
+    text-align: left;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #286090;
+    border-radius: 3px 3px 3px 3px;
+}
