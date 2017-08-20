@@ -15,7 +15,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 
-$this->title = <?= $generator->generateString('Crear ' . Inflector::camel2words(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass)))) ?>;
+$this->title = <?= $generator->generateString('Nuevo ' . Inflector::camel2words(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass)))) ?>;
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass))))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

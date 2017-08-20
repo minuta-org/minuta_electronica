@@ -18,40 +18,69 @@ use yii\widgets\DetailView;
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 
 $this->title = $model-><?= $generator->getNameAttribute() ?>;
-$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass))))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
-
-    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['update', <?= $urlParams ?>], ['class' => 'btn btn-primary']) ?>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= "<?= " ?>DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-<?php
-if (($tableSchema = $generator->getTableSchema()) === false) {
-    foreach ($generator->getColumnNames() as $name) {
-        echo "            '" . $name . "',\n";
+<div class="tbl-supervisores-view">
+   
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3><?= "<?= "?> Html::encode($this->title) ?></h3>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped table-hover">
+<?php if (($tableSchema = $generator->getTableSchema()) === false) : ?>                    
+    <?php foreach ($generator->getColumnNames() as $name) : ?>
+        <?php 
+//        echo "            '" . $name . "',\n";
+        ?>
+    <?php endforeach ?>    
+<?php else : ?>
+    <?php 
+    $primaryKey = ""; 
+    $rows = [];
+    $cols = "";
+    $cont = 0;
+    ?>
+    <?php foreach ($generator->getTableSchema()->columns as $column) : ?>
+        <?php 
+        $cont ++;
+        $cols .= "                    <th><?= Html::activeLabel(\$model, '{$column->name}') ?></th>\n";
+        $cols .= "                    <td><?= Html::encode(\$model->{$column->name}) ?></td>\n";
+        if($column->isPrimaryKey){
+            $primaryKey = $column->name;
+        }
+        if($cont % 2 == 0){
+            $rows[] = "                <tr>\n{$cols}                </tr>\n";
+            $cols = "";
+        }        
+        ?>
+    <?php endforeach ?>
+    <?php 
+    if($cols !== ""){
+        $rows[] = "                <tr>{$cols}</tr>\n";
     }
-} else {
-    foreach ($generator->getTableSchema()->columns as $column) {
-        $format = $generator->generateColumnFormat($column);
-        echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-    }
-}
-?>
-        ],
-    ]) ?>
+    echo implode("", $rows);
+    ?>
+<?php endif; ?>
+            </table>
+        </div>
+        <div class="panel-footer">
+            <div class="form-group text-right">
+                <?= "<?=" ?> Html::a('Cancelar ' . Html::tag('i', '', ['class' => 'fa fa-mail-reply']), ['<?= $generator->controllerID ?>/index'], ['class' => 'btn btn-warning']) ?>
+                <?= "<?=" ?> Html::a('Actualizar '  . Html::tag('i', '', ['class' => 'fa fa-pencil']), ['update', 'id' => $model-><?= $primaryKey?>], ['class' => 'btn btn-success']) ?>
+                <?= "<?=" ?> 
+                Html::a('Eliminar ' . Html::tag('i', '', ['class' => 'fa fa-trash']), ['delete', 'id' => $model-><?= $primaryKey?>], [
+                    'class' => 'btn btn-danger',
+                    'data' => [
+                        'confirm' => '¿Está seguro que desea eliminar este registro?',
+                        'method' => 'post',
+                    ],
+                ])
+                ?>
+            </div>
 
+        </div>
+    </div>
 </div>

@@ -65,7 +65,7 @@ class TblSupervisores extends \yii\db\ActiveRecord
         return [
             [['nombre_completo'], 'safe', 'on' => 'search'],
             [['codigo_supervisor', 'id_tipo_documento_fk', 'documento_supervisor', 'primer_nombre_supervisor', 'primer_apellido_supervisor', 'telefono_supervisor', 'celular_supervisor', 'email_supervisor', 'direccion_supervisor', 'id_barrio_fk', 'id_matricula_fk'], 'required'],
-            [['id_tipo_documento_fk', 'id_barrio_fk', 'id_matricula_fk', 'documento_supervisor'], 'integer'],
+            [['id_tipo_documento_fk', 'id_matricula_fk', 'documento_supervisor'], 'integer'],
             [['codigo_supervisor'], 'string', 'max' => 10],
             [['documento_supervisor', 'celular_supervisor'], 'string', 'max' => 15],
             [['primer_nombre_supervisor', 'segundo_nombre_supervisor', 'primer_apellido_supervisor', 'segundo_apellido_supervisor', 'telefono_supervisor'], 'string', 'max' => 30],

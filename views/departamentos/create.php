@@ -6,13 +6,15 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\TblDepartamentos */
 
-$this->title = 'Create Tbl Departamentos';
-$this->params['breadcrumbs'][] = ['label' => 'Tbl Departamentos', 'url' => ['index']];
+$this->title = 'Crear Departamentos';
+$this->params['breadcrumbs'][] = ['label' => 'Departamentos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="tbl-departamentos-create">
+<div class="departamentos-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="page-header">
+		<h2><?= Html::encode($this->title) ?></h2>
+	</div>
 
     <?= $this->render('_form', [
         'model' => $model,

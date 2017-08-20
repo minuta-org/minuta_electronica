@@ -78,6 +78,7 @@ class TblSupervisoresSearch extends TblSupervisores
             ->andFilterWhere(['like', 'celular_supervisor', $this->celular_supervisor])
             ->andFilterWhere(['like', 'email_supervisor', $this->email_supervisor])
             ->andFilterWhere(['like', 'direccion_supervisor', $this->direccion_supervisor]);
+        $query->orderBy(['id_supervisor' => SORT_DESC]);
         
         # ToDo: Corregir filtros.
         if(count($_POST) > 0){

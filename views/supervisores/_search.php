@@ -72,15 +72,3 @@ use yii\widgets\ActiveForm;
     </div>
 <?php ActiveForm::end(); ?>
 </div>
-
-<script>
-    $(function () {
-        var panel = $(".panel-filters");
-        panel.find(".panel-heading").click(function () {
-            panel.find(".panel-body").slideToggle(function(){
-                panel.find(".panel-footer").fadeToggle();
-                //panel.find("input").first().focus();
-            });
-        });
-    });
-</script>

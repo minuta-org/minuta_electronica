@@ -9,17 +9,38 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="tbl-departamentos-form">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3><?= Html::encode($this->title) ?></h3>
+        </div>
+        <div class="panel-body">
+            <?php
+            $form = ActiveForm::begin([
+                        'options' => ['class' => 'form-horizontal', 'role' => 'form'],
+                        'fieldConfig' => [
+                            'template' => '{label}<div class="col-sm-8 form-group">{input}{error}</div>',
+                            'labelOptions' => ['class' => 'col-sm-4 control-label'],
+                            'options' => []
+                        ],
+            ]);
+            ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <?= $form->field($model, 'codigo_departamento')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                    <?= $form->field($model, 'nombre_departamento')->textInput(['maxlength' => true]) ?>                    
+                </div>
+            </div>
 
-    <?= $form->field($model, 'codigo_departamento')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'nombre_departamento')->textInput(['maxlength' => true]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+        <div class = "panel-footer text-right">
+            <?php if ($model->isNewRecord): ?>
+                <?= Html::submitButton("Guardar " . Html::tag('i', '', ['class' => 'fa fa-floppy-o']), ['class' => 'btn btn-success']) ?>
+            <?php else: ?>
+                <?= Html::submitButton("Actualizar " . Html::tag('i', '', ['class' => 'fa fa-refresh']), ['class' => 'btn btn-success']) ?>
+            <?php endif ?>
+            <?= Html::a('Cancelar ' . Html::tag('i', '', ['class' => 'fa fa-mail-reply']), ['departamentos/index'], ['class' => 'btn btn-warning']) ?>
+        </div>
+        <?php ActiveForm::end(); ?>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

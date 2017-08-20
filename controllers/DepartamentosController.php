@@ -37,7 +37,7 @@ class DepartamentosController extends Controller
     {
         $searchModel = new TblDepartamentosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -66,7 +66,7 @@ class DepartamentosController extends Controller
         $model = new TblDepartamentos();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_departamento]);
+            return $this->redirect(['index', 'id' => $model->id_departamento]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -85,7 +85,7 @@ class DepartamentosController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_departamento]);
+            return $this->redirect(['index', 'id' => $model->id_departamento]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -101,7 +101,14 @@ class DepartamentosController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        # Obtenemos el modelo.
+        $model = $this->findModel($id);        
+        $municipios = $model->tblMunicipios;
+        if(count($municipios) > 0){
+            # alerta
+        } else {
+            $model->delete();
+        }
 
         return $this->redirect(['index']);
     }

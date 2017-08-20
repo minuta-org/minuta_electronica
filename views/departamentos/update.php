@@ -5,14 +5,16 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\TblDepartamentos */
 
-$this->title = 'Update Tbl Departamentos: ' . $model->id_departamento;
-$this->params['breadcrumbs'][] = ['label' => 'Tbl Departamentos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id_departamento, 'url' => ['view', 'id' => $model->id_departamento]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Actualizar Departamentos';
+$this->params['breadcrumbs'][] = ['label' => 'Departamentos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->nombre_departamento, 'url' => ['view', 'id' => $model->nombre_departamento]];
+$this->params['breadcrumbs'][] = 'Actualizar';
 ?>
 <div class="tbl-departamentos-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="page-header">
+		<h2><?= Html::encode($this->title) ?></h2>
+	</div>
 
     <?= $this->render('_form', [
         'model' => $model,

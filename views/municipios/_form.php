@@ -9,23 +9,42 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="tbl-municipios-form">
-    <?php $form = ActiveForm::begin(); ?>
-    <div class="panel panel-default">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3><?= Html::encode($this->title) ?></h3>
+        </div>
         <div class="panel-body">
+            <?php
+            $form = ActiveForm::begin([
+                        'options' => ['class' => 'form-horizontal', 'role' => 'form'],
+                        'fieldConfig' => [
+                            'template' => '{label}<div class="col-sm-8 form-group">{input}{error}</div>',
+                            'labelOptions' => ['class' => 'col-sm-4 control-label'],
+                            'options' => []
+                        ],
+            ]);
+            ?>
 
-            <?= $form->field($model, 'codigo_municipio')->textInput(['maxlength' => true, 'autofocus' => true, 'readonly' => !$model->isNewRecord]) ?>
-
-            <?= $form->field($model, 'nombre_municipio')->textInput(['maxlength' => true]) ?>
-
-            <?= $form->field($model, 'id_departamento_fk')->dropDownList($departamentos, ['prompt' => 'Seleccione un departamento', 'class' => 'select-2']) ?>
-
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row">
+                        <?= $form->field($model, 'codigo_municipio')->textInput(['maxlength' => true, 'autofocus' => true]) ?>
+                        <?= $form->field($model, 'nombre_municipio')->textInput(['maxlength' => true]) ?>
+                    </div>
+                    <div class="row">
+                        <?= $form->field($model, 'id_departamento_fk')->dropDownList($departamentos, ['prompt' => 'Seleccione un departamento', 'class' => 'select-2']) ?>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="panel-footer">
-            <div class="form-group">
-                <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-                <?= Html::a('Cancelar', ['municipios/index'], ['class' => 'btn btn-warning']) ?>
-            </div>            
+        <div class = "panel-footer text-right">
+            <?php if ($model->isNewRecord): ?>
+                <?= Html::submitButton("Guardar " . Html::tag('i', '', ['class' => 'fa fa-floppy-o']), ['class' => 'btn btn-success']) ?>
+            <?php else: ?>
+                <?= Html::submitButton("Actualizar " . Html::tag('i', '', ['class' => 'fa fa-refresh']), ['class' => 'btn btn-success']) ?>
+            <?php endif ?>
+            <?= Html::a('Cancelar ' . Html::tag('i', '', ['class' => 'fa fa-mail-reply']), ['municipios/index'], ['class' => 'btn btn-warning']) ?>
         </div>
+        <?php ActiveForm::end(); ?>
     </div>
-    <?php ActiveForm::end(); ?>
 </div>

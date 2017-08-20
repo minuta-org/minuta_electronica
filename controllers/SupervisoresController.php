@@ -39,6 +39,7 @@ class SupervisoresController extends Controller
         $searchModel = new TblSupervisoresSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->pageSize = 30;
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -119,12 +120,24 @@ class SupervisoresController extends Controller
         $model = $this->findModel($id);
         $tiposDocumento = \app\models\TblTiposDocumentos::find()->all();
         
+        $departamentos = \app\models\TblDepartamentos::find()->all();
+        $barrios = \app\models\TblBarrios::findAll(['id_municipio_fk' => $model->idBarrioFk->id_municipio_fk]);
+        $municipios = \app\models\TblMunicipios::findAll(['id_departamento_fk' => $model->idBarrioFk->idMunicipioFk->id_departamento_fk]);        
+        
+        $municipioId = $model->idBarrioFk->id_municipio_fk;
+        $departamentoId = $model->idBarrioFk->idMunicipioFk->id_departamento_fk;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_supervisor]);
         } else {
             return $this->render('update', [
                 'model' => $model,
                 'tiposDocumento' => ArrayHelper::map($tiposDocumento, 'id_tipo_documento', 'nombre'),
+                'departamentos' => ArrayHelper::map($departamentos, 'id_departamento', 'nombre_departamento'),
+                'municipios' => ArrayHelper::map($municipios, 'id_municipio', 'nombre_municipio'),
+                'barrios' => ArrayHelper::map($barrios, 'id_barrio', 'nombre_barrio'),
+                'departamentoId' => $departamentoId,
+                'municipioId' => $municipioId,
             ]);
         }
     }

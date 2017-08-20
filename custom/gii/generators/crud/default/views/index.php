@@ -28,17 +28,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 <?php if(!empty($generator->searchModelClass)): ?>
-<?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
+<?=  "<?= " ?> $this->render('_search', ['model' => $searchModel]); ?>
 <?php endif; ?>
 
-	<div class="text-right">
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Crear ' . Inflector::camel2words(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass)))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
-    </div>
 <?= $generator->enablePjax ? '<?php Pjax::begin(); ?>' : '' ?>
+<?= "<?php " ?>
+$newButton = Html::a('Nuevo ' . Html::tag('i', '', ['class' => 'fa fa-plus']), ['create'], ['class' => 'btn btn-success']);
+?>
 <?php if ($generator->indexWidgetType === 'grid'): ?>
     <?= "<?= " ?>GridView::widget([
         'dataProvider' => $dataProvider,
-        <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
+        #<?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
 
 <?php
 $count = 0;
@@ -61,12 +61,14 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     }
 }
 ?>
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['class' => 'col-sm-1 text-center'],
+            ],
         ],
-		'summary' => '<h4><span class="label label-default">Total: {totalCount}</span></h4>',
-        'responsive'=>true,
-        'hover'=>true
+        'tableOptions' => ['class' => 'table-condensed'],
+        'summary' => '<span class="summary label label-default">Registros: {totalCount}</span>',
+        'layout' => '{summary}{items}<div class="row"><div class="col-sm-8">{pager}</div><div class="col-sm-4 text-right">' . $newButton . '</div></div>',
     ]); ?>
 <?php else: ?>
     <?= "<?= " ?>ListView::widget([

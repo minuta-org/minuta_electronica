@@ -17,6 +17,8 @@ use Yii;
  */
 class TblMunicipios extends \yii\db\ActiveRecord
 {
+    const ESTADO_ACTIVO = 1;
+    const ESTADO_INACTIVO = 0;
     /**
      * @inheritdoc
      */
@@ -54,10 +56,12 @@ class TblMunicipios extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_municipio' => 'Municipio',
-            'codigo_municipio' => 'Codigo Municipio',
-            'nombre_municipio' => 'Nombre Municipio',
+            'id_municipio' => 'ID',
+            'codigo_municipio' => 'Codigo',
+            'nombre_municipio' => 'Municipio',
             'id_departamento_fk' => 'Departamento',
+            'nombreDepartamento' => 'Departamento',
+            'etiquetaEstado' => 'Estado',
         ];
     }
 
@@ -83,5 +87,12 @@ class TblMunicipios extends \yii\db\ActiveRecord
     
     public function getMunicipioMasDepartamento(){
         return  $this->nombre_municipio . " - " . $this->idDepartamentoFk->nombre_departamento;
+    }
+    
+    public function getEtiquetaEstado(){
+        if($this->estado == self::ESTADO_ACTIVO)
+            return \yii\helpers\Html::tag('span', 'ACTIVO', ['class' => 'label label-success']);
+        else 
+            return \yii\helpers\Html::tag('span', 'INACTIVO', ['class' => 'label label-default']);
     }
 }

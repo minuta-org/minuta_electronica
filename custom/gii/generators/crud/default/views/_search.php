@@ -21,22 +21,39 @@ use yii\widgets\ActiveForm;
 
     <?= "<?php " ?>$form = ActiveForm::begin([
         'action' => ['index'],
-        'method' => 'get',
+        'options' => ['class' => 'form-horizontal'],
+        'fieldConfig' => [
+            'template' => '{label}<div class="col-sm-4 form-group">{input}</div>',
+            'labelOptions' => ['class' => 'col-sm-2 control-label'],
+            'options' => [ 'tag' => false,]
+        ],
     ]); ?>
-
+    <div class="panel panel-info panel-filters">
+        <div class="panel-heading">
+            Filtros <i class="fa fa-filter"></i>
+        </div>
+        <div class="panel-body" style="display:none">
 <?php
 $count = 0;
+$filas = [];
+$inputs = "";
 foreach ($generator->getColumnNames() as $attribute) {
-    if (++$count < 6) {
-        echo "    <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
-    } else {
-        echo "    <?php // echo " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
-    }
+    $count ++;
+    $inputs .= "        <?= " . $generator->generateActiveSearchField($attribute) . " ?>\n\n";
+    if($count % 2 == 0){
+        $filas[] = "<div class=\"row\">\n{$inputs}</div>\n";
+        $inputs = "";
+    }    
 }
+if($inputs != ""){
+    $filas[] = "<div class=\"row\">\n{$inputs}</div>\n";
+}
+echo implode('', $filas);
 ?>
-    <div class="form-group">
-        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Search') ?>, ['class' => 'btn btn-primary']) ?>
-        <?= "<?= " ?>Html::resetButton(<?= $generator->generateString('Reset') ?>, ['class' => 'btn btn-default']) ?>
+        <div class="panel-footer text-right" style="display:none">
+        <?= "<?= " ?> Html::submitButton('Buscar ' . Html::tag('i', '', ['class' => 'fa fa-search']), ['class' => 'btn btn-primary']) ?>
+        <?= "<?= " ?> Html::resetButton('Limpiar ' . Html::tag('i', '', ['class' => 'fa fa-eraser']), ['class' => 'btn btn-info']) ?>
+        </div>
     </div>
 
     <?= "<?php " ?>ActiveForm::end(); ?>

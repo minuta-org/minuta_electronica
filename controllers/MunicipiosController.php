@@ -38,10 +38,12 @@ class MunicipiosController extends Controller
     {
         $searchModel = new TblMunicipiosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->pagination->pageSize = 5;
+        $dataProvider->pagination->pageSize = 40;
+        $departamentos = \app\models\TblDepartamentos::find()->all();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'departamentos' => ArrayHelper::map($departamentos, "id_departamento", "nombre_departamento"),
         ]);
     }
 
@@ -103,9 +105,22 @@ class MunicipiosController extends Controller
      * @return mixed
      */
     public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
+    {   
+        # Obtenemos el modelo.
+        $model = $this->findModel($id);        
+        $barrios = $model->tblBarrios;
+        if(count($barrios) > 0){
+            # alerta
+        } else {
+            $model->delete();
+        }
+        return $this->redirect(['index']);
+    }
+    
+    public function actionState($id){
+        $model = $this->findModel($id);
+        $model->estado = !$model->estado;
+        $model->save();
         return $this->redirect(['index']);
     }
 

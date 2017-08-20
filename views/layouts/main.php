@@ -78,8 +78,16 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
-    
 <script>
+    $(function () {
+        var panel = $(".panel-filters");
+        panel.find(".panel-heading").click(function () {
+            panel.find(".panel-body").slideToggle(function(){
+                panel.find(".panel-footer").fadeToggle();
+            });
+        });
+    });
+
     $(function(){
         $("select.select-2").select2({
             width : '100%',

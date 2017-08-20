@@ -54,16 +54,16 @@ use yii\widgets\ActiveForm;
                 <?= $form->field($model, 'direccion_supervisor')->textInput(['maxlength' => true]) ?>
                 <label class="control-label col-sm-2">Departamento</label>
                 <div class="col-sm-4 form-group">
-                    <?= Html::dropDownList('departamento', '', $departamentos, ['prompt' => 'Seleccione un departamento', 'class' => 'select-2 onchange-dependent', 'data-target' => '#combo-municipio', 'data-type' => 'mun']) ?>
+                    <?= Html::dropDownList('departamento', $departamentoId, $departamentos, ['prompt' => 'Seleccione un departamento', 'class' => 'select-2 onchange-dependent', 'data-target' => '#combo-municipio', 'data-type' => 'mun']) ?>
                 </div>
             </div>
             
             <div class="row">
                 <label class="control-label col-sm-2">Municipio</label>
                 <div class="col-sm-4 form-group">
-                    <?= Html::dropDownList('municipio', '', [], ['prompt' => 'Seleccione un municipio', 'class' => 'select-2 onchange-dependent', 'id' => 'combo-municipio', 'data-target' => '#tblsupervisores-id_barrio_fk', 'data-type' => 'bar']) ?>
+                    <?= Html::dropDownList('municipio', $municipioId, $municipios, ['prompt' => 'Seleccione un municipio', 'class' => 'select-2 onchange-dependent', 'id' => 'combo-municipio', 'data-target' => '#tblsupervisores-id_barrio_fk', 'data-type' => 'bar']) ?>
                 </div>
-                <?= $form->field($model, 'id_barrio_fk')->dropDownList([], ['Seleccione un barrio', 'class' => 'select-2']) ?>
+                <?= $form->field($model, 'id_barrio_fk')->dropDownList($barrios, ['Seleccione un barrio', 'class' => 'select-2', 'prompt' => 'Seleccione un barrio']) ?>
             </div>
         </div>            
         <div class = "panel-footer text-right">
@@ -92,6 +92,12 @@ use yii\widgets\ActiveForm;
             }).done(function(data){
                 var comboHijo = $(comboPadre.attr("data-target"));
                 comboHijo.html(data.html);
+                if(comboHijo.hasClass("onchange-dependent")){
+                    var hijoDelHijo = $(comboHijo.attr("data-target"));
+                    var primeraOpcion = hijoDelHijo.find("option:first-child");
+                    hijoDelHijo.html("");
+                    hijoDelHijo.append(primeraOpcion);
+                }
             });
         });
     });

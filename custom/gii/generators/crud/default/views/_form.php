@@ -13,8 +13,10 @@ if (empty($safeAttributes)) {
     $safeAttributes = $model->attributes();
 }
 $controllerName = str_replace('app', '', str_replace("Controller", '', $generator->controllerClass));
-preg_match_all('/((?:^|[A-Z])[a-z]+)/',$controllerName,$matches);
-$controllerName = implode('-', array_map(function($word){ return strtolower($word); }, $matches[1]));
+preg_match_all('/((?:^|[A-Z])[a-z]+)/', $controllerName, $matches);
+$controllerName = implode('-', array_map(function($word) {
+            return strtolower($word);
+        }, $matches[1]));
 
 echo "<?php\n";
 ?>
@@ -28,42 +30,55 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
-	<div class="panel panel-default">		
-		<div class="panel-body">
-    <?= "<?php " ?>$form = ActiveForm::begin(); ?>
-		
-<?php 
-	$rows = [];
-	$cont = 1;
-	$input = "";
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3><?= "<?=" ?> Html::encode($this->title) ?></h3>
+        </div>
+        <div class="panel-body">
+<?= "<?php " ?>$form = ActiveForm::begin([
+            'options' => ['class' => 'form-horizontal', 'role' => 'form'],
+            'fieldConfig' => [
+            'template' => '{label}<div class="col-sm-4 form-group">{input}{error}</div>',
+            'labelOptions' => ['class' => 'col-sm-2 control-label'],
+            'options' => []
+            ],
+            ]); ?>
+
+            <?php
+            $rows = [];
+            $cont = 1;
+            $input = "";
+            ?>
+            <?php
+            foreach ($generator->getColumnNames() as $attribute) {
+                if (in_array($attribute, $safeAttributes)) {
+
+                    $input .= "    <?= " . $generator->generateActiveField($attribute) . " ?>\n";
+                    if ($cont % 2 == 0) {
+                        $str = "<div class=\"row\">\n";
+                        $str .= $input;
+                        $str .= "</div>\n\n";
+                        $rows[] = $str;
+                        $input = "";
+                    }
+                    $cont ++;
+                }
+            }
+            ?>
+<?php
+if ($input != "")
+    $rows[] = $input;
+echo implode('', $rows);
 ?>
-<?php foreach ($generator->getColumnNames() as $attribute) {
-    if (in_array($attribute, $safeAttributes)) {
-		
-		$input .= "    <div class=\"col-sm-6\">\n";
-        $input .= "        <?= " . $generator->generateActiveField($attribute) . " ?>\n";
-		$input .= "    </div>\n";
-		if($cont % 2 == 0){
-			$str = "<div class=\"row\">\n";
-			$str .= $input;
-			$str .= "</div>\n\n";
-			$rows[] = $str;
-			$input = "";
-		}
-		$cont ++;
-    }	
-} ?>
-<?php 
-	if($input != "") $rows[] = $input;
-	echo implode('', $rows);
-?>
-		</div>
-		<div class="panel-footer">
-			<div class="form-group">
-				<?= "<?= " ?>Html::submitButton($model->isNewRecord ? <?= $generator->generateString('Crear') ?> : <?= $generator->generateString('Editar') ?>, ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-				<?= "<?= " ?>Html::a('Cancelar', ['<?= $controllerName ?>/index'], ['class' => 'btn btn-warning']) ?>
-			</div>
-		</div>
-    <?= "<?php " ?>ActiveForm::end(); ?>
-	</div>
+        </div>
+        <div class = "panel-footer text-right">
+                <?= "<?php" ?> if ($model->isNewRecord): ?>
+                    <?= "<?=" ?> Html::submitButton("Guardar " . Html::tag('i', '', ['class' => 'fa fa-floppy-o']), ['class' => 'btn btn-success']) ?>
+                <?= "<?php else: ?>\n" ?>
+                    <?= "<?=" ?> Html::submitButton("Actualizar " . Html::tag('i', '', ['class' => 'fa fa-refresh']), ['class' => 'btn btn-success']) ?>
+                <?= "<?php endif ?>\n" ?>
+                <?= "<?=" ?> Html::a('Cancelar ' . Html::tag('i', '', ['class' => 'fa fa-mail-reply']), ['<?= $controllerName ?>/index'], ['class' => 'btn btn-warning']) ?>
+        </div>
+<?= "<?php " ?>ActiveForm::end(); ?>
+    </div>
 </div>

@@ -119,6 +119,7 @@ a.desc:after {
 /* Estilos personalizados. */
 table.kv-grid-table th{
     background-color: #286090;    
+    text-align: center;
 }
 table.kv-grid-table th, table.kv-grid-table th a {
     color: white;
@@ -153,4 +154,10 @@ table.kv-grid-table th, table.kv-grid-table th a {
     font-size: 14px;
     background-color: #286090;
     border-radius: 3px 3px 3px 3px;
+}
+i.fa {
+    font-size: 20px;
+}
+.glyphicon {
+    font-size: 18px;
 }
