@@ -21,10 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass))) ?>-create">
 
-    <div class="page-header">
-		<h2><?= "<?= " ?>Html::encode($this->title) ?></h2>
-	</div>
-
     <?= "<?= " ?>$this->render('_form', [
         'model' => $model,
     ]) ?>

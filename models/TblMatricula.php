@@ -61,6 +61,10 @@ class TblMatricula extends \yii\db\ActiveRecord
             return false;
         }
         $this->razon_social_matricula = strtoupper($this->razon_social_matricula);
+        $this->primer_nombre_matricula = strtoupper($this->primer_nombre_matricula);
+        $this->segundo_nombre_matricula = strtoupper($this->segundo_nombre_matricula);
+        $this->primer_apellido_matricula = strtoupper($this->primer_apellido_matricula);
+        $this->segundo_apellido_matricula = strtoupper($this->segundo_apellido_matricula);
         return true;
     }
     
@@ -81,10 +85,11 @@ class TblMatricula extends \yii\db\ActiveRecord
             'segundo_apellido_matricula' => 'Segundo Apellido',
             'email_matricula' => 'Email',
             'telefono_matricula' => 'Teléfono',
-            'direccion_matricula' => 'Dirección',
+            'direccion_matricula' => 'Dirección', 
             'id_barrio_fk' => 'Barrio',
             'celular_matricula' => 'Celular',
             'pagina_web' => 'Pagina Web',
+            'identificacionCompleta' => 'Nit',
         ];
     }
 
@@ -113,9 +118,27 @@ class TblMatricula extends \yii\db\ActiveRecord
     }
     
     public function getNombreCorto(){
-        return "{$this->primer_nombre_matricula} {$this->primer_apellido_matricula}";
+        return "{$this->primer_nombre_matricula} {$this->segundo_nombre_matricula} {$this->primer_apellido_matricula} {$this->segundo_apellido_matricula}";
     }
     public function getBarrio(){
-        return $this->idBarrioFk->nombre_barrio;
+        return $this->idBarrioFk->ubicacionCompleta;
+    }
+    
+    public function getIdentificacionCompleta()
+    {
+        return "{$this->nit_matricula}-{$this->dv_matricula}";
+    }
+    
+    public function getNombreCompleto()
+    {
+        return implode(' ', [$this->primer_nombre_matricula, $this->segundo_nombre_matricula, $this->primer_apellido_matricula, $this->segundo_apellido_matricula]);
+    }
+    public function getAlgunNombre()
+    {
+        if($this->nombreCorto != ""){
+            return $this->nombreCorto;
+        } else {
+            return $this->razon_social_matricula;
+        }
     }
 }

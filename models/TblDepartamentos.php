@@ -15,6 +15,10 @@ use Yii;
  */
 class TblDepartamentos extends \yii\db\ActiveRecord
 {
+    
+    const ESTADO_ACTIVO = 1;
+    const ESTADO_INACTIVO = 0;
+    
     /**
      * @inheritdoc
      */
@@ -45,6 +49,7 @@ class TblDepartamentos extends \yii\db\ActiveRecord
             'id_departamento' => 'Id Departamento',
             'codigo_departamento' => 'Codigo Departamento',
             'nombre_departamento' => 'Nombre Departamento',
+            'etiquetaEstado' => 'Estado',
         ];
     }
 
@@ -54,5 +59,14 @@ class TblDepartamentos extends \yii\db\ActiveRecord
     public function getTblMunicipios()
     {
         return $this->hasMany(TblMunicipios::className(), ['id_departamento_fk' => 'id_departamento']);
+    }
+    
+    public function getEtiquetaEstado()
+    {
+        if($this->estado == self::ESTADO_ACTIVO){
+            return \yii\helpers\Html::tag('span', 'ACTIVO', ['class' => 'label label-success']);
+        } else {
+            return \yii\helpers\Html::tag('span', 'INACTIVO', ['class' => 'label label-default']);
+        }
     }
 }

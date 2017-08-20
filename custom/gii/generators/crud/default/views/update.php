@@ -16,17 +16,13 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model <?= ltrim($generator->modelClass, '\\') ?> */
 
-$this->title = <?= "'Actualizar {modelClass}'" ?>;
+$this->title = <?= $generator->generateString('Actualizar ' . Inflector::camel2words(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass)))) ?>;
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename(str_replace('Tbl', '', $generator->modelClass))))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model-><?= $generator->getNameAttribute() ?>, 'url' => ['view', <?= $urlParams ?>]];
 $this->params['breadcrumbs'][] = <?= $generator->generateString('Actualizar') ?>;
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
-
-    <div class="page-header">
-		<h2><?= "<?= " ?>Html::encode($this->title) ?></h2>
-	</div>
-
+    
     <?= "<?= " ?>$this->render('_form', [
         'model' => $model,
     ]) ?>

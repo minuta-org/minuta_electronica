@@ -58,9 +58,11 @@ class TblBarrios extends \yii\db\ActiveRecord
     {
         return [
             'id_barrio' => 'Id',
-            'nombre_barrio' => 'Nombre',
+            'nombre_barrio' => 'Barrio',
             'id_municipio_fk' => 'Municipio',
             'codigo_barrio' => 'Codigo',
+            'nombreMunicipio' => 'Municipio',
+            'ubicacionCompleta' => 'Barrio',
         ];
     }
 
@@ -102,6 +104,11 @@ class TblBarrios extends \yii\db\ActiveRecord
     
     public function getBarrioMunicipio(){
         return $this->nombre_barrio . " - " . $this->idMunicipioFk->nombre_municipio;
+    }
+    
+    public function getUbicacionCompleta()
+    {
+        return $this->getBarrioMunicipio() . " - " . $this->idMunicipioFk->idDepartamentoFk->nombre_departamento;
     }
     
 }

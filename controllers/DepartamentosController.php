@@ -112,6 +112,13 @@ class DepartamentosController extends Controller
 
         return $this->redirect(['index']);
     }
+    
+    public function actionState($id){
+        $model = $this->findModel($id);
+        $model->estado = !$model->estado;
+        $model->save();
+        return $this->redirect(['index']);
+    }
 
     /**
      * Finds the TblDepartamentos model based on its primary key value.

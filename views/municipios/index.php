@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'etiquetaEstado',
                 'contentOptions' => ['class' => 'col-sm-1', 'type' => 'raw'],
-                #'type' => ['encode' => false]
                 'format' => 'raw',
             ],
             [ 

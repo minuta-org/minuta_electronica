@@ -31,7 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'email_supervisor:email',
             // 'id_barrio_fk',
             // 'id_matricula_fk',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['style' => 'width:100px', 'class' => 'text-center fixed-grid-column']
+            ],
         ],
         'summary' => '<span class="summary label label-default">Registros: {totalCount}</span>',
         'layout' => '{summary}{items}<div class="row"><div class="col-sm-8">{pager}</div><div class="col-sm-4 text-right">' . $newButton . '</div></div>',

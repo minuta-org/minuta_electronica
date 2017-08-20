@@ -63,12 +63,18 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 ?>
             [
                 'class' => 'yii\grid\ActionColumn',
-                'contentOptions' => ['class' => 'col-sm-1 text-center'],
+                'contentOptions' => ['class' => 'text-center col-sm-1 fixed-grid-column'],
             ],
         ],
         'tableOptions' => ['class' => 'table-condensed'],
         'summary' => '<span class="summary label label-default">Registros: {totalCount}</span>',
         'layout' => '{summary}{items}<div class="row"><div class="col-sm-8">{pager}</div><div class="col-sm-4 text-right">' . $newButton . '</div></div>',
+        'pager' => [
+            'nextPageLabel' => '<i class="fa fa-forward"></i>',
+            'prevPageLabel'  => '<i class="fa fa-backward"></i>',
+            'lastPageLabel' => '<i class="fa fa-fast-forward"></i>',
+            'firstPageLabel'  => '<i class="fa fa-fast-backward"></i>'
+        ],
     ]); ?>
 <?php else: ?>
     <?= "<?= " ?>ListView::widget([

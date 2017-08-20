@@ -90,9 +90,10 @@ class TblMunicipios extends \yii\db\ActiveRecord
     }
     
     public function getEtiquetaEstado(){
-        if($this->estado == self::ESTADO_ACTIVO)
+        if($this->estado == self::ESTADO_ACTIVO){
             return \yii\helpers\Html::tag('span', 'ACTIVO', ['class' => 'label label-success']);
-        else 
+        } else {
             return \yii\helpers\Html::tag('span', 'INACTIVO', ['class' => 'label label-default']);
+        }
     }
 }

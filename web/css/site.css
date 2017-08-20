@@ -161,3 +161,6 @@ i.fa {
 .glyphicon {
     font-size: 18px;
 }
+.fixed-grid-column{
+    min-width: 100px !important;
+}

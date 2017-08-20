@@ -38,10 +38,13 @@ class BarriosController extends Controller
     {
         $searchModel = new TblBarriosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination->pageSize = 40;
+        $municipios = \app\models\TblMunicipios::find()->all();
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'municipios' => ArrayHelper::map($municipios, 'id_municipio', 'municipioMasDepartamento'),
         ]);
     }
 

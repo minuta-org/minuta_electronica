@@ -87,6 +87,10 @@ class MunicipiosController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if($model->estado == \app\models\TblMunicipios::ESTADO_INACTIVO){
+            # Alerta
+            return $this->redirect(['index']);
+        } 
         $departamentos = \app\models\TblDepartamentos::find()->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_municipio]);

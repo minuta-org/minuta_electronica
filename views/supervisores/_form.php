@@ -77,28 +77,3 @@ use yii\widgets\ActiveForm;
     </div>
 <?php ActiveForm::end(); ?>
 </div>
-<script>
-    $(function(){
-        $(".onchange-dependent").change(function(){            
-            var comboPadre = $(this);
-            $.ajax({
-                url: '<?= \yii\helpers\Url::to(['supervisores/ajax']) ?>',
-                type: 'POST',
-                data: {
-                    ajx_rqst: true,
-                    id: comboPadre.val(),
-                    type: comboPadre.attr("data-type")
-                }
-            }).done(function(data){
-                var comboHijo = $(comboPadre.attr("data-target"));
-                comboHijo.html(data.html);
-                if(comboHijo.hasClass("onchange-dependent")){
-                    var hijoDelHijo = $(comboHijo.attr("data-target"));
-                    var primeraOpcion = hijoDelHijo.find("option:first-child");
-                    hijoDelHijo.html("");
-                    hijoDelHijo.append(primeraOpcion);
-                }
-            });
-        });
-    });
-</script>

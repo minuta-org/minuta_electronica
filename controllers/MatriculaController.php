@@ -38,7 +38,7 @@ class MatriculaController extends Controller
     {
         $searchModel = new TblMatriculaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -65,13 +65,13 @@ class MatriculaController extends Controller
     public function actionCreate()
     {
         $model = new TblMatricula();
-        $barrios = \app\models\TblBarrios::find()->all();
+        $departamentos = \app\models\TblDepartamentos::find()->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_matricula]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'barrios' => ArrayHelper::map($barrios, 'id_barrio', 'barrioMunicipio')
+                'departamentos' => ArrayHelper::map($barrios, 'id_departamento', 'nombre_departamento'),
             ]);
         }
     }
@@ -85,13 +85,23 @@ class MatriculaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $barrios = \app\models\TblBarrios::find()->all();
+        $departamentos = \app\models\TblDepartamentos::find()->all();
+        $barrios = \app\models\TblBarrios::findAll(['id_municipio_fk' => $model->idBarrioFk->id_municipio_fk]);
+        $municipios = \app\models\TblMunicipios::findAll(['id_departamento_fk' => $model->idBarrioFk->idMunicipioFk->id_departamento_fk]);        
+        
+        $municipioId = $model->idBarrioFk->id_municipio_fk;
+        $departamentoId = $model->idBarrioFk->idMunicipioFk->id_departamento_fk;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_matricula]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'barrios' => ArrayHelper::map($barrios, 'id_barrio', 'barrioMunicipio')
+                'departamentos' => ArrayHelper::map($departamentos, 'id_departamento', 'nombre_departamento'),
+                'municipios' => ArrayHelper::map($municipios, 'id_municipio', 'nombre_municipio'),
+                'barrios' => ArrayHelper::map($barrios, 'id_barrio', 'nombre_barrio'),
+                'departamentoId' => $departamentoId,
+                'municipioId' => $municipioId,
             ]);
         }
     }

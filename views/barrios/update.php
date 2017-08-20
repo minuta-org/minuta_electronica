@@ -5,18 +5,22 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\TblBarrios */
 
-$this->title = 'Barrios';
-$this->params['breadcrumbs'][] = ['label' => 'Tbl Barrios', 'url' => ['index']];
+$this->title = 'Actualizar {modelClass}';
+$this->params['breadcrumbs'][] = ['label' => 'Barrios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_barrio, 'url' => ['view', 'id' => $model->id_barrio]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Actualizar';
 ?>
 <div class="tbl-barrios-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="page-header">
+        <h2><?= Html::encode($this->title) ?></h2>
+    </div>
 
-    <?= $this->render('_form', [
+    <?=
+    $this->render('_form', [
         'model' => $model,
         'municipios' => $municipios,
-    ]) ?>
+    ])
+    ?>
 
 </div>
