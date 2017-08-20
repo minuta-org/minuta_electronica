@@ -3,16 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TblTiposDocumentos;
-use app\models\search\TblTiposDocumentosSearch;
+use app\models\TblRecursos;
+use app\models\search\TblRecursosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
- * TiposDocumentosController implements the CRUD actions for TblTiposDocumentos model.
+ * RecursosController implements the CRUD actions for TblRecursos model.
  */
-class TiposDocumentosController extends Controller
+class RecursosController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,22 +31,23 @@ class TiposDocumentosController extends Controller
     }
 
     /**
-     * Lists all TblTiposDocumentos models.
+     * Lists all TblRecursos models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TblTiposDocumentosSearch();
+        $searchModel = new TblRecursosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $municipios = \app\models\TblMunicipios::find()->all();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'municipios' => ArrayHelper::map($municipios, 'id_municipio', 'municipioMasDepartamento'),
         ]);
     }
 
     /**
-     * Displays a single TblTiposDocumentos model.
+     * Displays a single TblRecursos model.
      * @param integer $id
      * @return mixed
      */
@@ -57,16 +59,16 @@ class TiposDocumentosController extends Controller
     }
 
     /**
-     * Creates a new TblTiposDocumentos model.
+     * Creates a new TblRecursos model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new TblTiposDocumentos();
+        $model = new TblRecursos();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'id' => $model->id_tipo_documento]);
+            return $this->redirect(['index', 'id' => $model->id_recurso]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -75,7 +77,7 @@ class TiposDocumentosController extends Controller
     }
 
     /**
-     * Updates an existing TblTiposDocumentos model.
+     * Updates an existing TblRecursos model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -85,7 +87,7 @@ class TiposDocumentosController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'id' => $model->id_tipo_documento]);
+            return $this->redirect(['index', 'id' => $model->id_recurso]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -94,7 +96,7 @@ class TiposDocumentosController extends Controller
     }
 
     /**
-     * Deletes an existing TblTiposDocumentos model.
+     * Deletes an existing TblRecursos model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +109,15 @@ class TiposDocumentosController extends Controller
     }
 
     /**
-     * Finds the TblTiposDocumentos model based on its primary key value.
+     * Finds the TblRecursos model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return TblTiposDocumentos the loaded model
+     * @return TblRecursos the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = TblTiposDocumentos::findOne($id)) !== null) {
+        if (($model = TblRecursos::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

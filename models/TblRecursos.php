@@ -58,7 +58,7 @@ class TblRecursos extends \yii\db\ActiveRecord
         return [
             'id_recurso' => 'Id',
             'id_tipo_documento_fk' => 'Tipo Documento',
-            'documento_recurso' => 'Documento Recurso',
+            'documento_recurso' => 'Documento',
             'primer_nombre_recurso' => 'Primer Nombre',
             'segundo_nombre_recurso' => 'Segundo Nombre',
             'primer_apellido_recurso' => 'Primer Apellido',
@@ -69,6 +69,7 @@ class TblRecursos extends \yii\db\ActiveRecord
             'celular_recurso' => 'Celular',
             'id_barrio_fk' => 'Barrio',
             'estado_recurso' => 'Estado',
+            'nombreCorto' => 'Recurso',
         ];
     }
 
@@ -94,5 +95,15 @@ class TblRecursos extends \yii\db\ActiveRecord
     public function getTblRecursosPorPuestos()
     {
         return $this->hasMany(TblRecursosPorPuesto::className(), ['id_recurso_fk' => 'id_recurso']);
+    }
+    
+    public function getTipoDocumento()
+    {
+        return $this->idTipoDocumentoFk->nombre;
+    }
+    
+    public function getNombreCorto()
+    {
+        return $this->primer_nombre_recurso . " " . $this->segundo_nombre_recurso . " " . $this->primer_apellido_recurso . " " . $this->segundo_apellido_recurso;
     }
 }

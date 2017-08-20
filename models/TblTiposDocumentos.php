@@ -31,8 +31,15 @@ class TblTiposDocumentos extends \yii\db\ActiveRecord
     {
         return [
             [['nombre'], 'required'],
-            [['nombre'], 'string', 'max' => 80],
+            [['nombre', 'concepto'], 'string', 'max' => 80],
         ];
+    }
+    
+    public function beforeSave($insert) {
+        if(!parent::beforeSave($insert)) return false;
+        $this->nombre = mb_strtoupper($this->nombre);
+        $this->concepto = mb_strtoupper($this->concepto);
+        return true;
     }
 
     /**
@@ -41,8 +48,9 @@ class TblTiposDocumentos extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_tipo_documento' => 'Id Tipo Documento',
-            'nombre' => 'Nombre',
+            'id_tipo_documento' => 'Id',
+            'nombre' => 'Tipo Documento',
+            'concepto' => 'Concepto',
         ];
     }
 
