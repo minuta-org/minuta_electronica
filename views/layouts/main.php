@@ -4,8 +4,10 @@
 /* @var $content string */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use app\components\web\WSideNavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 AppAsset::register($this);
@@ -26,49 +28,124 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Administrativo', 'items' => [
-                ['label' => 'Departamentos', 'url' => ['/departamentos/index']],
-                ['label' => 'Municipios', 'url' => ['/municipios/index']],
-                ['label' => 'Barrios', 'url' => ['/barrios/index']],
-                ['label' => 'Matricula', 'url' => ['/matricula/index']],
-                ['label' => 'Tipos de documento', 'url' => ['/tipos-documentos/index']],
-                ['label' => 'Supervisores', 'url' => ['/supervisores/index']],
-                ['label' => 'Recursos', 'url' => ['/recursos/index']],
-            ]],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
-    NavBar::end();
+    // NavBar::begin([
+    //     'brandLabel' => Yii::$app->name,
+    //     'brandUrl' => Yii::$app->homeUrl,
+    //     'options' => [
+    //         'class' => 'navbar-inverse navbar-fixed-top',
+    //     ],
+    // ]);
+    // echo Nav::widget([
+    //     'options' => ['class' => 'navbar-nav navbar-right'],
+    //     'items' => [
+    //         ['label' => 'Home', 'url' => ['/site/index']],
+    //         ['label' => 'Administrativo', 'items' => [
+    //             ['label' => 'Departamentos', 'url' => ['/departamentos/index']],
+    //             ['label' => 'Municipios', 'url' => ['/municipios/index']],
+    //             ['label' => 'Barrios', 'url' => ['/barrios/index']],
+    //             ['label' => 'Matricula', 'url' => ['/matricula/index']],
+    //             ['label' => 'Tipos de documento', 'url' => ['/tipos-documentos/index']],
+    //             ['label' => 'Supervisores', 'url' => ['/supervisores/index']],
+    //             ['label' => 'Recursos', 'url' => ['/recursos/index']],
+    //         ]],
+    //         Yii::$app->user->isGuest ? (
+    //             ['label' => 'Login', 'url' => ['/site/login']]
+    //         ) : (
+    //             '<li>'
+    //             . Html::beginForm(['/site/logout'], 'post')
+    //             . Html::submitButton(
+    //                 'Logout (' . Yii::$app->user->identity->username . ')',
+    //                 ['class' => 'btn btn-link logout']
+    //             )
+    //             . Html::endForm()
+    //             . '</li>'
+    //         )
+    //     ],
+    // ]);
+    // NavBar::end();
     ?>
-
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= $content ?>
+    <div class="top-status-bar">
+        <nav>
+            <a href="#" class="brand">Mi aplicación</a>
+            <ul class="menu-options">
+                <li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
+            </ul>
+            <ul class="status-icons">
+                <li><a href="#"><i class="fa fa-bell"></i><span class="count">16</span></a></li>
+                <li><a href="#"><i class="fa fa-bell"></i></a></li>
+                <li><a href="#"><i class="fa fa-bell"></i></a></li>
+            </ul>
+        </nav>
     </div>
+    <div class="side-nav-bar-container">
+        <!-- <?= WSideNavBar::widget([
+            'options' => [],
+        ]); ?>         -->
+        <nav class="main-side-nav-bar">
+            <div class="nav-header">
+                <div class="user-info">
+                    <div class="photo">
+                        <img src="<?= Url::base() ?>/pics/jako.png">
+                    </div>
+                    <div class="data">
+                        <p class="title">Alejandro Quiroz</p>
+                        <p>Administrador</p>
+                    </div>
+                </div>
+                <div class="simple-separator"></div>
+                <div class="form-group nav-search">
+                    <input type="text" class="form-control" placeholder="Buscar...">
+                    <i class="fa fa-search"></i>
+                </div>
+            </div>    
+            <ul class="nav">
+                <li><a href="#"><i class="fa fa-circle-o"></i> option1</a></li>
+                <li class="active"><a href="#"><i class="fa fa-circle-o"></i> option2</a></li>
+                <li><a href="#"><i class="fa fa-circle-o"></i> option3</a></li>
+                <li class="dropdown">
+                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
+                    <ul class="submenu" style="display: none">
+                        <li><a href="" class="sub-menu">Sub-menu1</a></li>
+                        <li><a href="" class="sub-menu">Sub-menu2</a></li>
+                        <li><a href="" class="sub-menu">Sub-menu3</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
+                    <ul class="submenu" style="display: none">
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu1</a></li>
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu2</a></li>
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu3</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
+                    <ul class="submenu" style="display: none">
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu1</a></li>
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu2</a></li>
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu3</a></li>
+                    </ul>
+                </li> 
+                <li class="dropdown">
+                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
+                    <ul class="submenu" style="display: none">
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu1</a></li>
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu2</a></li>
+                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu3</a></li>
+                    </ul>
+                </li>                
+            </ul>
+        </nav>
+    </div>
+    <div class="main-page-container">
+        <div class="container">
+            <?= Breadcrumbs::widget([
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
+            <?= $content ?>
+        </div>        
+    </div>
+
     
 </div>
 
@@ -80,6 +157,29 @@ AppAsset::register($this);
     </div>
 </footer>
 <script>
+    /**
+     * Scripts para el menú
+     */
+    $(function(){
+        $(".main-side-nav-bar .dropdown > a").click(function(){
+            var clicked = $(this).parent();
+            if(clicked.hasClass("opened")) {
+                clicked.removeClass("opened");
+                clicked.find(".submenu").slideUp();
+                return false;
+            }
+            var opened = $(".dropdown.opened");
+            opened.removeClass("opened");
+            opened.find(".submenu").slideUp();
+            clicked.toggleClass("opened");
+            clicked.find(".submenu").slideToggle('fast');
+            return false;
+        });
+    });
+    /**
+     * End escripts para el menú
+     */
+
     $(function () {
         var panel = $(".panel-filters");
         panel.find(".panel-heading").click(function () {
