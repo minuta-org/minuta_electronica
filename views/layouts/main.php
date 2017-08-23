@@ -77,10 +77,25 @@ AppAsset::register($this);
             </ul>
         </nav>
     </div>
-    <div class="side-nav-bar-container">
-        <!-- <?= WSideNavBar::widget([
-            'options' => [],
-        ]); ?>         -->
+        <?= WSideNavBar::widget([
+            'photo' => '@web/pics/jako.png',
+            'title' => 'Alejandro',
+            'subtitle' => 'Administrador',
+            'options' => [
+                ['label' => 'Home', 'url' => ['/site/index']],
+                ['label' => 'Administrativo', 'items' => [
+                    ['label' => 'Departamentos', 'url' => ['/departamentos/index']],
+                    ['label' => 'Municipios', 'url' => ['/municipios/index']],
+                    ['label' => 'Barrios', 'url' => ['/barrios/index']],
+                    ['label' => 'Matricula', 'url' => ['/matricula/index']],
+                    ['label' => 'Tipos de documento', 'url' => ['/tipos-documentos/index']],
+                    ['label' => 'Supervisores', 'url' => ['/supervisores/index']],
+                    ['label' => 'Recursos', 'url' => ['/recursos/index']],
+                ]],
+            ],
+        ]); ?>
+        <!-- 
+        <div class="side-nav-bar-container">
         <nav class="main-side-nav-bar">
             <div class="nav-header">
                 <div class="user-info">
@@ -97,7 +112,7 @@ AppAsset::register($this);
                     <input type="text" class="form-control" placeholder="Buscar...">
                     <i class="fa fa-search"></i>
                 </div>
-            </div>    
+            </div>
             <ul class="nav">
                 <li><a href="#"><i class="fa fa-circle-o"></i> option1</a></li>
                 <li class="active"><a href="#"><i class="fa fa-circle-o"></i> option2</a></li>
@@ -137,6 +152,7 @@ AppAsset::register($this);
             </ul>
         </nav>
     </div>
+    -->
     <div class="main-page-container">
         <div class="container">
             <?= Breadcrumbs::widget([
@@ -144,18 +160,17 @@ AppAsset::register($this);
             ]) ?>
             <?= $content ?>
         </div>        
+        <footer class="footer">
+            <div class="container">
+                <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+                <p class="pull-right"><?= Yii::powered() ?></p>
+            </div>
+        </footer>
     </div>
 
     
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
 <script>
     /**
      * Scripts para el menú
