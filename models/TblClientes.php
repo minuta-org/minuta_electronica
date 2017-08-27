@@ -152,4 +152,13 @@ class TblClientes extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TblPuestos::className(), ['id_cliente_fk' => 'id_cliente']);
     }
+    
+    public function getNombreCompleto(){
+        return implode(' ', [$this->primer_nombre_supervisor, $this->segundo_nombre_supervisor, $this->primer_apellido_supervisor, $this->segundo_apellido_supervisor]);
+    }
+    
+    public function getNombreCorto()
+    {
+        return $this->razon_social_cliente == ""? $this->getNombreCompleto() : $this->razon_social_cliente;
+    }
 }

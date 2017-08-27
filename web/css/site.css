@@ -369,6 +369,25 @@ i.fa {
     display: block;
     transition: background-color 0.3s;
 }
-body{
-    font-size: 11px;
+@media(max-width: 1400px){    
+    body{
+        font-size: 11px;
+    }
+}
+.form-group{
+    margin-bottom:5px;
+}
+.tabla-programacion {
+    
+}
+
+.tabla-programacion th, .tabla-programacion td{
+    font-size: 10px;
+    text-align: center;
+    width: 15px;
+    padding: 6px 0px !important;
+}
+
+.tabla-programacion .celda-bloqueada{
+    background-color: rgba(199, 199, 199, 0.72);
 }

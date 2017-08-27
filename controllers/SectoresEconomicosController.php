@@ -64,7 +64,7 @@ class SectoresEconomicosController extends Controller
     public function actionCreate()
     {
         $model = new TblSectoresEconomicos();
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_sector_economico]);
         } else {
@@ -83,7 +83,7 @@ class SectoresEconomicosController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_sector_economico]);
         } else {

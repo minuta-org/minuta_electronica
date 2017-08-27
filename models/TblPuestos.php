@@ -22,6 +22,7 @@ use Yii;
  * @property TblEntregaPuestos[] $tblEntregaPuestos
  * @property TblClientes $idClienteFk
  * @property TblZonas $idZonaFk
+ * @property TblBarrios $idBarrioFk
  * @property TblPuntosRecorrido[] $tblPuntosRecorridos
  * @property TblRecorridosSupervisores[] $tblRecorridosSupervisores
  * @property TblRecursosPorPuesto[] $tblRecursosPorPuestos
@@ -35,7 +36,15 @@ class TblPuestos extends \yii\db\ActiveRecord
     {
         return 'tbl_puestos';
     }
-
+    public function beforeSave($insert) {
+        if(!parent::beforeSave($insert)) return false;
+        
+        $this->nombre_puesto = strtoupper($this->nombre_puesto);
+        $this->direccion_puesto = strtoupper($this->direccion_puesto);
+        $this->contacto_puesto = strtoupper($this->contacto_puesto);
+        
+        return true;
+    }
     /**
      * @inheritdoc
      */
@@ -59,7 +68,7 @@ class TblPuestos extends \yii\db\ActiveRecord
     {
         return [
             'id_puesto' => 'ID',
-            'nombre_puesto' => 'Nombre',
+            'nombre_puesto' => 'Puesto',
             'direccion_puesto' => 'Direccion',
             'telefono_puesto' => 'Telefono',
             'id_barrio_fk' => 'Barrio',
@@ -67,6 +76,9 @@ class TblPuestos extends \yii\db\ActiveRecord
             'celular_contacto_puesto' => 'Celular Contacto',
             'id_zona_fk' => 'Zona',
             'id_cliente_fk' => 'Cliente',
+            'nombreCliente' => 'Cliente',
+            'nombreBarrio' => 'Barrio',
+            'nombreZona' => 'Zona',
         ];
     }
 
@@ -109,6 +121,14 @@ class TblPuestos extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TblZonas::className(), ['id_zona' => 'id_zona_fk']);
     }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdBarrioFk()
+    {
+        return $this->hasOne(TblBarrios::className(), ['id_barrio' => 'id_barrio_fk']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -132,5 +152,19 @@ class TblPuestos extends \yii\db\ActiveRecord
     public function getTblRecursosPorPuestos()
     {
         return $this->hasMany(TblRecursosPorPuesto::className(), ['id_puesto_fk' => 'id_puesto']);
+    }
+    
+    public function getNombreZona()
+    {
+        return $this->idZonaFk->nombre_zona;
+    }
+    
+    public function getNombreCliente()
+    {
+        return $this->idClienteFk->nombreCorto;
+    }
+    
+    public function getNombreBarrio(){
+        return $this->idBarrioFk->nombre_barrio;
     }
 }

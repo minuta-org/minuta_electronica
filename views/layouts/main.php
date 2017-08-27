@@ -92,6 +92,10 @@ AppAsset::register($this);
                     ['label' => 'Supervisores', 'url' => ['/supervisores/index']],
                     ['label' => 'Recursos', 'url' => ['/recursos/index']],
                 ]],
+                ['label' => 'Operaciones', 'items' => [                    
+                    ['label' => 'Puestos', 'url' => ['/puestos/index']],
+                    ['label' => 'Programacion supervisores', 'url' => ['/programacion-supervisores/index']],
+                ]]
             ],
         ]); ?>
         <!-- 
