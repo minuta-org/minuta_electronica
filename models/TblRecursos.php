@@ -23,16 +23,30 @@ use Yii;
  *
  * @property TblRecorridosRecursos[] $tblRecorridosRecursos
  * @property TblTiposDocumentos $idTipoDocumentoFk
+ * @property TblBarrios $idBarrioFk
  * @property TblRecursosPorPuesto[] $tblRecursosPorPuestos
  */
 class TblRecursos extends \yii\db\ActiveRecord
 {
+    const ESTADO_ACTIVO = 1;
+    const ESTADO_INACTIVO = 0;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'tbl_recursos';
+    }
+    
+    public function beforeSave($insert) {
+        if(!parent::beforeSave($insert)) return false;
+        $this->primer_nombre_recurso = strtoupper($this->primer_nombre_recurso);
+        $this->segundo_nombre_recurso = strtoupper($this->segundo_nombre_recurso);
+        $this->primer_apellido_recurso = strtoupper($this->primer_apellido_recurso);
+        $this->segundo_apellido_recurso = strtoupper($this->segundo_apellido_recurso);        
+        $this->direccion_recurso = strtoupper($this->direccion_recurso);
+        $this->email_recurso = strtolower($this->email_recurso);
+        return true;
     }
 
     /**
@@ -88,6 +102,14 @@ class TblRecursos extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TblTiposDocumentos::className(), ['id_tipo_documento' => 'id_tipo_documento_fk']);
     }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdBarrioFk()
+    {
+        return $this->hasOne(TblBarrios::className(), ['id_barrio' => 'id_barrio_fk']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -105,5 +127,13 @@ class TblRecursos extends \yii\db\ActiveRecord
     public function getNombreCorto()
     {
         return $this->primer_nombre_recurso . " " . $this->segundo_nombre_recurso . " " . $this->primer_apellido_recurso . " " . $this->segundo_apellido_recurso;
+    }
+    
+    public function getEtiquetaEstado(){
+        if($this->estado_recurso == self::ESTADO_ACTIVO){
+            return \yii\helpers\Html::tag('span', 'ACTIVO', ['class' => 'label label-success']);
+        } else {
+            return \yii\helpers\Html::tag('span', 'INACTIVO', ['class' => 'label label-default']);
+        }
     }
 }

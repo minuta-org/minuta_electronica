@@ -369,3 +369,6 @@ i.fa {
     display: block;
     transition: background-color 0.3s;
 }
+body{
+    font-size: 11px;
+}
