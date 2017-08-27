@@ -98,65 +98,9 @@ AppAsset::register($this);
                 ]]
             ],
         ]); ?>
-        <!-- 
-        <div class="side-nav-bar-container">
-        <nav class="main-side-nav-bar">
-            <div class="nav-header">
-                <div class="user-info">
-                    <div class="photo">
-                        <img src="<?= Url::base() ?>/pics/jako.png">
-                    </div>
-                    <div class="data">
-                        <p class="title">Alejandro Quiroz</p>
-                        <p>Administrador</p>
-                    </div>
-                </div>
-                <div class="simple-separator"></div>
-                <div class="form-group nav-search">
-                    <input type="text" class="form-control" placeholder="Buscar...">
-                    <i class="fa fa-search"></i>
-                </div>
-            </div>
-            <ul class="nav">
-                <li><a href="#"><i class="fa fa-circle-o"></i> option1</a></li>
-                <li class="active"><a href="#"><i class="fa fa-circle-o"></i> option2</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i> option3</a></li>
-                <li class="dropdown">
-                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
-                    <ul class="submenu" style="display: none">
-                        <li><a href="" class="sub-menu">Sub-menu1</a></li>
-                        <li><a href="" class="sub-menu">Sub-menu2</a></li>
-                        <li><a href="" class="sub-menu">Sub-menu3</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
-                    <ul class="submenu" style="display: none">
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu1</a></li>
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu2</a></li>
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu3</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
-                    <ul class="submenu" style="display: none">
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu1</a></li>
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu2</a></li>
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu3</a></li>
-                    </ul>
-                </li> 
-                <li class="dropdown">
-                    <a href="#"><i class="fa fa-circle-o"></i> Dropdown <span class="fa fa-chevron-right"></span></a>
-                    <ul class="submenu" style="display: none">
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu1</a></li>
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu2</a></li>
-                        <li><a href="" class="sub-menu"><i class="fa fa-circle-o"></i> Sub-menu3</a></li>
-                    </ul>
-                </li>                
-            </ul>
-        </nav>
-    </div>
-    -->
+
+    <?= $this->blocks['bloque-auxiliar']; ?>    
+    
     <div class="main-page-container">
         <div class="container">
             <?= Breadcrumbs::widget([

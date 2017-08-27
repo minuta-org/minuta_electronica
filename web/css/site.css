@@ -390,4 +390,19 @@ i.fa {
 
 .tabla-programacion .celda-bloqueada{
     background-color: rgba(199, 199, 199, 0.72);
+    cursor: not-allowed;
+}
+.celda-a-agregar{
+    cursor: pointer;    
+    transition: background-color 0.6s;
+}
+.celda-a-agregar:hover{
+    background-color: rgba(157, 212, 157, 0.4);
+}
+
+.modal-backdrop {
+    z-index: 20000;
+}
+.modal{
+    z-index: 30000 !important;
 }

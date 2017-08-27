@@ -25,7 +25,7 @@ class AppAsset extends AssetBundle
     ];
     
     public $js = [
-        'plugins/select-2/js/select2.min.js'
+        'plugins/select-2/js/select2.min.js',
     ];
     
     public $jsOptions = [
@@ -35,5 +35,6 @@ class AppAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+        'yii\bootstrap\BootstrapPluginAsset'
     ];
 }

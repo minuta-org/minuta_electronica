@@ -47,10 +47,24 @@ $this->params['breadcrumbs'][] = $this->title;
             </thead>
             <tbody>
                 <tr>
-                    <td></td>
+                    <td>
+                        <a href="#"><i class="fa fa-plus-circle"></i></a>
+                    </td>
                 <?php for($i = 1; $i <= $totalDiasMes; $i ++) : ?>
                     <?php if($i <= $diasAProgramar ): ?>
-                    <td>&nbsp;</td>
+                    <td class="celda-a-agregar"></td>
+                    <?php else: ?>
+                    <td class="celda-bloqueada">&nbsp;</td>
+                    <?php endif ?>
+                <?php endfor ?>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#"><i class="fa fa-plus-circle"></i></a>
+                    </td>
+                <?php for($i = 1; $i <= $totalDiasMes; $i ++) : ?>
+                    <?php if($i <= $diasAProgramar ): ?>
+                    <td class="celda-a-agregar"></td>
                     <?php else: ?>
                     <td class="celda-bloqueada">&nbsp;</td>
                     <?php endif ?>
@@ -60,3 +74,34 @@ $this->params['breadcrumbs'][] = $this->title;
         </table>
     </div>
 </div>
+
+    <?php $this->beginBlock('bloque-auxiliar') ?>
+    
+    <div class="modal fade" id="modal-agregar-puesto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Agregar puesto</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php $this->endBlock() ?>
+
+
+<script>
+    $(function(){        
+        $(".celda-a-agregar").click(function(){
+            $("#modal-agregar-puesto").modal("show");
+        });
+    });
+</script>
