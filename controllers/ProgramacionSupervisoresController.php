@@ -152,6 +152,7 @@ class ProgramacionSupervisoresController extends Controller
         $mes = date_create($programacion->fecha_inicio_programacion_supervisor);
         $diasMes = $this->getDiasMes($mes);
         $totalDiasMes = intval($mes->format('t'));
+        $clientes = \app\models\TblClientes::find()->all();
         
         return $this->render('agregar_detalle', [
             'programacion' => $programacion,
@@ -159,6 +160,7 @@ class ProgramacionSupervisoresController extends Controller
             'diasAProgramar' => $diferencia,
             'diasMes' => $diasMes,
             'totalDiasMes' => $totalDiasMes,
+            'clientes' => ArrayHelper::map($clientes, 'id_cliente', 'nombreCorto'),
         ]);
     }
     

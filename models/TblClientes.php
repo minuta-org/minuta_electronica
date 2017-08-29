@@ -154,7 +154,7 @@ class TblClientes extends \yii\db\ActiveRecord
     }
     
     public function getNombreCompleto(){
-        return implode(' ', [$this->primer_nombre_supervisor, $this->segundo_nombre_supervisor, $this->primer_apellido_supervisor, $this->segundo_apellido_supervisor]);
+        return implode(' ', [$this->primer_nombre_cliente, $this->segundo_nombre_cliente, $this->primer_apellido_cliente, $this->segundo_apellido_cliente]);
     }
     
     public function getNombreCorto()

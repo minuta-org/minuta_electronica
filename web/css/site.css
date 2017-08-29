@@ -406,3 +406,19 @@ i.fa {
 .modal{
     z-index: 30000 !important;
 }
+.select2-container{
+    z-index: 30001;
+}
+.modal-wide .modal-dialog{
+    width: 70%;
+}
+
+/**
+ * Sobre-escribimos archivos.
+ */
+.btn-xs{
+    padding: 4px 5px;
+}
+.btn-xs i{
+    font-size: 12px;
+}
