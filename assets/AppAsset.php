@@ -26,6 +26,7 @@ class AppAsset extends AssetBundle
     
     public $js = [
         'plugins/select-2/js/select2.min.js',
+        'js/commons.js',
     ];
     
     public $jsOptions = [

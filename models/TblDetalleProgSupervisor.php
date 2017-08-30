@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id_dps
  * @property integer $id_programacion_supervisor_fk
  * @property integer $id_puesto
+ * @property integer $dia_dps
  *
  * @property TblProgramacionSupervisores $idProgramacionSupervisorFk
  * @property TblPuestos $idPuesto
@@ -31,7 +32,7 @@ class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
     {
         return [
             [['id_programacion_supervisor_fk', 'id_puesto'], 'required'],
-            [['id_programacion_supervisor_fk', 'id_puesto'], 'integer'],
+            [['id_programacion_supervisor_fk', 'id_puesto', 'dia_dps'], 'integer'],
             [['id_programacion_supervisor_fk'], 'exist', 'skipOnError' => true, 'targetClass' => TblProgramacionSupervisores::className(), 'targetAttribute' => ['id_programacion_supervisor_fk' => 'id_programacion_supervisor']],
             [['id_puesto'], 'exist', 'skipOnError' => true, 'targetClass' => TblPuestos::className(), 'targetAttribute' => ['id_puesto' => 'id_puesto']],
         ];
@@ -43,9 +44,10 @@ class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_dps' => 'ID',
-            'id_programacion_supervisor_fk' => 'Supervisor',
-            'id_puesto' => 'Puesto',
+            'id_dps' => 'Id Dps',
+            'id_programacion_supervisor_fk' => 'Id Programacion Supervisor Fk',
+            'id_puesto' => 'Id Puesto',
+            'dia_dps' => 'Dia Dps',
         ];
     }
 

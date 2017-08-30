@@ -153,6 +153,8 @@ class ProgramacionSupervisoresController extends Controller
         $diasMes = $this->getDiasMes($mes);
         $totalDiasMes = intval($mes->format('t'));
         $clientes = \app\models\TblClientes::find()->all();
+        $cuadrantes = \app\models\TblCuadrantes::find()->all();
+		$diasProgramados = $this->getDiasProgramados($programacion->id_programacion_supervisor);
         
         return $this->render('agregar_detalle', [
             'programacion' => $programacion,
@@ -161,8 +163,24 @@ class ProgramacionSupervisoresController extends Controller
             'diasMes' => $diasMes,
             'totalDiasMes' => $totalDiasMes,
             'clientes' => ArrayHelper::map($clientes, 'id_cliente', 'nombreCorto'),
+            'cuadrantes' => ArrayHelper::map($cuadrantes, 'id_cuadrante', 'nombre_cuadrante'),
+			'diasProgramacion' => $diasProgramados,
         ]);
     }
+	
+	private function getDiasProgramados($idProgramacion)
+	{
+		$detalles = \app\models\TblDetalleProgSupervisor::find()
+								->select(['COUNT(*) AS total, dia_dps'])
+								->where("id_programacion_supervisor_fk = {$idProgramacion}")
+								->groupBy(['dia_dps'])
+								->all();
+		$dias = [];
+		foreach($detalles AS $detalle){
+			$dias[$detalle->dia_dps] = $detalle->dia_dps;
+		}
+		return $dias;
+	}
     
     private function getDiasMes($mes)
     {        

@@ -113,7 +113,7 @@ class TblPuestos extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TblClientes::className(), ['id_cliente' => 'id_cliente_fk']);
     }
-
+	
     /**
      * @return \yii\db\ActiveQuery
      */

@@ -422,3 +422,16 @@ i.fa {
 .btn-xs i{
     font-size: 12px;
 }
+.form-group.wide{
+    margin-bottom: 10px;
+    height: 25px;
+}
+.programado{
+    background-color: #9dd49d;
+}
+
+.programado i{
+    color: white;
+    font-size: 14px;
+    padding-top: 5px;
+}

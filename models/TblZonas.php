@@ -51,4 +51,12 @@ class TblZonas extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TblPuestos::className(), ['id_zona_fk' => 'id_zona']);
     }
+	
+	/**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdCuadranteFk()
+    {
+        return $this->hasOne(TblCuadrantes::className(), ['id_cuadrante' => 'id_cuadrante_fk']);
+    }
 }
