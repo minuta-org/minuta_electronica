@@ -435,3 +435,6 @@ i.fa {
     font-size: 14px;
     padding-top: 5px;
 }
+.tab-pane{
+    padding: 20px;
+}
