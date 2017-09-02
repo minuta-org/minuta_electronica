@@ -182,15 +182,12 @@ class ProgramacionSupervisoresController extends Controller
 		return $dias;
 	}
     
-    private function getDiasMes($mes)
+    public function getDiasMes($mes)
     {        
         $maxDiasMes = intval($mes->format('t'));
         $diasSemana = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
         $numerosDias = [];
         $letrasDias = [];
-        
-        $numerosDias[] = Html::tag('th', "");
-        $letrasDias[] = Html::tag('th', "");
         
         for($i = 1; $i <= $maxDiasMes; $i ++){
             $fechaRecorrida = date_create($mes->format("Y-m-{$i}"));

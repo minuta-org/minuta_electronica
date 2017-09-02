@@ -438,3 +438,41 @@ i.fa {
 .tab-pane{
     padding: 20px;
 }
+
+/**
+ * Plugin de opciones click derecho. 
+ */
+.dropdown-opciones{
+    position: absolute;
+    border: 1px solid rgba(128, 128, 128, 0.33);
+    background-color: white;
+    padding: 0px;
+}
+.dropdown-opciones ul{
+    margin: 0;
+    padding: 0px;
+}
+
+.dropdown-opciones li{
+    list-style: none;
+    padding: 2px 35px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.33);
+    cursor: pointer;
+    transition: background-color 0.6s;
+}
+
+.dropdown-opciones li:hover{
+    color: #FFFFFF;
+    background-color: #2A51D2;
+}
+.action-column-sm{
+    max-width:10px;
+    text-align: center;
+}
+
+.row{
+    margin-top: 10px;
+}
+.turno-seleccionado:focus, .turno-seleccionado.activo{
+    background-color: rgba(0, 153, 153, 0.50);
+}

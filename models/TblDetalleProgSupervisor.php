@@ -17,6 +17,9 @@ use Yii;
  */
 class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
 {
+    const ESTADO_VISITADO = 1;
+    const ESTADO_NO_VISITADO = 0;
+
     /**
      * @inheritdoc
      */
@@ -65,5 +68,14 @@ class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
     public function getIdPuesto()
     {
         return $this->hasOne(TblPuestos::className(), ['id_puesto' => 'id_puesto']);
+    }
+
+    public function getEtiquetaEstado()
+    {
+        if($this->estado == self::ESTADO_VISITADO){
+            return \yii\helpers\Html::tag('span', 'Visitado', ['class' => 'label label-success']);
+        } else if($this->estado == self::ESTADO_NO_VISITADO){
+            return \yii\helpers\Html::tag('span', 'Sin visitar', ['class' => 'label label-danger']);
+        }
     }
 }
