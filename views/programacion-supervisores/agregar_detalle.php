@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="panel-body">
         <?= Html::input('hidden', 'id-programacion', $programacion->id_programacion_supervisor, ['id' => 'hd-id-programacion']) ?>
+        <?= Html::input('hidden', 'id-supervisor-programacion', $programacion->id_supervisor_fk, ['id' => 'id-supervisor-programacion']) ?>
         <table class="table table-bordered table-striped table-hover">
             <tr>
                 <th><?= Html::activeLabel($programacion, 'id_supervisor_fk') ?></th>
@@ -68,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div class="panel panel-success">
+<div class="panel panel-success" id="panel-previsualizacion" style="display: none">
     <div class="panel-heading">
         <h3>
             Programación del día <span id="dia-previsualizacion"></span>.
@@ -90,7 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </tbody>
     </table>
     <div class="panel-footer text-right">
-        <button id="btn-reasignar" class="btn btn-primary">
+        <button id="btn-reasignar" class="btn btn-primary" disabled="disabled">
             <i class="fa fa-exchange"></i> Reasignar
         </button>
     </div>
@@ -204,7 +205,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Rasignar puesto</h4>
+                <h4 class="modal-title">Reasignar puesto</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -256,8 +257,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <h3>Programación</h3>
                             </div>
                             <div class="table-responsive">
-                                <table id="tabla-programacion-supervisores-reasignar" class="table table-bordered table-hover table-condensed tabla-programacion">
-                                    
+                                <table id="tabla-programacion-supervisores-reasignar" class="table table-bordered table-hover tabla-programacion">
+                                    <tr>
+                                        <td class="warning text-center">
+                                            Seleccione un supervisor y una programación
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -268,11 +273,36 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button id="btn-reasignar" type="button" class="btn btn-primary" id="">Reasignar</button>
+                <button id="btn-reasignar-guardar" type="button" class="btn btn-primary" data-dismiss="modal">Reasignar</button>
             </div>
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="modal-novedad">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Novedad</h4>
+            </div>
+            <div class="modal-body" id="previsualizar-novedad">
+                    
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group"id="botones-control">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">Cerrar</button>
+                    <button id="btn-editar-novedad"type="button" class="btn btn-info btn-xs">Editar <i class="fa fa-pencil"></i></button>
+                </div>
+                <div id="botones-acciones" class="btn-group" style="display: none">
+                    <button id="btn-cancelar-novedad"type="button" class="btn btn-default btn-xs">Cancelar </button>
+                    <button id="btn-guardar-novedad" type="button" class="btn btn-primary btn-xs">Guardar <i class="fa fa-floppy-o"></i></button>                    
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <?php $this->endBlock() ?>
 
@@ -284,6 +314,8 @@ $this->params['breadcrumbs'][] = $this->title;
     var puestosReasignar = [];
     var numeroDiaReasignar = null;
     var programacionReasignar = null;
+    var idDetalleNovedad = null;
+    var idSupervisor = $("#id-supervisor-programacion").val();
     
     /**
      * Plugin para click derechod
@@ -294,9 +326,10 @@ $this->params['breadcrumbs'][] = $this->title;
          */
         $("#btn-reasignar").click(function(){
             puestosReasignar = [];
-            $(".check-reasignar").each(function(){
+            $(".check-reasignar:checked").each(function(){
                 puestosReasignar.push($(this).val());
             });
+            console.log(puestosReasignar);
             iniciarReasignacion($("#hd-id-programacion").val());
         });
         $("#combo-reasignar-supervisor").change(function(){
@@ -390,16 +423,71 @@ $this->params['breadcrumbs'][] = $this->title;
     })(jQuery);
 
     $(function () {
-        $("#btn-reasignar").click(function(){
+        $("#btn-editar-novedad").click(function(){
+            // id="previsualizar-novedad"
+            var novedad = $("#previsualizar-novedad");
+            var texto = novedad.text();
+            var textarea = $("<textarea/>", {id: 'tmp-text-area', class: 'form-control'}).text(texto);
+            $("#botones-control").slideUp(function(){                
+                $("#botones-acciones").slideDown();
+                novedad.html(textarea);
+                textarea.focus().select();
+            });
+        });        
+        
+        $("#btn-cancelar-novedad").click(function(){            
+            var novedad = $("#previsualizar-novedad");
+            var texto = $("#tmp-text-area").val();
+            $("#botones-acciones").slideUp(function(){                
+                $("#botones-control").slideDown();
+                novedad.html(texto);
+            });            
+        });
+        
+        $("#btn-guardar-novedad").click(function(){
+            var parametros = {
+                'idDetalle' : idDetalleNovedad,
+                'novedad' : $("#tmp-text-area").val(),
+            };            
+             doAjax("<?= Url::toRoute(['ajax/actualizar-novedad-programacion']) ?>", parametros)
+                    .done(function(data){
+                        if(data.error === false){
+                            $("#modal-novedad").modal("hide");
+                            $("tr[data-id='" + idDetalleNovedad + "']").attr("data-novedad", $("#tmp-text-area").val());
+                        } else {
+                            console.log("Error al actualizar la novedad");
+                        }                        
+                    });
+        });
+    
+        $("#btn-reasignar-guardar").click(function(){
+            var novedad = $("#txt-novedad-reasignacion");
+            if($.trim(novedad.val()) === ""){
+                alert("Por favor ingrese una novedad.");
+                novedad.focus();
+                return false;
+            }
+            if(numeroDiaReasignar === null){
+                alert("Por favor seleccione una programación y un día para reasignar");
+                $("#combo-reasignar-supervisor").select2("open");
+                return false;
+            }
             var parametros = {
                 ids : puestosReasignar,
-                novedad: $("#txt-novedad-reasignacion").val(),
+                novedad: novedad.val(),
                 idProgramacion: programacionReasignar,
                 dia: numeroDiaReasignar,
             };
-            doAjax("<?= Url::toRoute(['ajax/consultar-programacion-supervisores-reasignar']) ?>", parametros)
+            doAjax("<?= Url::toRoute(['ajax/guardar-reasignacion-puesto']) ?>", parametros)
                     .done(function(data){
-                        
+                        if(data.error == false){
+                            console.log("Guardado exitoso!");
+                            preVisualizarDia(celdaSeleccionada.attr("data-dia"));
+                        } else {
+                            console.log("Ocurrió un error");
+                        }
+                        programacionReasignar = null;
+                        numeroDiaReasignar = null;
                     }); 
         });
     
@@ -419,6 +507,7 @@ $this->params['breadcrumbs'][] = $this->title;
         });
 
         $(".celda-a-agregar").click(function () {
+            ocultarPrevisualizacion();
             celdaSeleccionada = $(this);
             verPuestos();
             abrirModal($(this));
@@ -441,8 +530,19 @@ $this->params['breadcrumbs'][] = $this->title;
         });
     });
     
-    var consultarPuestosProgramacion = function(id){        
-        doAjax('<?= Url::toRoute(['ajax/consultar-puestos-programacion']) ?>', {'id': id})
+    var ocultarPrevisualizacion = function(){
+        var panel = $("#panel-previsualizacion");
+        panel.fadeOut();
+    };
+    
+    var mostrarNovedad = function(novedad, idDetalle){
+        $("#previsualizar-novedad").text(novedad);
+        idDetalleNovedad = idDetalle;
+        $("#modal-novedad").modal("show");
+    };
+    
+    var consultarPuestosProgramacion = function(id){
+        doAjax('<?= Url::toRoute(['ajax/consultar-puestos-programacion']) ?>', {'id': id, 'dia' : celdaSeleccionada.attr("data-dia"), 'id-supervisor' : idSupervisor})
                 .done(function(data){
                     var tabla = $("#tabla-programacion-supervisores-reasignar");
                     tabla.html(data.html);
@@ -455,30 +555,42 @@ $this->params['breadcrumbs'][] = $this->title;
     };
 
     var preVisualizarDia = function(dia){
+        var panel = $("#panel-previsualizacion");
+        panel.slideDown();
+        $("#dia-previsualizacion").text(celdaSeleccionada.attr("data-dia"));
         var parametros = {
             'dia': dia,
             'id-programacion': $("#hd-id-programacion").val()
         };
-
+        $("#btn-reasignar").attr("disabled", "disabled");
         var tabla = $("#tabla-mostrar-programacion-dia tbody");
         tabla.html("");
         doAjax('<?= Url::toRoute(['ajax/previsualizar-dia']) ?>', parametros)
             .done(function(data){
                 if (data.puestos && data.puestos.length > 0) {
                     $.each(data.puestos, function (k, v) {
-                        var tr = $("<tr/>", {'data-id': v.id});
+                        var tr = $("<tr/>", {'data-id': v.id, 'data-novedad' : v.novedad});
                         tr.append($("<td/>").text(v.puesto));
                         tr.append($("<td/>").text(v.cliente));
                         tr.append($("<td/>").text(v.zona));
                         tr.append($("<td/>").text(v.cuadrante));
                         tr.append($("<td/>", {class: 'action-column-sm text-center'}).html(v.estadoEtiqueta));
                         if(v.cambiar){
-                            // var boton = $("<a/>", {title: 'Reasignar', href:'#'}).html(icono);
-//                            boton.click(function(){
-//                                iniciarReasignacion(v.id);
-//                            });
-                            var check = $("<input/>", {type: 'checkbox', name: 'puestos-no-visitados[]', value: v.id});
+                            var check = $("<input/>", {class: 'check-reasignar', type: 'checkbox', name: 'puestos-no-visitados[]', value: v.id});
+                            check.click(function(){
+                                if($(".check-reasignar:checked").length > 0){
+                                    $("#btn-reasignar").removeAttr("disabled");
+                                } else {
+                                    $("#btn-reasignar").attr("disabled", "disabled");
+                                }
+                            });
                             tr.append($("<td/>", {class:'action-column-sm'}).html(check));
+                        } else if(v.reasignado){
+                            var boton = $("<a/>").html($("<i/>", {class: 'fa fa-eye'}));
+                            boton.click(function(){
+                                mostrarNovedad(tr.attr("data-novedad"), v.id);
+                            });
+                            tr.append($("<td/>", {class:'action-column-sm'}).html(boton));
                         } else {
                             tr.append($("<td/>", {class: 'action-column-sm'}).text(""));
                         }

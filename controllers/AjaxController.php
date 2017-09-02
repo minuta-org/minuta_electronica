@@ -16,8 +16,20 @@ class AjaxController extends Controller
         $programacion = $_POST['programacion'];
         $dia = $_POST['dia'];
         $query = \app\models\TblPuestos::find();
-
-
+        
+        # Consultar programaciones para el mismo día.
+        $programacionSupervisor = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $programacion]);
+        $fecha = date_create($programacionSupervisor->fecha_inicio_programacion_supervisor)->format('Y-m');
+        $programacionDetalleDia = \app\models\TblDetalleProgSupervisor::find()
+                   ->joinWith([
+                       'idProgramacionSupervisorFk' => function($query) use ($fecha){
+                            $query->andWhere("fecha_inicio_programacion_supervisor LIKE '%{$fecha}%'");
+                       },                   
+                   ])
+                   ->andWhere("dia_dps = '{$dia}'")
+                   ->all();
+        $idsPuestosProgramadosOtros = array_map(function($detalle){ return $detalle->id_puesto; }, $programacionDetalleDia);
+        
         if ($cliente != null) $query->where(['id_cliente_fk' => $cliente]);
 
         if ($zona == "" && $cuadrante != "") {
@@ -33,7 +45,9 @@ class AjaxController extends Controller
             ->where("id_programacion_supervisor_fk = {$programacion}")
             ->andWhere("dia_dps = {$dia}")
             ->all();
-        $idPuestosProgramados = ArrayHelper::map($puestosProgramados, 'id_dps', 'id_puesto');
+        
+        $idPuestosProgramados = array_merge(ArrayHelper::map($puestosProgramados, 'id_dps', 'id_puesto'), $idsPuestosProgramadosOtros);
+        
         $query->andWhere(['not in', 'id_puesto', $idPuestosProgramados]);
         $puestos = $query->all();
         $data = [];
@@ -65,12 +79,15 @@ class AjaxController extends Controller
             $puesto = $detalle->idPuesto;
             $puestos[] = [
                 'id' => $detalle->id_dps,
+                'novedad' => $detalle->novedad,
+                'puesto' => $puesto->nombre_puesto,
                 'puesto' => $puesto->nombre_puesto,
                 'cliente' => $puesto->idClienteFk->nombreCorto,
                 'zona' => $puesto->idZonaFk->nombre_zona,
                 'cuadrante' => $puesto->idZonaFk->idCuadranteFk->nombre_cuadrante,
                 'cambiar' => $detalle->estado == \app\models\TblDetalleProgSupervisor::ESTADO_NO_VISITADO,
                 'estadoEtiqueta' => $detalle->etiquetaEstado,
+                'reasignado' => $detalle->estado == \app\models\TblDetalleProgSupervisor::ESTADO_REASIGNADO,
             ];
         }
         $this->json(['puestos' => $puestos]);
@@ -181,6 +198,9 @@ class AjaxController extends Controller
     public function actionConsultarPuestosProgramacion()
     {
         $idProgramacion = $_POST['id'];
+        $dia = intval($_POST['dia']);
+        $idSupervisor = $_POST['id-supervisor'];
+        
         $programacion = \app\models\TblProgramacionSupervisores::find()
                                 ->where("id_programacion_supervisor = '{$idProgramacion}'")
                                 ->one();
@@ -196,15 +216,19 @@ class AjaxController extends Controller
         $maxDiasMes = intval($desde->format("t")); # Último día del mes.
         $maxDiasProg = intval($hasta->format("d"));
         
+        $restringirDiasAnt = $idSupervisor == $programacion->id_supervisor_fk;
         $diasProgramadosHtml = [];
+        $celdaBloqueada = \yii\helpers\Html::tag('td', '&nbsp;', ['class' => 'celda-bloqueada']);
         for ($i = 1; $i <= $maxDiasMes; $i ++){
-            if($i <= $maxDiasProg) {
+            if($i <= $dia && $restringirDiasAnt || $i < $dia && !$restringirDiasAnt){
+                $diasProgramadosHtml[] = $celdaBloqueada;
+            } else if($i <= $maxDiasProg) {
                 $marcar = in_array($i, $diasProgramados);
                 $clase = $marcar? 'programado' : '';
                 $icono = $marcar? \yii\helpers\Html::tag('i', '', ['class' => 'fa fa-check']) : '';
                 $diasProgramadosHtml[] = \yii\helpers\Html::tag('td', $icono, ['class' => $clase . " turno-seleccionado celda-reasignar", 'data-dia' => $i,  'tabindex' => 10000 + $i]);
             } else {
-                $diasProgramadosHtml[] = \yii\helpers\Html::tag('td', '&nbsp;', ['class' => 'celda-bloqueada']);
+                $diasProgramadosHtml[] = $celdaBloqueada;
             }
         }
         $dias .=  \yii\helpers\Html::tag('tr', implode('', $diasProgramadosHtml));
@@ -225,6 +249,42 @@ class AjaxController extends Controller
             $detalleProgramacion->save();
         }
         $this->json(['error' => false]);
+    }
+    
+    public function actionGuardarReasignacionPuesto()
+    {
+        $ids = $_POST['ids'];
+        $novedad = $_POST['novedad'];
+        $idProgramacion = $_POST['idProgramacion'];
+        $dia = $_POST['dia'];
+        $error = false;
+        foreach($ids AS $idDetalleProgramacion){
+            $detalleProgramacion = \app\models\TblDetalleProgSupervisor::findOne(['id_dps' => $idDetalleProgramacion]);
+            $detalleProgramacion->novedad = $novedad;
+            $detalleProgramacion->estado = \app\models\TblDetalleProgSupervisor::ESTADO_REASIGNADO;
+            $nuevoDetalle = new \app\models\TblDetalleProgSupervisor();
+            $nuevoDetalle->id_puesto = $detalleProgramacion->id_puesto;
+            $nuevoDetalle->id_programacion_supervisor_fk = $idProgramacion;
+            $nuevoDetalle->dia_dps = $dia;
+            if(!$detalleProgramacion->save() || !$nuevoDetalle->save()){
+                $error = true;
+                break;
+            }
+        }
+        $this->json([
+            'error' => $error,
+        ]);
+    }
+    
+    public function actionActualizarNovedadProgramacion()
+    {
+        $idDetalle = $_POST['idDetalle'];
+        $novedad = $_POST['novedad'];
+        $detalleProgramacion = \app\models\TblDetalleProgSupervisor::findOne(['id_dps' => $idDetalle]);
+        $detalleProgramacion->novedad = $novedad;
+        $this->json([
+            'error' => !$detalleProgramacion->save(),
+        ]);
     }
 
     private function json($array)

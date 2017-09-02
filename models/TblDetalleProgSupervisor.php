@@ -19,6 +19,7 @@ class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
 {
     const ESTADO_VISITADO = 1;
     const ESTADO_NO_VISITADO = 0;
+    const ESTADO_REASIGNADO = 2;
 
     /**
      * @inheritdoc
@@ -76,6 +77,8 @@ class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
             return \yii\helpers\Html::tag('span', 'Visitado', ['class' => 'label label-success']);
         } else if($this->estado == self::ESTADO_NO_VISITADO){
             return \yii\helpers\Html::tag('span', 'Sin visitar', ['class' => 'label label-danger']);
+        } else if($this->estado == self::ESTADO_REASIGNADO){
+            return \yii\helpers\Html::tag('span', 'Reasignado', ['class' => 'label label-default']);
         }
     }
 }
