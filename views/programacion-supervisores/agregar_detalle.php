@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <tbody>
                 <tr>
                     <?php for ($i = 1; $i <= $totalDiasMes; $i ++) : ?>
-                        <?php if ($i <= $diasAProgramar): ?>
+                        <?php if ($i >= $diaInicio && $i < $diaInicio + $diasAProgramar): ?>
                             <?php if (in_array($i, $diasProgramacion)): ?>
                                 <td class="celda-a-agregar programado" data-dia="<?= $i ?>" data-valor="<?= $i ?>">
                                     <i class="fa fa-check"></i>

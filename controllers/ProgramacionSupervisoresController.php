@@ -145,26 +145,29 @@ class ProgramacionSupervisoresController extends Controller
     public function actionProgramar($id)
     {
         $programacion = TblProgramacionSupervisores::findOne($id);
-        $periodicidad = intval($programacion->idTipoProgramacionFk->intervalo_tipo_programacion);        
+        
+        $periodicidad = intval($programacion->idTipoProgramacionFk->intervalo_tipo_programacion);
         $fechaInicio = strtotime($programacion->fecha_inicio_programacion_supervisor);
         $fechaFinal = strtotime($programacion->fecha_fin_programacion_supervisor);        
-        $diferencia = (($fechaFinal - $fechaInicio) / 60 / 60 / 24) + 1;                       
+        $diferencia = (($fechaFinal - $fechaInicio) / 60 / 60 / 24) + 1;
+        
         $mes = date_create($programacion->fecha_inicio_programacion_supervisor);
         $diasMes = $this->getDiasMes($mes);
         $totalDiasMes = intval($mes->format('t'));
         $clientes = \app\models\TblClientes::find()->all();
         $cuadrantes = \app\models\TblCuadrantes::find()->all();
-		$diasProgramados = $this->getDiasProgramados($programacion->id_programacion_supervisor);
-        
+        $diasProgramados = $this->getDiasProgramados($programacion->id_programacion_supervisor);
+        $diaInicio = intval($mes->format('d'));
         return $this->render('agregar_detalle', [
             'programacion' => $programacion,
             'periodicidad' => $periodicidad,
             'diasAProgramar' => $diferencia,
             'diasMes' => $diasMes,
+            'diaInicio' => $diaInicio,
             'totalDiasMes' => $totalDiasMes,
             'clientes' => ArrayHelper::map($clientes, 'id_cliente', 'nombreCorto'),
             'cuadrantes' => ArrayHelper::map($cuadrantes, 'id_cuadrante', 'nombre_cuadrante'),
-			'diasProgramacion' => $diasProgramados,
+            'diasProgramacion' => $diasProgramados,
         ]);
     }
 	

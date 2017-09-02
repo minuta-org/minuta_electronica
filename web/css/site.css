@@ -124,11 +124,13 @@ table.kv-grid-table th, table.kv-grid-table th a {
     color: white;
 }
 .panel-success .panel-heading{
-    background-color: rgba(92, 184, 92, 0.6);
+    /*background-color: rgba(92, 184, 92, 0.6);*/
+    background-color: #009999;
     border-color: rgba(92, 184, 92, 0.6);
 }
 .panel-success, .panel-success .panel-footer{
-    border-color: rgba(92, 184, 92, 0.6);
+    /*border-color: rgba(92, 184, 92, 0.6);*/
+    border-color: #009999;
 }
 .panel-success .panel-heading h3{
     margin-top: 5px;    
