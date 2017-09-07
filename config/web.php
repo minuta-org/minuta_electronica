@@ -7,6 +7,7 @@ $config = [
     'id' => 'basic',
     'name' => 'Minuta electrónica',
     'language' => 'es-CO',
+    'timeZone' => 'America/Bogota',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [

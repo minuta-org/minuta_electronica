@@ -27,6 +27,7 @@ class AjaxController extends Controller
                        },                   
                    ])
                    ->andWhere("dia_dps = '{$dia}'")
+		   ->andWhere("id_puesto IS NOT NULL")
                    ->all();
         $idsPuestosProgramadosOtros = array_map(function($detalle){ return $detalle->id_puesto; }, $programacionDetalleDia);
         
@@ -154,11 +155,21 @@ class AjaxController extends Controller
     public function actionConsultarSupervisoresReasignacion()
     {
         $idProgramacion = $_POST['id-programacion'];
+	$dia = $_POST['dia'];
+	# Traemos la programación.
         $programacion = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $idProgramacion]); 
         $fecha = date_create($programacion->fecha_inicio_programacion_supervisor);
         $mesAnio = $fecha->format("Y-m");
+	$supervisoresDescanso = \app\models\TblDetalleProgSupervisor::find()
+					->where(['<>', 'id_turno_fk', ''])
+					->andWhere("dia_dps = {$dia}")
+					->all();
+	$idsSupervisoresDescanso = array_map(function($obj){ return $obj->idProgramacionSupervisorFk->id_supervisor_fk; }, $supervisoresDescanso);
+	
+	# Traemos las programaciones cuyo mes sea igual al mes de la programación seleccionada.
         $programacionesMes = \app\models\TblProgramacionSupervisores::find()
                                     ->where("fecha_inicio_programacion_supervisor LIKE '%{$mesAnio}%'")
+				    ->andWhere(['not in', 'id_supervisor_fk', $idsSupervisoresDescanso])
                                     ->groupBy('id_supervisor_fk')
                                     ->all();
         $supervisores = [];
@@ -171,16 +182,34 @@ class AjaxController extends Controller
         $this->json(['supervisores' => $supervisores]);
     }
     
+    private function validarSigDia($horaInicial, $horaFinal)
+    {
+	$fechaInicial = strtotime(date("Y-d-m") . " {$horaInicial}");
+	$fechaFinal = strtotime(date("Y-d-m") . " {$horaFinal}");	
+	return $fechaFinal < $fechaInicial;
+    }
+    
     public function actionConsultarProgramacionSupervisoresReasignar()
     {
         $idSupervisor = $_POST['id-supervisor'];
         $idProgramacion = $_POST['id-programacion'];
+        $dia = $_POST['dia'];
+	# Programación sobre la que se está trabajando
         $programacion = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $idProgramacion]); 
         $fecha = date_create($programacion->fecha_inicio_programacion_supervisor);
         $mesAnio = $fecha->format("Y-m");
+	
+	# Fecha sobre la cual se está haciendo la reasignación.
+	$fechaActual = date_create("{$mesAnio}-{$dia} {$programacion->idHorarioFk->finaliza_horario}");
+	
+	if($this->validarSigDia($programacion->idHorarioFk->inicio_horario, $programacion->idHorarioFk->finaliza_horario)) {
+	    $fecha = date_add($fecha, date_interval_create_from_date_string("1 day"));
+	}
+	$fechaAComparar = $fecha->format("Y-m-d");
+	
         $programacionesMes = \app\models\TblProgramacionSupervisores::find()
                                     ->where("fecha_inicio_programacion_supervisor LIKE '%{$mesAnio}%'")
-                                    ->andWhere("id_supervisor_fk = '{$idSupervisor}'")
+                                    ->andWhere("id_supervisor_fk = '{$idSupervisor}'")				    
                                     ->all();
         $programaciones = [];
         
@@ -189,21 +218,39 @@ class AjaxController extends Controller
                 'id' => $programacionMes->id_programacion_supervisor,
                 'fecha' => $programacionMes->fecha_inicio_programacion_supervisor . " / " . $programacionMes->fecha_fin_programacion_supervisor,
                 'tipo' => $programacionMes->idTipoProgramacionFk->nombre_tipo_programacion,
-                'horario' => $programacionMes->idHorarioFk->nombre_horario,
+                'horario' => $programacionMes->idHorarioFk->nombreHorario,
             ];
         }
-        $this->json(['programaciones' => $programaciones]);
+        $this->json(['programaciones' => $programaciones, 'fecha_arranque' => $fechaAComparar]);
     }
     
     public function actionConsultarPuestosProgramacion()
     {
         $idProgramacion = $_POST['id'];
-        $dia = intval($_POST['dia']);
-        $idSupervisor = $_POST['id-supervisor'];
+        $idSupervisor = $_POST['id-supervisor'];	
+        $fechaArranque = date_create($_POST['fecha-arranque']);
+        $dia = $_POST['dia']; #intval($fechaArranque->format("d"));
+	$idProgramacionActual = $_POST['id-programacion-actual'];
         
         $programacion = \app\models\TblProgramacionSupervisores::find()
                                 ->where("id_programacion_supervisor = '{$idProgramacion}'")
                                 ->one();
+	$programacionActual = \app\models\TblProgramacionSupervisores::find()
+                            ->where("id_programacion_supervisor = '{$idProgramacionActual}'")
+                            ->one();
+	$horaInicial = strtotime($programacionActual->idHorarioFk->finaliza_horario);
+	$horaFinal = strtotime($programacion->idHorarioFk->inicio_horario);
+        $restringirDiasAnt = $idSupervisor == $programacion->id_supervisor_fk;
+	
+	if($this->validarSigDia($programacionActual->idHorarioFk->inicio_horario, $programacionActual->idHorarioFk->finaliza_horario)){
+	    $horaInicial = strtotime(date("Y-m-d", strtotime("+1 day")) . " " . $programacion->idHorarioFk->inicio_horario);
+	}
+	if($this->validarSigDia($programacion->idHorarioFk->inicio_horario, $programacion->idHorarioFk->finaliza_horario)){
+	    $horaFinal = strtotime(date("Y-m-d", strtotime("+1 day")) . " " . $programacion->idHorarioFk->inicio_horario);
+	}
+	
+	$horarioMenor = $horaFinal <= $horaInicial;
+	
         $ctrlProgramacionSupervisores = new ProgramacionSupervisoresController("prog-supervisores", "none");
         $desde = date_create($programacion->fecha_inicio_programacion_supervisor);
         $hasta = date_create($programacion->fecha_fin_programacion_supervisor);
@@ -216,11 +263,10 @@ class AjaxController extends Controller
         $maxDiasMes = intval($desde->format("t")); # Último día del mes.
         $maxDiasProg = intval($hasta->format("d"));
         
-        $restringirDiasAnt = $idSupervisor == $programacion->id_supervisor_fk;
         $diasProgramadosHtml = [];
         $celdaBloqueada = \yii\helpers\Html::tag('td', '&nbsp;', ['class' => 'celda-bloqueada']);
         for ($i = 1; $i <= $maxDiasMes; $i ++){
-            if($i <= $dia && $restringirDiasAnt || $i < $dia && !$restringirDiasAnt){
+            if(($horarioMenor && $i == $dia) || $i <= $dia && $restringirDiasAnt || $i < $dia && !$restringirDiasAnt){
                 $diasProgramadosHtml[] = $celdaBloqueada;
             } else if($i <= $maxDiasProg) {
                 $marcar = in_array($i, $diasProgramados);

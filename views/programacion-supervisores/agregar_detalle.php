@@ -52,12 +52,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 <tr>
                     <?php for ($i = 1; $i <= $totalDiasMes; $i ++) : ?>
                         <?php if ($i >= $diaInicio && $i < $diaInicio + $diasAProgramar): ?>
-                            <?php if (in_array($i, $diasProgramacion)): ?>
+                            <?php if (isset($diasProgramacion[$i])): ?>
+				<?php if($diasProgramacion[$i]['turno'] == ""): ?>
                                 <td class="celda-a-agregar programado" data-dia="<?= $i ?>" data-valor="<?= $i ?>">
                                     <i class="fa fa-check"></i>
                                 </td>
+				<?php else: ?>
+                                <td class="celda-bloqueada" data-dia="<?= $i ?>" data-valor="<?= $i ?>">
+                                    &nbsp;
+                                </td>
+				<?php endif ?>
                             <?php else: ?>
-                                <td class="celda-a-agregar" data-dia="<?= $i ?>" data-valor="<?= $i ?>"></td>
+                                <td class="celda-a-agregar" data-dia="<?= $i ?>" data-valor="<?= $i ?>">&nbsp;</td>
                             <?php endif ?>
                         <?php else: ?>
                             <td class="celda-bloqueada">&nbsp;</td>
@@ -352,7 +358,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 fila.append($("<td/>").text(v.tipo));
                                 fila.append($("<td/>", {class: 'text-center'}).html(radio));
                                 radio.click(function(){
-                                    consultarPuestosProgramacion(v.id);
+                                    consultarPuestosProgramacion(v.id, data.fecha_arranque);
                                     programacionReasignar = v.id;
                                 });
                                 tabla.append(fila);
@@ -541,8 +547,15 @@ $this->params['breadcrumbs'][] = $this->title;
         $("#modal-novedad").modal("show");
     };
     
-    var consultarPuestosProgramacion = function(id){
-        doAjax('<?= Url::toRoute(['ajax/consultar-puestos-programacion']) ?>', {'id': id, 'dia' : celdaSeleccionada.attr("data-dia"), 'id-supervisor' : idSupervisor})
+    var consultarPuestosProgramacion = function(id, fechaArranque){
+	var params = {
+	    'id': id, 
+	    'dia' : celdaSeleccionada.attr("data-dia"), 
+	    'id-supervisor' : idSupervisor, 
+	    'fecha-arranque' : fechaArranque, 
+	    'id-programacion-actual' : $("#id-programacion").val()
+	};
+        doAjax('<?= Url::toRoute(['ajax/consultar-puestos-programacion']) ?>', params)
                 .done(function(data){
                     var tabla = $("#tabla-programacion-supervisores-reasignar");
                     tabla.html(data.html);
@@ -611,7 +624,8 @@ $this->params['breadcrumbs'][] = $this->title;
      */
     var iniciarReasignacion = function(idProgramacion){
         var parametros = {
-            'id-programacion': idProgramacion
+            'id-programacion': idProgramacion,
+	    'dia' : celdaSeleccionada.attr("data-dia"),
         };
         doAjax("<?= Url::toRoute(['ajax/consultar-supervisores-reasignacion']) ?>", parametros)
             .done(function(data){
