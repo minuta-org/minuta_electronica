@@ -427,10 +427,16 @@ i.fa {
 .btn-xs i{
     font-size: 12px;
 }
+.btn-condensed {
+    min-width: 30px;
+    padding: 2px 2px;
+    margin: 0px;
+}
 .form-group.wide{
     margin-bottom: 10px;
     height: 25px;
 }
+
 .programado{
     background-color: #9dd49d;
 }
@@ -480,4 +486,11 @@ i.fa {
 }
 .turno-seleccionado:focus, .turno-seleccionado.activo{
     background-color: rgba(0, 153, 153, 0.50);
+}
+
+.puesto-visitado td {
+    cursor: not-allowed;
+    background-color: rgba(0, 153, 153, 0.38) !important;
+    color: black;
+    opacity: 0.5;
 }

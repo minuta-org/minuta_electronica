@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 $this->title = 'Actualizar Puestos';
 $this->params['breadcrumbs'][] = ['label' => 'Puestos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id_puesto, 'url' => ['view', 'id' => $model->id_puesto]];
+$this->params['breadcrumbs'][] = ['label' => $model->nombre_puesto, 'url' => ['view', 'id' => $model->id_puesto]];
 $this->params['breadcrumbs'][] = 'Actualizar';
 ?>
 <div class="tbl-puestos-update">

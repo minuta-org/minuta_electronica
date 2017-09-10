@@ -26,6 +26,10 @@ use yii\widgets\ActiveForm;
             ?>
 
             <div class="row">
+                <?= $form->field($model, 'codigo_puesto')->textInput(['autofocus' => true]) ?>
+            </div>
+            
+            <div class="row">
                 <?= $form->field($model, 'id_cliente_fk')->dropDownList($clientes, ['class' => 'select-2', 'prompt' => 'Seleccione un cliente']) ?>
                 <?= $form->field($model, 'nombre_puesto')->textInput(['maxlength' => true]) ?>
             </div>

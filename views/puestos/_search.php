@@ -41,6 +41,9 @@ use yii\widgets\ActiveForm;
                 </div>
                 <?= $form->field($model, 'id_barrio_fk')->dropDownList([], ['class' => 'select-2', 'prompt' => 'Busque por barrio']) ?>
             </div>
+            <div class="row">
+                <?= $form->field($model, 'codigo_puesto')->textInput() ?>
+            </div>
             <div class="panel-footer text-right" style="display:none">
                 <?= Html::submitButton('Buscar ' . Html::tag('i', '', ['class' => 'fa fa-search']), ['class' => 'btn btn-primary']) ?>
                 <?= Html::resetButton('Limpiar ' . Html::tag('i', '', ['class' => 'fa fa-eraser']), ['class' => 'btn btn-info']) ?>

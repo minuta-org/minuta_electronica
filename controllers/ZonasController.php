@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\TblZonas;
 use app\models\search\TblZonasSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 

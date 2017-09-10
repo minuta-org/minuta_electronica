@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\TblHorarios;
 use app\models\search\TblHorariosSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 

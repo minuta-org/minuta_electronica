@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use yii\web\Controller;
 use yii\helpers\ArrayHelper;
 
 class AjaxController extends Controller
@@ -331,13 +330,6 @@ class AjaxController extends Controller
         $this->json([
             'error' => !$detalleProgramacion->save(),
         ]);
-    }
-
-    private function json($array)
-    {
-        header("Content-type:application/json");
-        echo json_encode($array);
-        exit();
     }
 
 }

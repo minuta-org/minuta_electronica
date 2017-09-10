@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "tbl_puestos".
  *
  * @property integer $id_puesto
+ * @property integer $codigo_puesto
  * @property string $nombre_puesto
  * @property string $direccion_puesto
  * @property string $telefono_puesto
@@ -51,7 +52,8 @@ class TblPuestos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre_puesto', 'direccion_puesto', 'telefono_puesto', 'id_barrio_fk', 'contacto_puesto', 'celular_contacto_puesto', 'id_zona_fk', 'id_cliente_fk'], 'required'],
+            [['nombre_puesto', 'codigo_puesto', 'direccion_puesto', 'telefono_puesto', 'id_barrio_fk', 'contacto_puesto', 'celular_contacto_puesto', 'id_zona_fk', 'id_cliente_fk'], 'required'],
+            [['codigo_puesto'], 'unique', 'on' => 'create'],
             [['id_barrio_fk', 'id_zona_fk', 'id_cliente_fk'], 'integer'],
             [['nombre_puesto'], 'string', 'max' => 40],
             [['direccion_puesto'], 'string', 'max' => 80],

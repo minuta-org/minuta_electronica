@@ -27,48 +27,15 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?php
-    // NavBar::begin([
-    //     'brandLabel' => Yii::$app->name,
-    //     'brandUrl' => Yii::$app->homeUrl,
-    //     'options' => [
-    //         'class' => 'navbar-inverse navbar-fixed-top',
-    //     ],
-    // ]);
-    // echo Nav::widget([
-    //     'options' => ['class' => 'navbar-nav navbar-right'],
-    //     'items' => [
-    //         ['label' => 'Home', 'url' => ['/site/index']],
-    //         ['label' => 'Administrativo', 'items' => [
-    //             ['label' => 'Departamentos', 'url' => ['/departamentos/index']],
-    //             ['label' => 'Municipios', 'url' => ['/municipios/index']],
-    //             ['label' => 'Barrios', 'url' => ['/barrios/index']],
-    //             ['label' => 'Matricula', 'url' => ['/matricula/index']],
-    //             ['label' => 'Tipos de documento', 'url' => ['/tipos-documentos/index']],
-    //             ['label' => 'Supervisores', 'url' => ['/supervisores/index']],
-    //             ['label' => 'Recursos', 'url' => ['/recursos/index']],
-    //         ]],
-    //         Yii::$app->user->isGuest ? (
-    //             ['label' => 'Login', 'url' => ['/site/login']]
-    //         ) : (
-    //             '<li>'
-    //             . Html::beginForm(['/site/logout'], 'post')
-    //             . Html::submitButton(
-    //                 'Logout (' . Yii::$app->user->identity->username . ')',
-    //                 ['class' => 'btn btn-link logout']
-    //             )
-    //             . Html::endForm()
-    //             . '</li>'
-    //         )
-    //     ],
-    // ]);
-    // NavBar::end();
-    ?>
     <div class="top-status-bar">
         <nav>
-            <a href="#" class="brand">Mi aplicación</a>
+            <a href="#" class="brand"><?= Yii::$app->name ?></a>
             <ul class="menu-options">
-                <li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
+                <?php if(Yii::$app->user->getIsGuest()): ?>
+                <li><a href="<?= Url::to(['site/login']) ?>">Ingresar <i class="fa fa-sign-in"></i></a></li>
+                <?php else:  ?>                
+                <li><a href="<?= Url::to(['site/logout']) ?>">Salir <i class="fa fa-sign-out"></i></a></li>
+                <?php endif ?>
             </ul>
             <ul class="status-icons">
                 <li><a href="#"><i class="fa fa-bell"></i><span class="count">16</span></a></li>
@@ -79,8 +46,8 @@ AppAsset::register($this);
     </div>
         <?= WSideNavBar::widget([
             'photo' => '@web/pics/jako.png',
-            'title' => 'Alejandro',
-            'subtitle' => 'Administrador',
+            'title' => Yii::$app->user->getIsGuest()? '' : Yii::$app->user->getIdentity()->nombreCompleto ,
+            'subtitle' => Yii::$app->user->getIsGuest()? '' : Yii::$app->user->getIdentity()->rolUsuario->nombre_rol,
             'options' => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'Administrativo', 'items' => [
@@ -95,11 +62,14 @@ AppAsset::register($this);
                 ['label' => 'Operaciones', 'items' => [                    
                     ['label' => 'Puestos', 'url' => ['/puestos/index']],
                     ['label' => 'Programacion supervisores', 'url' => ['/programacion-supervisores/index']],
+                ]],
+                ['label' => 'Programacion', 'items' => [
+                    ['label' => 'Consultar', 'url' => ['/supervisores/consultar-programacion']],
                 ]]
             ],
         ]); ?>
 
-    <?= $this->blocks['bloque-auxiliar']; ?>    
+    <?= isset($this->blocks['bloque-auxiliar'])? $this->blocks['bloque-auxiliar'] : '' ?>
     
     <div class="main-page-container">
         <div class="container">
@@ -137,7 +107,7 @@ AppAsset::register($this);
             clicked.toggleClass("opened");
             clicked.find(".submenu").slideToggle('fast');
             return false;
-        });
+        });       
     });
     /**
      * End escripts para el menú
@@ -157,6 +127,8 @@ AppAsset::register($this);
             width : '100%',
         });
     });
+    
+    $("[data-toggle='tooltip']").tooltip();
 
     $(function(){
         $(".onchange-dependent").change(function(){            
@@ -182,6 +154,9 @@ AppAsset::register($this);
         });
     });
 </script>
+
+<?= isset($this->blocks['js-scripts'])? $this->blocks['js-scripts'] : '' ?>
+
 <?php $this->endBody() ?>
 </body>
 </html>

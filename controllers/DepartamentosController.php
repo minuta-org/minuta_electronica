@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\TblDepartamentos;
 use app\models\search\TblDepartamentosSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 

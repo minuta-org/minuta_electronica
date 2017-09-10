@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\TblProgramacionSupervisores;
 use app\models\search\TblProgramacionSupervisoresSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -198,5 +197,5 @@ class ProgramacionSupervisoresController extends Controller {
 	$encabezadoNumeros = Html::tag('tr', implode('', $numerosDias));
 	return $encabezadoLetras . $encabezadoNumeros;
     }
-
+    
 }

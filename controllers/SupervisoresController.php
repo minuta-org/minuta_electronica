@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\TblSupervisores;
 use app\models\search\TblSupervisoresSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -28,6 +27,32 @@ class SupervisoresController extends Controller
                 ],
             ],
         ];
+    }
+    
+    public function actionConsultarProgramacion()
+    {
+        $diaActual = intval(date("d"));
+        $idUsuario = Yii::$app->user->getIdentity()->id_usuario;
+        $supervisor = TblSupervisores::findOne(['id_usuario_fk' => $idUsuario]);
+        $programacionDia = \app\models\TblDetalleProgSupervisor::find()
+                                ->joinWith([
+                                    'idProgramacionSupervisorFk' => function($query) use($supervisor){
+                                        $mesActual = date("Y-m");
+                                        $query->andWhere("fecha_inicio_programacion_supervisor LIKE '%{$mesActual}%'")
+                                              ->andWhere("id_supervisor_fk = {$supervisor->id_supervisor}");
+                                    },
+                                ])
+                                ->joinWith([
+                                    'idPuesto' => function($query){
+                                        $query->orderBy(['tbl_puestos.id_cliente_fk' => SORT_ASC]);
+                                    }
+                                ])
+                                ->andWhere("dia_dps = {$diaActual}")
+                                ->orderBy(new \yii\db\Expression('tbl_detalle_prog_supervisor.estado = 1 ASC'))
+                                ->all();
+        return $this->render('consultar-programacion', [
+            'programacionDia' => $programacionDia,
+        ]);
     }
 
     /**
@@ -169,5 +194,35 @@ class SupervisoresController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    public function actionGuardarRecorrido()
+    {
+        $idPuesto = $_POST['id_puesto'];
+        $idProgramacion = $_POST['id_programacion'];
+        $observacion = $_POST['observacion'];
+        $latitud = $_POST['latitud'];
+        $longitud = $_POST['longitud'];        
+        $idDetalle = $_POST['detalle'];
+        $recorrido = new \app\models\TblRecorridosSupervisores();
+        $recorrido->id_puesto_fk = $idPuesto;
+        $recorrido->id_programacion_fk = $idProgramacion;
+        $recorrido->observacion_recorrido_supervisor = $observacion;
+        $recorrido->latitud_recorrido_supervisor = $latitud;
+        $recorrido->longitud_recorrido_supervisor = $longitud;
+        $recorrido->hora_recorrido_supervisor = date("H:i:s");
+        $recorrido->fecha_recorrido_supervisor = date("Y-m-d");
+        $error = false;
+        if($recorrido->save()){
+            $detalleProgramacion = \app\models\TblDetalleProgSupervisor::findOne(['id_dps' => $idDetalle]);
+            $detalleProgramacion->estado = \app\models\TblDetalleProgSupervisor::ESTADO_VISITADO;
+            $detalleProgramacion->save();
+        } else {
+            $error = true;
+        }
+        
+        $this->json([
+            'error' => $error,
+        ]);
     }
 }

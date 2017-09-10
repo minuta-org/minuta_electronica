@@ -26,6 +26,7 @@ class AppAsset extends AssetBundle
     
     public $js = [
         'plugins/select-2/js/select2.min.js',
+        'plugins/tinymce/tinymce.min.js',
         'js/commons.js',
     ];
     
