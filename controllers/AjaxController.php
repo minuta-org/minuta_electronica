@@ -331,5 +331,31 @@ class AjaxController extends Controller
             'error' => !$detalleProgramacion->save(),
         ]);
     }
+    
+    public function actionConsultarProgramacionDiaSupervisor()
+    {
+	$idProgramacion = $_POST['idProgramacion'];
+	$diaProgramado = $_POST['diaProgramado'];
+	
+	$detallesProgramacion = \app\models\TblDetalleProgSupervisor::find()
+					->where(['id_programacion_supervisor_fk' => $idProgramacion])
+					->andWhere(['dia_dps' => $diaProgramado])
+					->all();
+	$programacionDia = [];
+	foreach($detallesProgramacion AS $detalle){
+	    $programacionDia[] = [
+		'codigo_puesto' => $detalle->idPuesto->codigo_puesto,
+		'nombre_puesto' => $detalle->idPuesto->nombre_puesto,
+		'cliente' => $detalle->idPuesto->idClienteFk->nombreCorto,
+		'cuadrante' => $detalle->idPuesto->idZonaFk->idCuadranteFk->nombre_cuadrante,
+		'zona' => $detalle->idPuesto->idZonaFk->nombre_zona,
+	    ];
+	}
+
+	$this->json([
+	    'error' => false,
+	    'programacion' => $programacionDia,
+	]);
+    }
 
 }

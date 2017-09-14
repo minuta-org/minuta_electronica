@@ -162,7 +162,7 @@ class ProgramacionSupervisoresController extends Controller {
 	]);
     }
 
-    private function getDiasProgramados($idProgramacion) {
+    public function getDiasProgramados($idProgramacion) {
 	$sql = "SELECT dia_dps, GROUP_CONCAT(id_turno_fk) AS turnos, GROUP_CONCAT(id_puesto) AS puestos, dia_dps"
 		. " FROM tbl_detalle_prog_supervisor t "
 		. "WHERE id_programacion_supervisor_fk = {$idProgramacion} "

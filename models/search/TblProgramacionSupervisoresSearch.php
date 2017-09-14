@@ -67,6 +67,7 @@ class TblProgramacionSupervisoresSearch extends TblProgramacionSupervisores
             'id_tipo_programacion_fk' => $this->id_tipo_programacion_fk,
         ]);
 
+	$query->orderBy(['id_programacion_supervisor' => SORT_DESC]);
         return $dataProvider;
     }
 }

@@ -50,10 +50,36 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php endforeach ?>
                 </tbody>
             </table>
-            
+            <div class="row">
+		<div class="col-sm-12">
+		    <nav aria-label="Page navigation">
+			<ul class="pagination">
+			    <?php $primera = $pagina == 1; ?>
+			    <?php if ($primera): ?>
+    			    <li class="disabled"><span><i class="fa fa-fast-backward"></i></span></li>
+    			    <li class="disabled"><span><i class="fa fa-backward"></i></span></li>
+			    <?php else: ?>
+    			    <li><a href="<?= yii\helpers\Url::to(['supervisores/consultar-programacion', 'p' => 1]) ?>" aria-label="Previous"><i class="fa fa-fast-backward"></i></a></li>
+    			    <li><a href="<?= yii\helpers\Url::to(['supervisores/consultar-programacion', 'p' => $pagina - 1]) ?>" aria-label="Previous"><i class="fa fa-backward"></i></a></li>
+			    <?php endif ?>				    
+			    <?php for ($i = 1; $i <= $totalPaginas; $i ++): ?>
+    			    <li <?= $pagina == $i ? 'class="active"' : '' ?>><a href="<?= yii\helpers\Url::to(['supervisores/consultar-programacion', 'p' => $i]) ?>"><?= $i ?></a></li>
+			    <?php endfor ?>
+			    <?php $ultima = $pagina == $totalPaginas; ?>
+			    <?php if ($ultima): ?>
+    			    <li class="disabled"><span><i class="fa fa-forward"></i></span></li>
+    			    <li class="disabled"><span><i class="fa fa-fast-forward"></i></span></li>
+			    <?php else: ?>
+    			    <li class="<?= $ultima ? 'disabled' : '' ?>"><a href="<?= yii\helpers\Url::to(['supervisores/consultar-programacion', 'p' => $pagina + 1]) ?>" aria-label="Next"><i class="fa fa-forward"></i></a></li>
+    			    <li><a href="<?= yii\helpers\Url::to(['supervisores/consultar-programacion', 'p' => $totalPaginas]) ?>" aria-label="Next"><i class="fa fa-fast-forward"></i></a></li>
+			    <?php endif ?>				
+			</ul>
+		    </nav>
+		</div>
+	    </div>
         </div>
         <div role="tabpanel" class="tab-pane fade in" id="prog-mes">
-            
+            <?= $this->render('partials/_programacionMes.php', ['diaActual' => $diaActual, 'ultimoDia' => $ultimoDia, 'diasProgramados' => $diasProgramados, 'diasMes' => $diasMes, 'programacionMes' => $programacionMes]) ?>
         </div>
     </div>
 
@@ -150,6 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
         fila.addClass("puesto-visitado");
         celdaAccion.html(label);
         tablaProgDia.append(fila);
+	window.location.reload();
     }
 </script>
 <?php $this->endBlock() ?>
