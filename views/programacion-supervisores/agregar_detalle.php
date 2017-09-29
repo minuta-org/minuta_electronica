@@ -121,14 +121,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active fade in" id="consultar">
-                        <table id="tabla-ver-puestos" class="table table-bordered table-condensed table-hover">
+                        <table id="tabla-ver-puestos" class="table table-bordered table-condensed table-hover kv-grid-table">
                             <thead>
+				<tr>
+				    <th colspan="5" class="text-left">Registros: <span id="total-programados">0</span></th>
+				</tr>
                                 <tr>
                                     <th class="text-center">Puesto</th>
                                     <th class="text-center">Cliente</th>
                                     <th class="text-center">Zona</th>
                                     <th class="text-center">Cuadrante</th>
-                                    <th class="text-center">&nbsp;</th>
+                                    <th class="text-center"><input type="checkbox" id="puestos-prog-dia"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -137,6 +140,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </tr>
                             </tbody>
                         </table>
+			<div class="row">
+			    <div class="col-sm-12">
+				<ul class="pagination" id="paginador-tabla-prog-dia" data-pagina-actual="1" data-total-registros="0" data-total-paginas="0" data-max-registros="11" data-tipo-busqueda="programados" data-target="#total-programados">
+				</ul>
+			    </div>
+			</div>
                         <hr class="col-sm-11">
                         <div class="form-group text-right">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -175,14 +184,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         <div class="row">                        
                             <div class="col-sm-12">
-                                <table id="tabla-puestos" class="table table-bordered table-condensed table-hover">
+                                <table id="tabla-puestos" class="table table-bordered table-condensed table-hover kv-grid-table">
                                     <thead>
+					<tr>
+					    <th colspan="5" class="text-left">Registros: <span id="total-libres">0</span></th>
+					</tr>
                                         <tr>
                                             <th class="text-center">Puesto</th>
                                             <th class="text-center">Cliente</th>
                                             <th class="text-center">Zona</th>
                                             <th class="text-center">Cuadrante</th>
-                                            <th class="text-center">&nbsp;</th>
+                                            <th class="text-center">
+						<input type="checkbox" id="seleccionar-todos-puestos">
+					    </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -191,6 +205,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                         </tr>
                                     </tbody>
                                 </table>
+				<div class="row">
+				    <div class="col-sm-12">
+					<ul class="pagination" id="paginador-tabla" data-pagina-actual="1" data-total-registros="0" data-total-paginas="0" data-max-registros="12" data-tipo-busqueda="libres" data-target="#total-libres">
+					</ul>
+				    </div>
+				</div>
                             </div>
                         </div>
                         <hr>
@@ -322,11 +342,24 @@ $this->params['breadcrumbs'][] = $this->title;
     var programacionReasignar = null;
     var idDetalleNovedad = null;
     var idSupervisor = $("#id-supervisor-programacion").val();
+    var checkTodos = $("#seleccionar-todos-puestos");
+    var checkTodosProgDia = $("#puestos-prog-dia");    
+    
+    var paginadorConsulta = $("#paginador-tabla");
+    var paginadorProgramados = $("#paginador-tabla-prog-dia");
     
     /**
      * Plugin para click derechod
      */
     (function($){
+	checkTodos.click(function(){
+	    var inputs = $("#tabla-puestos .check-puestos");
+	    inputs.prop("checked", $(this).prop("checked"));
+	});
+	checkTodosProgDia.click(function(){
+	    var inputs = $("#tabla-ver-puestos .check-puestos");
+	    inputs.prop("checked", $(this).prop("checked"));
+	});
         /**
          * Eventos para reasignación
          */
@@ -647,13 +680,15 @@ $this->params['breadcrumbs'][] = $this->title;
     var verPuestos = function () {
         var parametros = {
             'dia': celdaSeleccionada.attr("data-dia"),
-            'id-programacion': $("#hd-id-programacion").val()
+            'id-programacion': $("#hd-id-programacion").val(),
+	    'paginaActual': paginadorProgramados.attr("data-pagina-actual"),
+	    'maximoRegistros': paginadorProgramados.attr("data-max-registros")
         };
         doAjax('<?= Url::toRoute(['ajax/consultar-puestos-programados-supervisor']) ?>', parametros)
                 .done(function (data) {
                     var tabla = $("#tabla-ver-puestos tbody");
                     tabla.html("");
-                    llenarTabla(data, tabla);
+                    llenarTabla(data, tabla, paginadorProgramados);
                 });
     };
 
@@ -673,9 +708,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         $.each(ids, function (k, v) {
                             $("#tabla-ver-puestos tr[data-id='" + v + "']").remove();
                         });
-                        if ($("#tabla-ver-puestos tbody tr").length == 0) {
+			var totalRegistros = parseInt(paginadorProgramados.attr("data-total-registros"));
+                        if (ids.length === totalRegistros) {
                             celdaSeleccionada.removeClass("programado").html("");
                         }
+			checkTodosProgDia.prop("checked", false);
+			paginadorProgramados.attr("data-pagina-actual", 1);
                     } else {
                         console.log("Error al eliminar los puestos");
                     }
@@ -691,6 +729,8 @@ $this->params['breadcrumbs'][] = $this->title;
         resetSelect2(zona);
         tr.append($("<td/>", {colspan: 5, class: 'text-center'}).text("Busca puestos"));
         tabla.html(tr);
+	paginadorConsulta.html("");
+	paginadorProgramados.html("");
         $("#modal-agregar-puesto").modal("show");
     };
 
@@ -714,6 +754,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 var dia = $("[data-dia='" + $("#dia-a-guardar").val() + "']");
                 var icono = $("<i/>", {class: 'fa fa-check'});
                 dia.addClass("programado").html(icono);
+		checkTodos.prop("checked", false);
+		checkTodosProgDia.prop("checked", false);
+		paginadorConsulta.attr("data-pagina-actual", 1);
+		paginadorProgramados.attr("data-pagina-actual", 1);
+		paginadorConsulta.attr("data-total-paginas", 0);
+		paginadorProgramados.attr("data-total-paginas", 0);
             }
         });
     };
@@ -731,16 +777,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'cuadrante': cuadrante.val(),
             'zona': zona.val(),
             'dia': celdaSeleccionada.attr("data-dia"),
-            'programacion': $("#hd-id-programacion").val()
+            'programacion': $("#hd-id-programacion").val(),
+	    'paginaActual': paginadorConsulta.attr("data-pagina-actual"),
+	    'maximoRegistros': paginadorConsulta.attr("data-max-registros")
         };
         var tabla = $("#tabla-puestos tbody");
         doAjax(url, params).done(function (data) {
             tabla.html("");
-            llenarTabla(data, tabla);
+            llenarTabla(data, tabla, paginadorConsulta);
         });
     };
 
-    var llenarTabla = function (data, tabla) {
+    var llenarTabla = function (data, tabla, paginador) {
         if (data.puestos && data.puestos.length > 0) {
             $.each(data.puestos, function (k, v) {
                 var tr = $("<tr/>", {'data-id': v.id});
@@ -752,11 +800,119 @@ $this->params['breadcrumbs'][] = $this->title;
                 tr.append($("<td/>", {class: 'text-center'}).append(check));
                 tabla.append(tr);
             });
+	    construirPaginacion(paginador, data.totalPaginas, data.totalRegistros);
         } else {
             var tr = $("<tr/>");
             tr.append($("<td/>", {colspan: 5, class: 'text-center warning'}).html("No hay resultados"));
             tabla.append(tr);
         }
+    };
+    /**
+    * 
+<li><span><i class="fa fa-fast-backward"></i></span></li>
+    <li><span><i class="fa fa-backward"></i></span></li>
+
+    <li><a href="#" aria-label="Next"><i class="fa fa-forward"></i></a></li>
+    <li><a href="#" aria-label="Next"><i class="fa fa-fast-forward"></i></a></li>    
+     * @returns {undefined}     */
+    var construirPaginacion = function(paginadorTabla, totalPaginas, totalRegistros){
+	paginadorTabla.html("");
+	var paginaActual = parseInt(paginadorTabla.attr("data-pagina-actual"));
+	
+	var iatras = $("<i/>", {class:'fa fa-backward'});
+	var iadelante = $("<i/>", {class:'fa fa-forward'});
+	var iff = $("<i/>", {class:'fa fa-fast-forward'});
+	var ifb = $("<i/>", {class:'fa fa-fast-backward'});
+	var tipoBusqueda = paginadorTabla.attr("data-tipo-busqueda");	
+	var liAtras = $("<li/>");
+	var liAdelante = $("<li/>");
+	var liFF = $("<li/>");
+	var liFB = $("<li/>");
+	
+	var aAdelante = $("<a/>", {href:"#"});
+	var aAtras = $("<a/>", {href:"#"});
+	var aFF = $("<a/>", {href:"#"});
+	var aFB = $("<a/>", {href:"#"});
+	
+	var busqueda = function(){
+	    if(tipoBusqueda === "programados"){
+		verPuestos();
+	    } else if(tipoBusqueda === "libres"){
+		buscarPuestos();
+	    }
+	};
+	
+	
+	var setearAtributos = function(){
+	    paginadorTabla.attr("data-pagina-actual", paginaActual);
+	    paginadorTabla.attr("data-total-registros", totalRegistros);
+	    paginadorTabla.attr("data-total-paginas", totalPaginas);
+	    var spanTotal = $(paginadorTabla.attr("data-target")).html(totalRegistros);
+	};		
+	
+	var adelante = function(){ 
+	    paginaActual ++;
+	    if(paginaActual > totalPaginas){ paginaActual = totalPaginas; }
+	    setearAtributos();
+	    busqueda();
+	};
+	
+	var atras = function(){ 
+	    paginaActual --; 
+	    if(paginaActual < 1){ paginaActual = 1; }
+	    setearAtributos();
+	    busqueda();
+	};
+	
+	var ff = function(){
+	    paginaActual = totalPaginas;
+	    setearAtributos();
+	    busqueda();
+	};
+	
+	var fb = function(){
+	    paginaActual = 1;
+	    setearAtributos();
+	    busqueda();
+	};
+	
+	if(paginaActual === 1){
+	    liFB.append($("<span/>").append(ifb)).addClass("disabled");
+	    liAtras.append($("<span/>").append(iatras)).addClass("disabled");
+	} else {
+	    liFB.append(aFB.append(ifb)).click(function(){ fb(); });
+	    liAtras.append(aAtras.append(iatras)).click(function(){ atras(); });
+	}
+	if(paginaActual === totalPaginas){
+	    liFF.append($("<span/>").append(iff)).addClass("disabled");
+	    liAdelante.append($("<span/>").append(iadelante)).addClass("disabled");
+	} else {
+	    liFF.append(aFF.append(iff)).click(function(){ ff(); });
+	    liAdelante.append(aAdelante.append(iadelante)).click(function(){ adelante(); });
+	}
+	
+	paginadorTabla.append(liFB, liAtras);
+	
+	var irA = function(pagina){
+	    paginaActual = parseInt(pagina);
+	    setearAtributos();
+	    busqueda();
+	};
+	
+	for(var i = 1; i <= totalPaginas; i ++){
+	    var li = $("<li/>");
+	    var a = $("<a/>", {href:"#", 'data-pagina' : i});
+	    a.text(i);
+	    if(i == paginaActual) {
+		li.addClass("active");
+	    } else {
+		a.click(function(){ irA($(this).attr("data-pagina")); });
+	    }
+	    li.append(a);
+	    paginadorTabla.append(li);
+	}
+	paginadorTabla.append(liAdelante, liFF);
+	setearAtributos();
     };
 
     var limpiarCombo = function (combo) {

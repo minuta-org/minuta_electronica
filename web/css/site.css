@@ -116,10 +116,6 @@ a.desc:after {
     min-width: 90px;
 }
 /* Estilos personalizados. */
-table.kv-grid-table th{
-    background-color: #286090;    
-    text-align: center;
-}
 table.kv-grid-table th, table.kv-grid-table th a {
     color: white;
 }
@@ -496,9 +492,12 @@ i.fa {
 
 .puesto-visitado td {
     cursor: not-allowed;
-    background-color: rgba(0, 153, 153, 0.38) !important;
+    background-color: rgb(122, 202, 202) !important;
     color: black;
-    opacity: 0.5;
+    opacity: 0.8;
+}
+.label.huge{
+    font-size: 13px;
 }
 
 ul.pagination i.fa {
@@ -506,4 +505,37 @@ ul.pagination i.fa {
 }
 .pointer{
     cursor: pointer;
+}
+table.kv-grid-table th, .summary, .pagination li.active a{
+    background-color: #009999;
+    border-color: #009999;
+}
+
+.nav-tabs li.active a, .nav-tabs li.active a:focus, .nav-tabs li.active a:active{
+    background-color: rgba(0, 153, 153, 0.52);
+    color: white;
+    border-color: rgba(0, 153, 153, 0.52);
+    transition: background-color 0.6s;
+}
+
+.pagination li.active a:hover, .nav-tabs li.active a:hover{
+    background-color: #057b7b;
+    color: white;
+}
+
+.pagination li a,
+.pagination li a i{
+    color: #009999;
+}
+.summary{
+    color: white;
+}
+table.kv-grid-table th{
+    text-align: center;    
+}
+th.text-left, .summary{
+    text-align: left !important;
+}
+.nav-tabs {
+    border-color: rgba(0, 153, 153, 0.52);
 }

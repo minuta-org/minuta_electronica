@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <td class="zona_puesto"><?= $detalle->idPuesto->idZonaFk->nombre_zona ?></td>
                         <td class="text-center col-sm-1 accion">
                             <?php if($detalle->estado == \app\models\TblDetalleProgSupervisor::ESTADO_VISITADO): ?>
-                            <span class="label label-success">Visitado</span>
+                            <span class="label label-success huge">Visitado</span>
                             <?php else: ?>
                             <button data-id-fila="<?= $detalle->id_dps ?>" class="btn-visitar-puesto btn btn-primary btn-condensed btn-xs" title="Visitar puesto" data-toggle="tooltip" data-placement="top">
                                 <i class="fa fa-map-marker"></i>
@@ -171,7 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     var marcarPuestoVisitado = function(id){
         var fila = $("tr[data-fila='" + id + "']");
-        var label = $("<span/>", {class: 'label label-success'}).text("Visitado");
+        var label = $("<span/>", {class: 'label label-success huge'}).text("Visitado");
         var celdaAccion = fila.find(".accion");
         fila.addClass("puesto-visitado");
         celdaAccion.html(label);

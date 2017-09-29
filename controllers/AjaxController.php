@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use yii\helpers\ArrayHelper;
+use Yii;
 
 class AjaxController extends Controller
 {
@@ -15,6 +16,8 @@ class AjaxController extends Controller
         $programacion = $_POST['programacion'];
         $dia = $_POST['dia'];
         $query = \app\models\TblPuestos::find();
+	$paginaActual = $_POST['paginaActual'];
+	$maximoRegistros = $_POST['maximoRegistros'];
         
         # Consultar programaciones para el mismo día.
         $programacionSupervisor = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $programacion]);
@@ -49,10 +52,15 @@ class AjaxController extends Controller
         $idPuestosProgramados = array_merge(ArrayHelper::map($puestosProgramados, 'id_dps', 'id_puesto'), $idsPuestosProgramadosOtros);
         
         $query->andWhere(['not in', 'id_puesto', $idPuestosProgramados]);
+	$totalPuestos = $query->count();
+	$totalPaginas = ceil($totalPuestos / $maximoRegistros);
+	$query->limit($maximoRegistros);
+	$query->offset(($paginaActual - 1) * $maximoRegistros);
         $puestos = $query->all();
         $data = [];
+	
         foreach ($puestos AS $puesto) {
-            $data[] = [
+            $data[] = [		
                 'id' => $puesto->id_puesto,
                 'puesto' => $puesto->nombre_puesto,
                 'cliente' => $puesto->idClienteFk->nombreCorto,
@@ -60,7 +68,11 @@ class AjaxController extends Controller
                 'cuadrante' => $puesto->idZonaFk->idCuadranteFk->nombre_cuadrante,
             ];
         }
-        $this->json(['puestos' => $data]);
+        $this->json([
+	    'totalPaginas' => $totalPaginas,
+	    'totalRegistros' => $totalPuestos,
+	    'puestos' => $data
+	]);
     }
 
     /**
@@ -98,11 +110,19 @@ class AjaxController extends Controller
      */
     public function actionConsultarPuestosProgramadosSupervisor()
     {
+	$paginaActual = $_POST['paginaActual'];
+	$maximoRegistros = $_POST['maximoRegistros'];	
         $dia = $_POST['dia'];
         $idProgramacion = $_POST['id-programacion'];
         $query = \app\models\TblDetalleProgSupervisor::find()
             ->where("id_programacion_supervisor_fk = {$idProgramacion}")
             ->andWhere("dia_dps = {$dia}");
+	    
+	$totalPuestos = $query->count();
+	$totalPaginas = ceil($totalPuestos / $maximoRegistros);
+	$query->limit($maximoRegistros);
+	$query->offset(($paginaActual - 1) * $maximoRegistros);
+	
         $detalles = $query->all();
         $puestos = [];
         foreach ($detalles AS $detalle) {
@@ -115,7 +135,11 @@ class AjaxController extends Controller
                 'cuadrante' => $puesto->idZonaFk->idCuadranteFk->nombre_cuadrante,
             ];
         }
-        $this->json(['puestos' => $puestos]);
+        $this->json([
+	    'totalPaginas' => $totalPaginas,
+	    'totalRegistros' => $totalPuestos,
+	    'puestos' => $puestos
+	]);
     }
 
     /**
@@ -125,14 +149,10 @@ class AjaxController extends Controller
     {
         $ids = $_POST['ids'];
         $error = false;
-        foreach ($ids AS $idDetalle) {
-            if (!\app\models\TblDetalleProgSupervisor::findOne(['id_dps' => $idDetalle])->delete()) {
-                $error = true;
-                break;
-            }
-        }
+	$idsDps = implode(", ", $ids);
+	$resultado = Yii::$app->db->createCommand()->delete("tbl_detalle_prog_supervisor", "id_dps IN ({$idsDps})")->execute();
         $this->json([
-            'error' => $error,
+            'error' => $resultado == 0,
         ]);
     }
 

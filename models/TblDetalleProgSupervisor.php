@@ -74,11 +74,11 @@ class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
     public function getEtiquetaEstado()
     {
         if($this->estado == self::ESTADO_VISITADO){
-            return \yii\helpers\Html::tag('span', 'Visitado', ['class' => 'label label-success']);
+            return \yii\helpers\Html::tag('span', 'Visitado', ['class' => 'label label-success huge']);
         } else if($this->estado == self::ESTADO_NO_VISITADO){
-            return \yii\helpers\Html::tag('span', 'Sin visitar', ['class' => 'label label-danger']);
+            return \yii\helpers\Html::tag('span', 'Sin visitar', ['class' => 'label label-danger huge']);
         } else if($this->estado == self::ESTADO_REASIGNADO){
-            return \yii\helpers\Html::tag('span', 'Reasignado', ['class' => 'label label-default']);
+            return \yii\helpers\Html::tag('span', 'Reasignado', ['class' => 'label label-default huge']);
         }
     }
 }
