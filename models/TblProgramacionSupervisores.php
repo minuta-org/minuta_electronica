@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "tbl_programacion_supervisores".
@@ -60,6 +61,7 @@ class TblProgramacionSupervisores extends \yii\db\ActiveRecord
             'nombreSupervisor' => "Supervisor",
             'nombreHorario' => "Horario",
             'nombreTipo' => "Tipo",
+            'diasProgramados' => "Dias Programados"
         ];
     }
 
@@ -116,5 +118,29 @@ class TblProgramacionSupervisores extends \yii\db\ActiveRecord
     public function getNombreHorario()
     {
         return $this->idHorarioFk->nombreHorario;
+    }
+
+    public function getDiasProgramados(){
+        $totalProgramaciones = TblDetalleProgSupervisor::find()
+            ->where("id_programacion_supervisor_fk = '{$this->id_programacion_supervisor}'")
+            ->andWhere("id_puesto IS NOT NULL")
+            ->groupBy("dia_dps")
+            ->count();
+        $novedades = TblDetalleProgSupervisor::find()
+            ->where("id_programacion_supervisor_fk = '{$this->id_programacion_supervisor}'")
+            ->andWhere("id_turno_fk IS NOT NULL")
+            ->groupBy("dia_dps")
+            ->count();
+        $fechaInicial = new \DateTime($this->fecha_inicio_programacion_supervisor);
+        $fechaFinal = new \DateTime($this->fecha_fin_programacion_supervisor);
+        $diff = $fechaFinal->diff($fechaInicial);
+        $dias = intval($diff->format("%a")) - $novedades + 1;
+
+
+        if($totalProgramaciones == 0) $clase = "danger";
+        else if($totalProgramaciones == $dias) $clase = "success";
+        else if($totalProgramaciones < $dias && $totalProgramaciones >= ($dias / 2)) $clase = "warning";
+        else $clase = "default";
+        return Html::tag("span", $totalProgramaciones . " / " . $dias, ["class" => "label label-{$clase} huge"]);
     }
 }

@@ -11,6 +11,8 @@ use Yii;
  * @property integer $id_programacion_supervisor_fk
  * @property integer $id_puesto
  * @property integer $dia_dps
+ * @property integer $id_turno_fk
+ * @property string $novedad;
  *
  * @property TblProgramacionSupervisores $idProgramacionSupervisorFk
  * @property TblPuestos $idPuesto
@@ -35,7 +37,7 @@ class TblDetalleProgSupervisor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_programacion_supervisor_fk', ], 'required'],
+                [['id_programacion_supervisor_fk', ], 'required'],
             [['id_programacion_supervisor_fk', 'id_puesto', 'id_turno_fk', 'dia_dps'], 'integer'],
             [['id_programacion_supervisor_fk'], 'exist', 'skipOnError' => true, 'targetClass' => TblProgramacionSupervisores::className(), 'targetAttribute' => ['id_programacion_supervisor_fk' => 'id_programacion_supervisor']],
             [['id_puesto'], 'exist', 'skipOnError' => true, 'targetClass' => TblPuestos::className(), 'targetAttribute' => ['id_puesto' => 'id_puesto']],

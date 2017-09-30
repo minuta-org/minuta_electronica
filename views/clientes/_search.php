@@ -12,62 +12,98 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
-        'method' => 'get',
+        'options' => ['class' => 'form-horizontal'],
+        'fieldConfig' => [
+            'template' => '{label}<div class="col-sm-4 form-group">{input}</div>',
+            'labelOptions' => ['class' => 'col-sm-2 control-label'],
+            'options' => [ 'tag' => false,]
+        ],
     ]); ?>
+    <div class="panel panel-info panel-filters">
+        <div class="panel-heading">
+            Filtros <i class="fa fa-filter"></i>
+        </div>
+        <div class="panel-body" style="display:none">
+<div class="row">
+        <?= $form->field($model, 'id_cliente') ?>
 
-    <?= $form->field($model, 'id_cliente') ?>
+        <?= $form->field($model, 'id_tipo_documento_fk') ?>
 
-    <?= $form->field($model, 'id_tipo_documento_fk') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'nit_cliente') ?>
 
-    <?= $form->field($model, 'nit_cliente') ?>
+        <?= $form->field($model, 'dv_cliente') ?>
 
-    <?= $form->field($model, 'dv_cliente') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'razon_social_cliente') ?>
 
-    <?= $form->field($model, 'razon_social_cliente') ?>
+        <?= $form->field($model, 'sigla_cliente') ?>
 
-    <?php // echo $form->field($model, 'sigla_cliente') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'primer_nombre_cliente') ?>
 
-    <?php // echo $form->field($model, 'primer_nombre_cliente') ?>
+        <?= $form->field($model, 'segundo_nombre_cliente') ?>
 
-    <?php // echo $form->field($model, 'segundo_nombre_cliente') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'primer_apellido_cliente') ?>
 
-    <?php // echo $form->field($model, 'primer_apellido_cliente') ?>
+        <?= $form->field($model, 'segundo_apellido_cliente') ?>
 
-    <?php // echo $form->field($model, 'segundo_apellido_cliente') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'email_cliente') ?>
 
-    <?php // echo $form->field($model, 'email_cliente') ?>
+        <?= $form->field($model, 'telefono_cliente') ?>
 
-    <?php // echo $form->field($model, 'telefono_cliente') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'celular_cliente') ?>
 
-    <?php // echo $form->field($model, 'celular_cliente') ?>
+        <?= $form->field($model, 'direccion_cliente') ?>
 
-    <?php // echo $form->field($model, 'direccion_cliente') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'contacto_cliente') ?>
 
-    <?php // echo $form->field($model, 'contacto_cliente') ?>
+        <?= $form->field($model, 'telefono_contacto_cliente') ?>
 
-    <?php // echo $form->field($model, 'telefono_contacto_cliente') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'id_barrio_fk') ?>
 
-    <?php // echo $form->field($model, 'id_barrio_fk') ?>
+        <?= $form->field($model, 'id_sector_comercial_fk') ?>
 
-    <?php // echo $form->field($model, 'id_sector_comercial_fk') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'id_sector_economico_fk') ?>
 
-    <?php // echo $form->field($model, 'id_sector_economico_fk') ?>
+        <?= $form->field($model, 'id_dimesion_opt_fk') ?>
 
-    <?php // echo $form->field($model, 'id_dimesion_opt_fk') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'id_origen_judicial_opt_fk') ?>
 
-    <?php // echo $form->field($model, 'id_origen_judicial_opt_fk') ?>
+        <?= $form->field($model, 'id_cobertura_opt_fk') ?>
 
-    <?php // echo $form->field($model, 'id_cobertura_opt_fk') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'id_origen_capital_opt_fk') ?>
 
-    <?php // echo $form->field($model, 'id_origen_capital_opt_fk') ?>
+        <?= $form->field($model, 'id_matricula_fk') ?>
 
-    <?php // echo $form->field($model, 'id_matricula_fk') ?>
+</div>
+<div class="row">
+        <?= $form->field($model, 'observaciones_cliente') ?>
 
-    <?php // echo $form->field($model, 'observaciones_cliente') ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+</div>
+        <div class="panel-footer text-right" style="display:none">
+        <?=  Html::submitButton('Buscar ' . Html::tag('i', '', ['class' => 'fa fa-search']), ['class' => 'btn btn-primary']) ?>
+        <?=  Html::resetButton('Limpiar ' . Html::tag('i', '', ['class' => 'fa fa-eraser']), ['class' => 'btn btn-info']) ?>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>

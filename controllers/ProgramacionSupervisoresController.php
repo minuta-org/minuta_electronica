@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\TblTurnos;
 use Yii;
 use app\models\TblProgramacionSupervisores;
 use app\models\search\TblProgramacionSupervisoresSearch;
@@ -149,6 +150,7 @@ class ProgramacionSupervisoresController extends Controller {
 	$cuadrantes = \app\models\TblCuadrantes::find()->all();
 	$diasProgramados = $this->getDiasProgramados($programacion->id_programacion_supervisor);	
 	$diaInicio = intval($mes->format('d'));
+	$tiposNovedades = TblTurnos::find()->all();
 	return $this->render('agregar_detalle', [
 		    'programacion' => $programacion,
 		    'periodicidad' => $periodicidad,
@@ -159,12 +161,14 @@ class ProgramacionSupervisoresController extends Controller {
 		    'clientes' => ArrayHelper::map($clientes, 'id_cliente', 'nombreCorto'),
 		    'cuadrantes' => ArrayHelper::map($cuadrantes, 'id_cuadrante', 'nombre_cuadrante'),
 			'diasProgramacion' => $diasProgramados,
+            'tiposNovedades' => ArrayHelper::map($tiposNovedades, 'id_turno', 'nombre_turno'),
 	]);
     }
 
     public function getDiasProgramados($idProgramacion) {
-	$sql = "SELECT dia_dps, GROUP_CONCAT(id_turno_fk) AS turnos, GROUP_CONCAT(id_puesto) AS puestos, dia_dps"
+	$sql = "SELECT dia_dps, GROUP_CONCAT(t2.nombre_turno) AS turnos, GROUP_CONCAT(t2.color) AS color, GROUP_CONCAT(id_puesto) AS puestos, dia_dps"
 		. " FROM tbl_detalle_prog_supervisor t "
+        . " LEFT JOIN tbl_turnos t2 ON t2.id_turno = t.id_turno_fk "
 		. "WHERE id_programacion_supervisor_fk = {$idProgramacion} "
 		. "GROUP BY dia_dps";
 	$conn = Yii::$app->getDb();
@@ -176,6 +180,7 @@ class ProgramacionSupervisoresController extends Controller {
 	    $dias[$detalle->dia_dps] = [
 		'puesto' => $detalle->puestos,
 		'turno' => $detalle->turnos,
+        'color' => $detalle->color,
 	    ];
 	}
 	return $dias;

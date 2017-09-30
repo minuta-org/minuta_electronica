@@ -539,3 +539,11 @@ th.text-left, .summary{
 .nav-tabs {
     border-color: rgba(0, 153, 153, 0.52);
 }
+
+.btn-primary{
+    background-color: #009999;
+    border-color: #057b7b;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active{
+    background-color: #057b7b !important;
+}

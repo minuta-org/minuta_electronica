@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\TblDetalleProgSupervisor;
+use app\models\TblTurnos;
 use yii\helpers\ArrayHelper;
 use Yii;
 
@@ -16,23 +18,23 @@ class AjaxController extends Controller
         $programacion = $_POST['programacion'];
         $dia = $_POST['dia'];
         $query = \app\models\TblPuestos::find();
-	$paginaActual = $_POST['paginaActual'];
-	$maximoRegistros = $_POST['maximoRegistros'];
-        
+        $paginaActual = $_POST['paginaActual'];
+        $maximoRegistros = $_POST['maximoRegistros'];
+
         # Consultar programaciones para el mismo día.
         $programacionSupervisor = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $programacion]);
         $fecha = date_create($programacionSupervisor->fecha_inicio_programacion_supervisor)->format('Y-m');
         $programacionDetalleDia = \app\models\TblDetalleProgSupervisor::find()
-                   ->joinWith([
-                       'idProgramacionSupervisorFk' => function($query) use ($fecha){
-                            $query->andWhere("fecha_inicio_programacion_supervisor LIKE '%{$fecha}%'");
-                       },                   
-                   ])
-                   ->andWhere("dia_dps = '{$dia}'")
-		   ->andWhere("id_puesto IS NOT NULL")
-                   ->all();
+            ->joinWith([
+                'idProgramacionSupervisorFk' => function($query) use ($fecha){
+                    $query->andWhere("fecha_inicio_programacion_supervisor LIKE '%{$fecha}%'");
+                },
+            ])
+            ->andWhere("dia_dps = '{$dia}'")
+            ->andWhere("id_puesto IS NOT NULL")
+            ->all();
         $idsPuestosProgramadosOtros = array_map(function($detalle){ return $detalle->id_puesto; }, $programacionDetalleDia);
-        
+
         if ($cliente != null) $query->where(['id_cliente_fk' => $cliente]);
 
         if ($zona == "" && $cuadrante != "") {
@@ -48,19 +50,19 @@ class AjaxController extends Controller
             ->where("id_programacion_supervisor_fk = {$programacion}")
             ->andWhere("dia_dps = {$dia}")
             ->all();
-        
+
         $idPuestosProgramados = array_merge(ArrayHelper::map($puestosProgramados, 'id_dps', 'id_puesto'), $idsPuestosProgramadosOtros);
-        
+
         $query->andWhere(['not in', 'id_puesto', $idPuestosProgramados]);
-	$totalPuestos = $query->count();
-	$totalPaginas = ceil($totalPuestos / $maximoRegistros);
-	$query->limit($maximoRegistros);
-	$query->offset(($paginaActual - 1) * $maximoRegistros);
+        $totalPuestos = $query->count();
+        $totalPaginas = ceil($totalPuestos / $maximoRegistros);
+        $query->limit($maximoRegistros);
+        $query->offset(($paginaActual - 1) * $maximoRegistros);
         $puestos = $query->all();
         $data = [];
-	
+
         foreach ($puestos AS $puesto) {
-            $data[] = [		
+            $data[] = [
                 'id' => $puesto->id_puesto,
                 'puesto' => $puesto->nombre_puesto,
                 'cliente' => $puesto->idClienteFk->nombreCorto,
@@ -69,10 +71,10 @@ class AjaxController extends Controller
             ];
         }
         $this->json([
-	    'totalPaginas' => $totalPaginas,
-	    'totalRegistros' => $totalPuestos,
-	    'puestos' => $data
-	]);
+            'totalPaginas' => $totalPaginas,
+            'totalRegistros' => $totalPuestos,
+            'puestos' => $data
+        ]);
     }
 
     /**
@@ -110,19 +112,19 @@ class AjaxController extends Controller
      */
     public function actionConsultarPuestosProgramadosSupervisor()
     {
-	$paginaActual = $_POST['paginaActual'];
-	$maximoRegistros = $_POST['maximoRegistros'];	
+        $paginaActual = $_POST['paginaActual'];
+        $maximoRegistros = $_POST['maximoRegistros'];
         $dia = $_POST['dia'];
         $idProgramacion = $_POST['id-programacion'];
         $query = \app\models\TblDetalleProgSupervisor::find()
             ->where("id_programacion_supervisor_fk = {$idProgramacion}")
             ->andWhere("dia_dps = {$dia}");
-	    
-	$totalPuestos = $query->count();
-	$totalPaginas = ceil($totalPuestos / $maximoRegistros);
-	$query->limit($maximoRegistros);
-	$query->offset(($paginaActual - 1) * $maximoRegistros);
-	
+
+        $totalPuestos = $query->count();
+        $totalPaginas = ceil($totalPuestos / $maximoRegistros);
+        $query->limit($maximoRegistros);
+        $query->offset(($paginaActual - 1) * $maximoRegistros);
+
         $detalles = $query->all();
         $puestos = [];
         foreach ($detalles AS $detalle) {
@@ -136,10 +138,10 @@ class AjaxController extends Controller
             ];
         }
         $this->json([
-	    'totalPaginas' => $totalPaginas,
-	    'totalRegistros' => $totalPuestos,
-	    'puestos' => $puestos
-	]);
+            'totalPaginas' => $totalPaginas,
+            'totalRegistros' => $totalPuestos,
+            'puestos' => $puestos
+        ]);
     }
 
     /**
@@ -149,8 +151,8 @@ class AjaxController extends Controller
     {
         $ids = $_POST['ids'];
         $error = false;
-	$idsDps = implode(", ", $ids);
-	$resultado = Yii::$app->db->createCommand()->delete("tbl_detalle_prog_supervisor", "id_dps IN ({$idsDps})")->execute();
+        $idsDps = implode(", ", $ids);
+        $resultado = Yii::$app->db->createCommand()->delete("tbl_detalle_prog_supervisor", "id_dps IN ({$idsDps})")->execute();
         $this->json([
             'error' => $resultado == 0,
         ]);
@@ -174,23 +176,23 @@ class AjaxController extends Controller
     public function actionConsultarSupervisoresReasignacion()
     {
         $idProgramacion = $_POST['id-programacion'];
-	$dia = $_POST['dia'];
-	# Traemos la programación.
-        $programacion = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $idProgramacion]); 
+        $dia = $_POST['dia'];
+        # Traemos la programación.
+        $programacion = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $idProgramacion]);
         $fecha = date_create($programacion->fecha_inicio_programacion_supervisor);
         $mesAnio = $fecha->format("Y-m");
-	$supervisoresDescanso = \app\models\TblDetalleProgSupervisor::find()
-					->where(['<>', 'id_turno_fk', ''])
-					->andWhere("dia_dps = {$dia}")
-					->all();
-	$idsSupervisoresDescanso = array_map(function($obj){ return $obj->idProgramacionSupervisorFk->id_supervisor_fk; }, $supervisoresDescanso);
-	
-	# Traemos las programaciones cuyo mes sea igual al mes de la programación seleccionada.
+        $supervisoresDescanso = \app\models\TblDetalleProgSupervisor::find()
+            ->where(['<>', 'id_turno_fk', ''])
+            ->andWhere("dia_dps = {$dia}")
+            ->all();
+        $idsSupervisoresDescanso = array_map(function($obj){ return $obj->idProgramacionSupervisorFk->id_supervisor_fk; }, $supervisoresDescanso);
+
+        # Traemos las programaciones cuyo mes sea igual al mes de la programación seleccionada.
         $programacionesMes = \app\models\TblProgramacionSupervisores::find()
-                                    ->where("fecha_inicio_programacion_supervisor LIKE '%{$mesAnio}%'")
-				    ->andWhere(['not in', 'id_supervisor_fk', $idsSupervisoresDescanso])
-                                    ->groupBy('id_supervisor_fk')
-                                    ->all();
+            ->where("fecha_inicio_programacion_supervisor LIKE '%{$mesAnio}%'")
+            ->andWhere(['not in', 'id_supervisor_fk', $idsSupervisoresDescanso])
+            ->groupBy('id_supervisor_fk')
+            ->all();
         $supervisores = [];
         foreach($programacionesMes AS $programacionMes){
             $supervisores[] = [
@@ -200,38 +202,38 @@ class AjaxController extends Controller
         }
         $this->json(['supervisores' => $supervisores]);
     }
-    
+
     private function validarSigDia($horaInicial, $horaFinal)
     {
-	$fechaInicial = strtotime(date("Y-d-m") . " {$horaInicial}");
-	$fechaFinal = strtotime(date("Y-d-m") . " {$horaFinal}");	
-	return $fechaFinal < $fechaInicial;
+        $fechaInicial = strtotime(date("Y-d-m") . " {$horaInicial}");
+        $fechaFinal = strtotime(date("Y-d-m") . " {$horaFinal}");
+        return $fechaFinal < $fechaInicial;
     }
-    
+
     public function actionConsultarProgramacionSupervisoresReasignar()
     {
         $idSupervisor = $_POST['id-supervisor'];
         $idProgramacion = $_POST['id-programacion'];
         $dia = $_POST['dia'];
-	# Programación sobre la que se está trabajando
-        $programacion = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $idProgramacion]); 
+        # Programación sobre la que se está trabajando
+        $programacion = \app\models\TblProgramacionSupervisores::findOne(['id_programacion_supervisor' => $idProgramacion]);
         $fecha = date_create($programacion->fecha_inicio_programacion_supervisor);
         $mesAnio = $fecha->format("Y-m");
-	
-	# Fecha sobre la cual se está haciendo la reasignación.
-	$fechaActual = date_create("{$mesAnio}-{$dia} {$programacion->idHorarioFk->finaliza_horario}");
-	
-	if($this->validarSigDia($programacion->idHorarioFk->inicio_horario, $programacion->idHorarioFk->finaliza_horario)) {
-	    $fecha = date_add($fecha, date_interval_create_from_date_string("1 day"));
-	}
-	$fechaAComparar = $fecha->format("Y-m-d");
-	
+
+        # Fecha sobre la cual se está haciendo la reasignación.
+        $fechaActual = date_create("{$mesAnio}-{$dia} {$programacion->idHorarioFk->finaliza_horario}");
+
+        if($this->validarSigDia($programacion->idHorarioFk->inicio_horario, $programacion->idHorarioFk->finaliza_horario)) {
+            $fecha = date_add($fecha, date_interval_create_from_date_string("1 day"));
+        }
+        $fechaAComparar = $fecha->format("Y-m-d");
+
         $programacionesMes = \app\models\TblProgramacionSupervisores::find()
-                                    ->where("fecha_inicio_programacion_supervisor LIKE '%{$mesAnio}%'")
-                                    ->andWhere("id_supervisor_fk = '{$idSupervisor}'")				    
-                                    ->all();
+            ->where("fecha_inicio_programacion_supervisor LIKE '%{$mesAnio}%'")
+            ->andWhere("id_supervisor_fk = '{$idSupervisor}'")
+            ->all();
         $programaciones = [];
-        
+
         foreach($programacionesMes AS $programacionMes){
             $programaciones[] = [
                 'id' => $programacionMes->id_programacion_supervisor,
@@ -242,46 +244,46 @@ class AjaxController extends Controller
         }
         $this->json(['programaciones' => $programaciones, 'fecha_arranque' => $fechaAComparar]);
     }
-    
+
     public function actionConsultarPuestosProgramacion()
     {
         $idProgramacion = $_POST['id'];
-        $idSupervisor = $_POST['id-supervisor'];	
+        $idSupervisor = $_POST['id-supervisor'];
         $fechaArranque = date_create($_POST['fecha-arranque']);
         $dia = $_POST['dia']; #intval($fechaArranque->format("d"));
-	$idProgramacionActual = $_POST['id-programacion-actual'];
-        
+        $idProgramacionActual = $_POST['id-programacion-actual'];
+
         $programacion = \app\models\TblProgramacionSupervisores::find()
-                                ->where("id_programacion_supervisor = '{$idProgramacion}'")
-                                ->one();
-	$programacionActual = \app\models\TblProgramacionSupervisores::find()
-                            ->where("id_programacion_supervisor = '{$idProgramacionActual}'")
-                            ->one();
-	$horaInicial = strtotime($programacionActual->idHorarioFk->finaliza_horario);
-	$horaFinal = strtotime($programacion->idHorarioFk->inicio_horario);
+            ->where("id_programacion_supervisor = '{$idProgramacion}'")
+            ->one();
+        $programacionActual = \app\models\TblProgramacionSupervisores::find()
+            ->where("id_programacion_supervisor = '{$idProgramacionActual}'")
+            ->one();
+        $horaInicial = strtotime($programacionActual->idHorarioFk->finaliza_horario);
+        $horaFinal = strtotime($programacion->idHorarioFk->inicio_horario);
         $restringirDiasAnt = $idSupervisor == $programacion->id_supervisor_fk;
-	
-	if($this->validarSigDia($programacionActual->idHorarioFk->inicio_horario, $programacionActual->idHorarioFk->finaliza_horario)){
-	    $horaInicial = strtotime(date("Y-m-d", strtotime("+1 day")) . " " . $programacion->idHorarioFk->inicio_horario);
-	}
-	if($this->validarSigDia($programacion->idHorarioFk->inicio_horario, $programacion->idHorarioFk->finaliza_horario)){
-	    $horaFinal = strtotime(date("Y-m-d", strtotime("+1 day")) . " " . $programacion->idHorarioFk->inicio_horario);
-	}
-	
-	$horarioMenor = $horaFinal <= $horaInicial;
-	
+
+        if($this->validarSigDia($programacionActual->idHorarioFk->inicio_horario, $programacionActual->idHorarioFk->finaliza_horario)){
+            $horaInicial = strtotime(date("Y-m-d", strtotime("+1 day")) . " " . $programacion->idHorarioFk->inicio_horario);
+        }
+        if($this->validarSigDia($programacion->idHorarioFk->inicio_horario, $programacion->idHorarioFk->finaliza_horario)){
+            $horaFinal = strtotime(date("Y-m-d", strtotime("+1 day")) . " " . $programacion->idHorarioFk->inicio_horario);
+        }
+
+        $horarioMenor = $horaFinal <= $horaInicial;
+
         $ctrlProgramacionSupervisores = new ProgramacionSupervisoresController("prog-supervisores", "none");
         $desde = date_create($programacion->fecha_inicio_programacion_supervisor);
         $hasta = date_create($programacion->fecha_fin_programacion_supervisor);
-        
+
         $dias = $ctrlProgramacionSupervisores->getDiasMes($desde); # Obtenemos el html del encabezado de la tabla ( nombre de días y número de días ).
         $puestosProgramados = $programacion->tblDetalleProgSupervisors; # Obtenemos los detalles de la programación
         $diasProgramados = array_map(function($puestoProg){ return $puestoProg->dia_dps; }, $puestosProgramados); # Convertimos esos detalles a un array
-                                                                                                                  # con el fin de iterar más fácil.
-        
+        # con el fin de iterar más fácil.
+
         $maxDiasMes = intval($desde->format("t")); # Último día del mes.
         $maxDiasProg = intval($hasta->format("d"));
-        
+
         $diasProgramadosHtml = [];
         $celdaBloqueada = \yii\helpers\Html::tag('td', '&nbsp;', ['class' => 'celda-bloqueada']);
         for ($i = 1; $i <= $maxDiasMes; $i ++){
@@ -299,7 +301,7 @@ class AjaxController extends Controller
         $dias .=  \yii\helpers\Html::tag('tr', implode('', $diasProgramadosHtml));
         $this->json(['html' => $dias]);
     }
-    
+
 
     public function actionGuardarPuestos()
     {
@@ -315,7 +317,7 @@ class AjaxController extends Controller
         }
         $this->json(['error' => false]);
     }
-    
+
     public function actionGuardarReasignacionPuesto()
     {
         $ids = $_POST['ids'];
@@ -340,7 +342,7 @@ class AjaxController extends Controller
             'error' => $error,
         ]);
     }
-    
+
     public function actionActualizarNovedadProgramacion()
     {
         $idDetalle = $_POST['idDetalle'];
@@ -351,31 +353,51 @@ class AjaxController extends Controller
             'error' => !$detalleProgramacion->save(),
         ]);
     }
-    
+
     public function actionConsultarProgramacionDiaSupervisor()
     {
-	$idProgramacion = $_POST['idProgramacion'];
-	$diaProgramado = $_POST['diaProgramado'];
-	
-	$detallesProgramacion = \app\models\TblDetalleProgSupervisor::find()
-					->where(['id_programacion_supervisor_fk' => $idProgramacion])
-					->andWhere(['dia_dps' => $diaProgramado])
-					->all();
-	$programacionDia = [];
-	foreach($detallesProgramacion AS $detalle){
-	    $programacionDia[] = [
-		'codigo_puesto' => $detalle->idPuesto->codigo_puesto,
-		'nombre_puesto' => $detalle->idPuesto->nombre_puesto,
-		'cliente' => $detalle->idPuesto->idClienteFk->nombreCorto,
-		'cuadrante' => $detalle->idPuesto->idZonaFk->idCuadranteFk->nombre_cuadrante,
-		'zona' => $detalle->idPuesto->idZonaFk->nombre_zona,
-	    ];
-	}
+        $idProgramacion = $_POST['idProgramacion'];
+        $diaProgramado = $_POST['diaProgramado'];
 
-	$this->json([
-	    'error' => false,
-	    'programacion' => $programacionDia,
-	]);
+        $detallesProgramacion = \app\models\TblDetalleProgSupervisor::find()
+            ->where(['id_programacion_supervisor_fk' => $idProgramacion])
+            ->andWhere(['dia_dps' => $diaProgramado])
+            ->all();
+        $programacionDia = [];
+        foreach($detallesProgramacion AS $detalle){
+            $programacionDia[] = [
+                'codigo_puesto' => $detalle->idPuesto->codigo_puesto,
+                'nombre_puesto' => $detalle->idPuesto->nombre_puesto,
+                'cliente' => $detalle->idPuesto->idClienteFk->nombreCorto,
+                'cuadrante' => $detalle->idPuesto->idZonaFk->idCuadranteFk->nombre_cuadrante,
+                'zona' => $detalle->idPuesto->idZonaFk->nombre_zona,
+            ];
+        }
+
+        $this->json([
+            'error' => false,
+            'programacion' => $programacionDia,
+        ]);
+    }
+    public function actionGuardarNovedadTurno()
+    {
+        $dia = $_POST['dia'];
+        $idProgramacion = $_POST['idProgramacion'];
+        $tipoNovedad = $_POST['tipoNovedad'];
+        $descripcionNovedad = $_POST['descripcionNovedad'];
+        $nuevoDetalleProgramacion = new TblDetalleProgSupervisor();
+        $nuevoDetalleProgramacion->dia_dps = $dia;
+        $nuevoDetalleProgramacion->id_programacion_supervisor_fk = $idProgramacion;
+        $nuevoDetalleProgramacion->id_turno_fk = $tipoNovedad;
+        $nuevoDetalleProgramacion->novedad = $descripcionNovedad;
+
+        $turno = TblTurnos::findOne(["id_turno" => $tipoNovedad]);
+
+        $this->json([
+            'error' => !$nuevoDetalleProgramacion->save(),
+            'color' => $turno->color,
+            'nombreTurno' => $turno->nombre_turno,
+        ]);
     }
 
 }

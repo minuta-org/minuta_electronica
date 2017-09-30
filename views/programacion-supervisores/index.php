@@ -28,6 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'fecha_fin_programacion_supervisor',
             'nombreTipo',
             [
+                'attribute' => 'diasProgramados',
+                'contentOptions' => ['class' => 'col-sm-1 text-center', 'type' => 'raw'],
+                'format' => 'raw',
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['class' => 'text-center', 'style' => 'width:30px;'],
                 'template' => '{programar}',

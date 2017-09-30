@@ -32,8 +32,8 @@ use yii\jui\DatePicker;
             </div>
 
             <div class="row">
-                <?= $form->field($model, 'fecha_inicio_programacion_supervisor')->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control']]) ?>
-                <?= $form->field($model, 'fecha_fin_programacion_supervisor')->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'options' => ['class' => 'form-control']]) ?>
+                <?= $form->field($model, 'fecha_inicio_programacion_supervisor')->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'clientOptions' => ['minDate' => date("Y-m-01")], 'options' => ['class' => 'form-control', 'readonly' => true]]) ?>
+                <?= $form->field($model, 'fecha_fin_programacion_supervisor')->widget(DatePicker::className(), ['dateFormat' => 'yyyy-MM-dd', 'clientOptions' => ['minDate' => date("Y-m-01")], 'options' => ['class' => 'form-control', 'readonly' => true]]) ?>
             </div>
 
             <div class="row">
@@ -51,3 +51,29 @@ use yii\jui\DatePicker;
         <?php ActiveForm::end(); ?>
     </div>
 </div>
+
+<script>
+    var fecha = new Date();
+    var fechaActual = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+
+    $(function(){
+        $("#tblprogramacionsupervisores-fecha_inicio_programacion_supervisor").change(function(){
+            var fechaHasta = $("#tblprogramacionsupervisores-fecha_fin_programacion_supervisor").val();
+            if(fechaHasta == "") return false;
+            if(!esFechaMenor($(this).val(), fechaHasta)){
+                alert("La fecha de inicio no puede ser mayor a la fecha de finalización.");
+                $(this).val(fechaHasta);
+            }
+        });
+
+        $("#tblprogramacionsupervisores-fecha_fin_programacion_supervisor").change(function(){
+            var fechaDesde = $("#tblprogramacionsupervisores-fecha_inicio_programacion_supervisor").val();
+            if(fechaDesde == "") return false;
+            if(!esFechaMenor(fechaDesde, $(this).val())){
+                alert("La fecha de final no puede ser menor a la fecha de inicio.");
+                $(this).val(fechaDesde);
+            }
+        });
+    });
+
+</script>

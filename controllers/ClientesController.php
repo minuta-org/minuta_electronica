@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\TblClientes;
 use app\models\search\TblClientesSearch;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -65,7 +66,7 @@ class ClientesController extends Controller
         $model = new TblClientes();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_cliente]);
+            return $this->redirect(['index', 'id' => $model->id_cliente]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -84,7 +85,7 @@ class ClientesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_cliente]);
+            return $this->redirect(['index', 'id' => $model->id_cliente]);
         } else {
             return $this->render('update', [
                 'model' => $model,

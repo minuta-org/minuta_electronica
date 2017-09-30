@@ -45,31 +45,34 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="table-responsive">
         <table class="table table-bordered table-hover table-condensed tabla-programacion">
-            <thead>                
-                <?= $diasMes ?>
+            <thead>
+            <?= $diasMes ?>
             </thead>
             <tbody>
-                <tr>
-                    <?php for ($i = 1; $i <= $totalDiasMes; $i ++) : ?>
-                        <?php if ($i >= $diaInicio && $i < $diaInicio + $diasAProgramar): ?>
-                            <?php if (isset($diasProgramacion[$i])): ?>
-				<?php if($diasProgramacion[$i]['turno'] == ""): ?>
+            <tr>
+                <?php for ($i = 1; $i <= $totalDiasMes; $i ++) : ?>
+                    <?php if ($i >= $diaInicio && $i < $diaInicio + $diasAProgramar): ?>
+                        <?php if (isset($diasProgramacion[$i])): ?>
+                            <?php if($diasProgramacion[$i]['turno'] == ""): ?>
                                 <td class="celda-a-agregar programado" data-dia="<?= $i ?>" data-valor="<?= $i ?>">
                                     <i class="fa fa-check"></i>
                                 </td>
-				<?php else: ?>
-                                <td class="celda-bloqueada" data-dia="<?= $i ?>" data-valor="<?= $i ?>">
-                                    &nbsp;
-                                </td>
-				<?php endif ?>
                             <?php else: ?>
-                                <td class="celda-a-agregar" data-dia="<?= $i ?>" data-valor="<?= $i ?>">&nbsp;</td>
+                                <td class="celda-bloqueada celda-licencia" style="background-color: <?= $diasProgramacion[$i]['color'] ?>;" data-dia="<?= $i ?>" data-valor="<?= $i ?>">
+                                    <div data-toggle="tooltip" data-placement="top" title="<?= $diasProgramacion[$i]['turno'] ?>">
+                                        <?= substr($diasProgramacion[$i]['turno'], 0,1) ?>
+                                    </div>
+                                </td>
                             <?php endif ?>
+
                         <?php else: ?>
-                            <td class="celda-bloqueada">&nbsp;</td>
+                            <td class="celda-a-agregar" data-dia="<?= $i ?>" data-valor="<?= $i ?>">&nbsp;</td>
                         <?php endif ?>
-                    <?php endfor ?>
-                </tr>
+                    <?php else: ?>
+                        <td class="celda-bloqueada">&nbsp;</td>
+                    <?php endif ?>
+                <?php endfor ?>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -83,17 +86,17 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <table id="tabla-mostrar-programacion-dia" class="table table-bordered table-hover table-striped">
         <thead>
-            <tr>
-                <th class="text-center">Puesto</th>
-                <th class="text-center">Cliente</th>
-                <th class="text-center">Zona</th>
-                <th class="text-center">Cuadrante</th>
-                <th class="text-center">Estado</th>
-                <th class="text-center action-column-sm">&nbsp;</th>
-            </tr>
+        <tr>
+            <th class="text-center">Puesto</th>
+            <th class="text-center">Cliente</th>
+            <th class="text-center">Zona</th>
+            <th class="text-center">Cuadrante</th>
+            <th class="text-center">Estado</th>
+            <th class="text-center action-column-sm">&nbsp;</th>
+        </tr>
         </thead>
         <tbody>
-            
+
         </tbody>
     </table>
     <div class="panel-footer text-right">
@@ -123,29 +126,29 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="tab-pane active fade in" id="consultar">
                         <table id="tabla-ver-puestos" class="table table-bordered table-condensed table-hover kv-grid-table">
                             <thead>
-				<tr>
-				    <th colspan="5" class="text-left">Registros: <span id="total-programados">0</span></th>
-				</tr>
-                                <tr>
-                                    <th class="text-center">Puesto</th>
-                                    <th class="text-center">Cliente</th>
-                                    <th class="text-center">Zona</th>
-                                    <th class="text-center">Cuadrante</th>
-                                    <th class="text-center"><input type="checkbox" id="puestos-prog-dia"></th>
-                                </tr>
+                            <tr>
+                                <th colspan="5" class="text-left">Registros: <span id="total-programados">0</span></th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">Puesto</th>
+                                <th class="text-center">Cliente</th>
+                                <th class="text-center">Zona</th>
+                                <th class="text-center">Cuadrante</th>
+                                <th class="text-center"><input type="checkbox" id="puestos-prog-dia"></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr class="warning">
-                                    <td colspan="5" class="text-center">No se han asignado puestos</td>
-                                </tr>
+                            <tr class="warning">
+                                <td colspan="5" class="text-center">No se han asignado puestos</td>
+                            </tr>
                             </tbody>
                         </table>
-			<div class="row">
-			    <div class="col-sm-12">
-				<ul class="pagination" id="paginador-tabla-prog-dia" data-pagina-actual="1" data-total-registros="0" data-total-paginas="0" data-max-registros="11" data-tipo-busqueda="programados" data-target="#total-programados">
-				</ul>
-			    </div>
-			</div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="pagination" id="paginador-tabla-prog-dia" data-pagina-actual="1" data-total-registros="0" data-total-paginas="0" data-max-registros="11" data-tipo-busqueda="programados" data-target="#total-programados">
+                                </ul>
+                            </div>
+                        </div>
                         <hr class="col-sm-11">
                         <div class="form-group text-right">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -164,7 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <div class="col-sm-4">
                                         <?= Html::dropDownList('select-cuadrante', '', $cuadrantes, ['class' => 'select-2', 'prompt' => 'Seleccione un cuadrante', 'id' => 'select-cuadrante']); ?>
                                     </div>
-                                </div>        
+                                </div>
                                 <div class="form-group wide">
                                     <label for="" class="col-sm-2">Zona</label>
                                     <div class="col-sm-4">
@@ -176,41 +179,41 @@ $this->params['breadcrumbs'][] = $this->title;
                                         </button>
                                         <button class="btn btn-primary btn-xs" id="btn-add-cliente">
                                             Registrar <i class="fa fa-user-plus"></i>
-                                        </button>                                        
-                                    </div>                                
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <hr class="col-sm-10">
                         </div>
-                        <div class="row">                        
+                        <div class="row">
                             <div class="col-sm-12">
                                 <table id="tabla-puestos" class="table table-bordered table-condensed table-hover kv-grid-table">
                                     <thead>
-					<tr>
-					    <th colspan="5" class="text-left">Registros: <span id="total-libres">0</span></th>
-					</tr>
-                                        <tr>
-                                            <th class="text-center">Puesto</th>
-                                            <th class="text-center">Cliente</th>
-                                            <th class="text-center">Zona</th>
-                                            <th class="text-center">Cuadrante</th>
-                                            <th class="text-center">
-						<input type="checkbox" id="seleccionar-todos-puestos">
-					    </th>
-                                        </tr>
+                                    <tr>
+                                        <th colspan="5" class="text-left">Registros: <span id="total-libres">0</span></th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center">Puesto</th>
+                                        <th class="text-center">Cliente</th>
+                                        <th class="text-center">Zona</th>
+                                        <th class="text-center">Cuadrante</th>
+                                        <th class="text-center">
+                                            <input type="checkbox" id="seleccionar-todos-puestos">
+                                        </th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="warning">
-                                            <td colspan="5" class="text-center">Busca puestos</td>
-                                        </tr>
+                                    <tr class="warning">
+                                        <td colspan="5" class="text-center">Busca puestos</td>
+                                    </tr>
                                     </tbody>
                                 </table>
-				<div class="row">
-				    <div class="col-sm-12">
-					<ul class="pagination" id="paginador-tabla" data-pagina-actual="1" data-total-registros="0" data-total-paginas="0" data-max-registros="12" data-tipo-busqueda="libres" data-target="#total-libres">
-					</ul>
-				    </div>
-				</div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <ul class="pagination" id="paginador-tabla" data-pagina-actual="1" data-total-registros="0" data-total-paginas="0" data-max-registros="12" data-tipo-busqueda="libres" data-target="#total-libres">
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -248,28 +251,28 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <div class="col-sm-9">
                                     <?= Html::textarea('novedad', '', ['id' => 'txt-novedad-reasignacion', 'placeholders' => 'Ingrese una novedad...', 'class' => 'form-control']) ?>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <table id="tabla-programaciones-supervisores" class="table table-bordered table-hover table-condensed table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>
-                                            Fecha 
-                                        </th>
-                                        <th>
-                                            Horario
-                                        </th>
-                                        <th>
-                                            Tipo
-                                        </th>
-                                        <th>
-                                            &nbsp;
-                                        </th>
-                                    </tr>
+                                <tr>
+                                    <th>
+                                        Fecha
+                                    </th>
+                                    <th>
+                                        Horario
+                                    </th>
+                                    <th>
+                                        Tipo
+                                    </th>
+                                    <th>
+                                        &nbsp;
+                                    </th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -314,7 +317,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h4 class="modal-title">Novedad</h4>
             </div>
             <div class="modal-body" id="previsualizar-novedad">
-                    
+
             </div>
             <div class="modal-footer">
                 <div class="btn-group"id="botones-control">
@@ -323,12 +326,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div id="botones-acciones" class="btn-group" style="display: none">
                     <button id="btn-cancelar-novedad"type="button" class="btn btn-default btn-xs">Cancelar </button>
-                    <button id="btn-guardar-novedad" type="button" class="btn btn-primary btn-xs">Guardar <i class="fa fa-floppy-o"></i></button>                    
+                    <button id="btn-guardar-novedad" type="button" class="btn btn-primary btn-xs">Guardar <i class="fa fa-floppy-o"></i></button>
                 </div>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+
+<?= $this->render('partials/_modal_novedad', ['tiposNovedades' => $tiposNovedades]) ?>
 
 <?php $this->endBlock() ?>
 
@@ -343,23 +348,20 @@ $this->params['breadcrumbs'][] = $this->title;
     var idDetalleNovedad = null;
     var idSupervisor = $("#id-supervisor-programacion").val();
     var checkTodos = $("#seleccionar-todos-puestos");
-    var checkTodosProgDia = $("#puestos-prog-dia");    
-    
+    var checkTodosProgDia = $("#puestos-prog-dia");
+
     var paginadorConsulta = $("#paginador-tabla");
     var paginadorProgramados = $("#paginador-tabla-prog-dia");
-    
-    /**
-     * Plugin para click derechod
-     */
-    (function($){
-	checkTodos.click(function(){
-	    var inputs = $("#tabla-puestos .check-puestos");
-	    inputs.prop("checked", $(this).prop("checked"));
-	});
-	checkTodosProgDia.click(function(){
-	    var inputs = $("#tabla-ver-puestos .check-puestos");
-	    inputs.prop("checked", $(this).prop("checked"));
-	});
+
+    $(function(){
+        checkTodos.click(function(){
+            var inputs = $("#tabla-puestos .check-puestos");
+            inputs.prop("checked", $(this).prop("checked"));
+        });
+        checkTodosProgDia.click(function(){
+            var inputs = $("#tabla-ver-puestos .check-puestos");
+            inputs.prop("checked", $(this).prop("checked"));
+        });
         /**
          * Eventos para reasignación
          */
@@ -368,7 +370,6 @@ $this->params['breadcrumbs'][] = $this->title;
             $(".check-reasignar:checked").each(function(){
                 puestosReasignar.push($(this).val());
             });
-            console.log(puestosReasignar);
             iniciarReasignacion($("#hd-id-programacion").val());
         });
         $("#combo-reasignar-supervisor").change(function(){
@@ -379,87 +380,35 @@ $this->params['breadcrumbs'][] = $this->title;
             };
             $("#tabla-programacion-supervisores-reasignar").html("");
             doAjax("<?= Url::toRoute(['ajax/consultar-programacion-supervisores-reasignar']) ?>", parametros)
-                    .done(function(data){
-                        var tabla = $("#tabla-programaciones-supervisores tbody");
-                        tabla.html("");
-                        if(data.programaciones.length > 0){
-                            $.each(data.programaciones, function(k,v){
-                                var fila = $("<tr/>");
-                                var radio = $("<input/>", {type: 'radio', name: 'programacion-reasignar', value:v.id, class: 'check-reasignar'});
-                                fila.append($("<td/>").text(v.fecha));
-                                fila.append($("<td/>").text(v.horario));
-                                fila.append($("<td/>").text(v.tipo));
-                                fila.append($("<td/>", {class: 'text-center'}).html(radio));
-                                radio.click(function(){
-                                    consultarPuestosProgramacion(v.id, data.fecha_arranque);
-                                    programacionReasignar = v.id;
-                                });
-                                tabla.append(fila);
-                            });                            
-                        } else {
+                .done(function(data){
+                    var tabla = $("#tabla-programaciones-supervisores tbody");
+                    tabla.html("");
+                    if(data.programaciones.length > 0){
+                        $.each(data.programaciones, function(k,v){
                             var fila = $("<tr/>");
-                            fila.append($("<td/>", { colspan: 3 }).text("No hay programaciones para este supervisor este mes"));
+                            var radio = $("<input/>", {type: 'radio', name: 'programacion-reasignar', value:v.id, class: 'check-reasignar'});
+                            fila.append($("<td/>").text(v.fecha));
+                            fila.append($("<td/>").text(v.horario));
+                            fila.append($("<td/>").text(v.tipo));
+                            fila.append($("<td/>", {class: 'text-center'}).html(radio));
+                            radio.click(function(){
+                                consultarPuestosProgramacion(v.id, data.fecha_arranque);
+                                programacionReasignar = v.id;
+                            });
                             tabla.append(fila);
-                        }
-                    });
+                        });
+                    } else {
+                        var fila = $("<tr/>");
+                        fila.append($("<td/>", { colspan: 3 }).text("No hay programaciones para este supervisor este mes"));
+                        tabla.append(fila);
+                    }
+                });
         });
-
         /**
          * Fin Eventos para reasignación
          */
-        $.fn.clickDerecho = function(parametros){
-            var opciones = parametros.opciones || {};
-            var elementos = $(this);
+    });
 
-            var dibujarMenu = function(elemento, valor){
-                var posicion = elemento.offset();
-                var ancho = elemento.width();
-
-                var contenedor = $("<div/>", {class: "dropdown-opciones"});
-                var contenedorOpciones = $("<ul/>");
-                var xcontenedor = posicion.left + ancho;
-                var ycontenedor = posicion.top;
-
-                $.each(opciones, function(k,v) {
-                    var opcion = $("<li/>").text(v.texto);
-                    var accion = v.accion || function(){};
-                    opcion.click(function(){accion(valor);});
-                    contenedorOpciones.append(opcion);
-                });
-                contenedor.append(contenedorOpciones);
-                contenedor.css({
-                    left: xcontenedor,
-                    top: ycontenedor,
-                });
-                $("body").append(contenedor);
-                contenedor.contextmenu(function(e){
-                    e.preventDefault();
-                });
-            };
-
-            var removerMenu = function(){
-                $(".dropdown-opciones").remove();
-            };
-
-            $("body").click(function(){
-               removerMenu();
-            });
-
-            /**
-             * Iniciamos los eventos
-             */
-            $.each(elementos, function(k,v){
-                var elemento = $(v);
-                elemento.on("contextmenu", function(e){
-                    removerMenu();
-                    var valor = elemento.attr("data-valor");
-                    celdaSeleccionada = elemento;
-                    dibujarMenu(elemento, valor);
-                    e.preventDefault();
-                });
-            });
-        };
-    })(jQuery);
 
     $(function () {
         $("#btn-editar-novedad").click(function(){
@@ -467,38 +416,38 @@ $this->params['breadcrumbs'][] = $this->title;
             var novedad = $("#previsualizar-novedad");
             var texto = novedad.text();
             var textarea = $("<textarea/>", {id: 'tmp-text-area', class: 'form-control'}).text(texto);
-            $("#botones-control").slideUp(function(){                
+            $("#botones-control").slideUp(function(){
                 $("#botones-acciones").slideDown();
                 novedad.html(textarea);
                 textarea.focus().select();
             });
-        });        
-        
-        $("#btn-cancelar-novedad").click(function(){            
+        });
+
+        $("#btn-cancelar-novedad").click(function(){
             var novedad = $("#previsualizar-novedad");
             var texto = $("#tmp-text-area").val();
-            $("#botones-acciones").slideUp(function(){                
+            $("#botones-acciones").slideUp(function(){
                 $("#botones-control").slideDown();
                 novedad.html(texto);
-            });            
+            });
         });
-        
+
         $("#btn-guardar-novedad").click(function(){
             var parametros = {
                 'idDetalle' : idDetalleNovedad,
                 'novedad' : $("#tmp-text-area").val(),
-            };            
-             doAjax("<?= Url::toRoute(['ajax/actualizar-novedad-programacion']) ?>", parametros)
-                    .done(function(data){
-                        if(data.error === false){
-                            $("#modal-novedad").modal("hide");
-                            $("tr[data-id='" + idDetalleNovedad + "']").attr("data-novedad", $("#tmp-text-area").val());
-                        } else {
-                            console.log("Error al actualizar la novedad");
-                        }                        
-                    });
+            };
+            doAjax("<?= Url::toRoute(['ajax/actualizar-novedad-programacion']) ?>", parametros)
+                .done(function(data){
+                    if(data.error === false){
+                        $("#modal-novedad").modal("hide");
+                        $("tr[data-id='" + idDetalleNovedad + "']").attr("data-novedad", $("#tmp-text-area").val());
+                    } else {
+                        console.log("Error al actualizar la novedad");
+                    }
+                });
         });
-    
+
         $("#btn-reasignar-guardar").click(function(){
             var novedad = $("#txt-novedad-reasignacion");
             if($.trim(novedad.val()) === ""){
@@ -518,18 +467,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 dia: numeroDiaReasignar,
             };
             doAjax("<?= Url::toRoute(['ajax/guardar-reasignacion-puesto']) ?>", parametros)
-                    .done(function(data){
-                        if(data.error == false){
-                            console.log("Guardado exitoso!");
-                            preVisualizarDia(celdaSeleccionada.attr("data-dia"));
-                        } else {
-                            console.log("Ocurrió un error");
-                        }
-                        programacionReasignar = null;
-                        numeroDiaReasignar = null;
-                    }); 
+                .done(function(data){
+                    if(data.error == false){
+                        console.log("Guardado exitoso!");
+                        preVisualizarDia(celdaSeleccionada.attr("data-dia"));
+                    } else {
+                        console.log("Ocurrió un error");
+                    }
+                    programacionReasignar = null;
+                    numeroDiaReasignar = null;
+                });
         });
-    
+
         /**
          * Capturamos los click derechos.
          */
@@ -538,9 +487,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 {texto: "Previsualizar", accion: function(dia){
                     preVisualizarDia(dia);
                 }},
+                {
+                    texto: "Asignar novedad", accion: function(dia){
+                    asignarNovedad(dia);
+                }
+                }
             ]
         });
-        
+
+        $(".celda-licencia").clickDerecho({
+            opciones: [
+                {texto: "Remover licencia", accion: function(dia){
+                    preVisualizarDia(dia);
+                }},
+            ]
+        });
+
         $("#eliminar-puestos").click(function () {
             eliminarPuestos();
         });
@@ -568,36 +530,41 @@ $this->params['breadcrumbs'][] = $this->title;
             guardarPuestos();
         });
     });
-    
+
+    var asignarNovedad = function(dia){
+        $("#dia-seleccionado-novedad").val(dia);
+        $("#modal-novedad-turno").modal("show");
+    };
+
     var ocultarPrevisualizacion = function(){
         var panel = $("#panel-previsualizacion");
         panel.fadeOut();
     };
-    
+
     var mostrarNovedad = function(novedad, idDetalle){
         $("#previsualizar-novedad").text(novedad);
         idDetalleNovedad = idDetalle;
         $("#modal-novedad").modal("show");
     };
-    
+
     var consultarPuestosProgramacion = function(id, fechaArranque){
-	var params = {
-	    'id': id, 
-	    'dia' : celdaSeleccionada.attr("data-dia"), 
-	    'id-supervisor' : idSupervisor, 
-	    'fecha-arranque' : fechaArranque, 
-	    'id-programacion-actual' : $("#id-programacion").val()
-	};
+        var params = {
+            'id': id,
+            'dia' : celdaSeleccionada.attr("data-dia"),
+            'id-supervisor' : idSupervisor,
+            'fecha-arranque' : fechaArranque,
+            'id-programacion-actual' : $("#id-programacion").val()
+        };
         doAjax('<?= Url::toRoute(['ajax/consultar-puestos-programacion']) ?>', params)
-                .done(function(data){
-                    var tabla = $("#tabla-programacion-supervisores-reasignar");
-                    tabla.html(data.html);
-                    $(".celda-reasignar").click(function(){
-                        $(".celda-reasignar").removeClass("activo");
-                        $(this).addClass("activo");
-                        numeroDiaReasignar = $(this).attr("data-dia");
-                    });
+            .done(function(data){
+                var tabla = $("#tabla-programacion-supervisores-reasignar");
+                tabla.html(data.html);
+                $(".celda-reasignar").click(function(){
+                    $(".celda-reasignar").removeClass("activo");
+                    $(this).addClass("activo");
+                    numeroDiaReasignar = $(this).attr("data-dia");
                 });
+            });
     };
 
     var preVisualizarDia = function(dia){
@@ -649,16 +616,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             });
     };
-    
-    
-    
+
+
+
     /**
      * Esta función se encarga de llenar el combo de supervisores para reasignarles el puesto.
      */
     var iniciarReasignacion = function(idProgramacion){
         var parametros = {
             'id-programacion': idProgramacion,
-	    'dia' : celdaSeleccionada.attr("data-dia"),
+            'dia' : celdaSeleccionada.attr("data-dia"),
         };
         doAjax("<?= Url::toRoute(['ajax/consultar-supervisores-reasignacion']) ?>", parametros)
             .done(function(data){
@@ -668,7 +635,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $.each(data.supervisores, function(k,v){
                     var opcion = $("<option/>", {value: v.id}).html(v.nombre);
                     comboSupervisores.append(opcion);
-                    
+
                 });
                 $("#modal-reasignar").modal('show');
                 setTimeout(function(){
@@ -681,15 +648,15 @@ $this->params['breadcrumbs'][] = $this->title;
         var parametros = {
             'dia': celdaSeleccionada.attr("data-dia"),
             'id-programacion': $("#hd-id-programacion").val(),
-	    'paginaActual': paginadorProgramados.attr("data-pagina-actual"),
-	    'maximoRegistros': paginadorProgramados.attr("data-max-registros")
+            'paginaActual': paginadorProgramados.attr("data-pagina-actual"),
+            'maximoRegistros': paginadorProgramados.attr("data-max-registros")
         };
         doAjax('<?= Url::toRoute(['ajax/consultar-puestos-programados-supervisor']) ?>', parametros)
-                .done(function (data) {
-                    var tabla = $("#tabla-ver-puestos tbody");
-                    tabla.html("");
-                    llenarTabla(data, tabla, paginadorProgramados);
-                });
+            .done(function (data) {
+                var tabla = $("#tabla-ver-puestos tbody");
+                tabla.html("");
+                llenarTabla(data, tabla, paginadorProgramados);
+            });
     };
 
     var eliminarPuestos = function () {
@@ -701,23 +668,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'ids': ids,
         };
         doAjax('<?= Url::toRoute(['ajax/eliminar-puestos-programados-supervisor']) ?>', parametros)
-                .done(function (data) {
-                    if (data.error == false) {
-                        console.log("Puesto eliminado correctamente");
-                        /* Eliminamos las filas */
-                        $.each(ids, function (k, v) {
-                            $("#tabla-ver-puestos tr[data-id='" + v + "']").remove();
-                        });
-			var totalRegistros = parseInt(paginadorProgramados.attr("data-total-registros"));
-                        if (ids.length === totalRegistros) {
-                            celdaSeleccionada.removeClass("programado").html("");
-                        }
-			checkTodosProgDia.prop("checked", false);
-			paginadorProgramados.attr("data-pagina-actual", 1);
-                    } else {
-                        console.log("Error al eliminar los puestos");
+            .done(function (data) {
+                if (data.error == false) {
+                    console.log("Puesto eliminado correctamente");
+                    /* Eliminamos las filas */
+                    $.each(ids, function (k, v) {
+                        $("#tabla-ver-puestos tr[data-id='" + v + "']").remove();
+                    });
+                    var totalRegistros = parseInt(paginadorProgramados.attr("data-total-registros"));
+                    if (ids.length === totalRegistros) {
+                        celdaSeleccionada.removeClass("programado").html("");
                     }
-                });
+                    checkTodosProgDia.prop("checked", false);
+                    paginadorProgramados.attr("data-pagina-actual", 1);
+                } else {
+                    console.log("Error al eliminar los puestos");
+                }
+            });
     };
 
     var abrirModal = function (celda) {
@@ -729,8 +696,8 @@ $this->params['breadcrumbs'][] = $this->title;
         resetSelect2(zona);
         tr.append($("<td/>", {colspan: 5, class: 'text-center'}).text("Busca puestos"));
         tabla.html(tr);
-	paginadorConsulta.html("");
-	paginadorProgramados.html("");
+        paginadorConsulta.html("");
+        paginadorProgramados.html("");
         $("#modal-agregar-puesto").modal("show");
     };
 
@@ -754,12 +721,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 var dia = $("[data-dia='" + $("#dia-a-guardar").val() + "']");
                 var icono = $("<i/>", {class: 'fa fa-check'});
                 dia.addClass("programado").html(icono);
-		checkTodos.prop("checked", false);
-		checkTodosProgDia.prop("checked", false);
-		paginadorConsulta.attr("data-pagina-actual", 1);
-		paginadorProgramados.attr("data-pagina-actual", 1);
-		paginadorConsulta.attr("data-total-paginas", 0);
-		paginadorProgramados.attr("data-total-paginas", 0);
+                checkTodos.prop("checked", false);
+                checkTodosProgDia.prop("checked", false);
+                paginadorConsulta.attr("data-pagina-actual", 1);
+                paginadorProgramados.attr("data-pagina-actual", 1);
+                paginadorConsulta.attr("data-total-paginas", 0);
+                paginadorProgramados.attr("data-total-paginas", 0);
             }
         });
     };
@@ -778,8 +745,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'zona': zona.val(),
             'dia': celdaSeleccionada.attr("data-dia"),
             'programacion': $("#hd-id-programacion").val(),
-	    'paginaActual': paginadorConsulta.attr("data-pagina-actual"),
-	    'maximoRegistros': paginadorConsulta.attr("data-max-registros")
+            'paginaActual': paginadorConsulta.attr("data-pagina-actual"),
+            'maximoRegistros': paginadorConsulta.attr("data-max-registros")
         };
         var tabla = $("#tabla-puestos tbody");
         doAjax(url, params).done(function (data) {
@@ -800,7 +767,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 tr.append($("<td/>", {class: 'text-center'}).append(check));
                 tabla.append(tr);
             });
-	    construirPaginacion(paginador, data.totalPaginas, data.totalRegistros);
+            construirPaginacion(paginador, data.totalPaginas, data.totalRegistros);
         } else {
             var tr = $("<tr/>");
             tr.append($("<td/>", {colspan: 5, class: 'text-center warning'}).html("No hay resultados"));
@@ -808,111 +775,111 @@ $this->params['breadcrumbs'][] = $this->title;
         }
     };
     /**
-    * 
-<li><span><i class="fa fa-fast-backward"></i></span></li>
-    <li><span><i class="fa fa-backward"></i></span></li>
+     *
+     <li><span><i class="fa fa-fast-backward"></i></span></li>
+     <li><span><i class="fa fa-backward"></i></span></li>
 
-    <li><a href="#" aria-label="Next"><i class="fa fa-forward"></i></a></li>
-    <li><a href="#" aria-label="Next"><i class="fa fa-fast-forward"></i></a></li>    
+     <li><a href="#" aria-label="Next"><i class="fa fa-forward"></i></a></li>
+     <li><a href="#" aria-label="Next"><i class="fa fa-fast-forward"></i></a></li>
      * @returns {undefined}     */
     var construirPaginacion = function(paginadorTabla, totalPaginas, totalRegistros){
-	paginadorTabla.html("");
-	var paginaActual = parseInt(paginadorTabla.attr("data-pagina-actual"));
-	
-	var iatras = $("<i/>", {class:'fa fa-backward'});
-	var iadelante = $("<i/>", {class:'fa fa-forward'});
-	var iff = $("<i/>", {class:'fa fa-fast-forward'});
-	var ifb = $("<i/>", {class:'fa fa-fast-backward'});
-	var tipoBusqueda = paginadorTabla.attr("data-tipo-busqueda");	
-	var liAtras = $("<li/>");
-	var liAdelante = $("<li/>");
-	var liFF = $("<li/>");
-	var liFB = $("<li/>");
-	
-	var aAdelante = $("<a/>", {href:"#"});
-	var aAtras = $("<a/>", {href:"#"});
-	var aFF = $("<a/>", {href:"#"});
-	var aFB = $("<a/>", {href:"#"});
-	
-	var busqueda = function(){
-	    if(tipoBusqueda === "programados"){
-		verPuestos();
-	    } else if(tipoBusqueda === "libres"){
-		buscarPuestos();
-	    }
-	};
-	
-	
-	var setearAtributos = function(){
-	    paginadorTabla.attr("data-pagina-actual", paginaActual);
-	    paginadorTabla.attr("data-total-registros", totalRegistros);
-	    paginadorTabla.attr("data-total-paginas", totalPaginas);
-	    var spanTotal = $(paginadorTabla.attr("data-target")).html(totalRegistros);
-	};		
-	
-	var adelante = function(){ 
-	    paginaActual ++;
-	    if(paginaActual > totalPaginas){ paginaActual = totalPaginas; }
-	    setearAtributos();
-	    busqueda();
-	};
-	
-	var atras = function(){ 
-	    paginaActual --; 
-	    if(paginaActual < 1){ paginaActual = 1; }
-	    setearAtributos();
-	    busqueda();
-	};
-	
-	var ff = function(){
-	    paginaActual = totalPaginas;
-	    setearAtributos();
-	    busqueda();
-	};
-	
-	var fb = function(){
-	    paginaActual = 1;
-	    setearAtributos();
-	    busqueda();
-	};
-	
-	if(paginaActual === 1){
-	    liFB.append($("<span/>").append(ifb)).addClass("disabled");
-	    liAtras.append($("<span/>").append(iatras)).addClass("disabled");
-	} else {
-	    liFB.append(aFB.append(ifb)).click(function(){ fb(); });
-	    liAtras.append(aAtras.append(iatras)).click(function(){ atras(); });
-	}
-	if(paginaActual === totalPaginas){
-	    liFF.append($("<span/>").append(iff)).addClass("disabled");
-	    liAdelante.append($("<span/>").append(iadelante)).addClass("disabled");
-	} else {
-	    liFF.append(aFF.append(iff)).click(function(){ ff(); });
-	    liAdelante.append(aAdelante.append(iadelante)).click(function(){ adelante(); });
-	}
-	
-	paginadorTabla.append(liFB, liAtras);
-	
-	var irA = function(pagina){
-	    paginaActual = parseInt(pagina);
-	    setearAtributos();
-	    busqueda();
-	};
-	
-	for(var i = 1; i <= totalPaginas; i ++){
-	    var li = $("<li/>");
-	    var a = $("<a/>", {href:"#", 'data-pagina' : i});
-	    a.text(i);
-	    if(i == paginaActual) {
-		li.addClass("active");
-	    } else {
-		a.click(function(){ irA($(this).attr("data-pagina")); });
-	    }
-	    li.append(a);
-	    paginadorTabla.append(li);
-	}
-	paginadorTabla.append(liAdelante, liFF);
-	setearAtributos();
+        paginadorTabla.html("");
+        var paginaActual = parseInt(paginadorTabla.attr("data-pagina-actual"));
+
+        var iatras = $("<i/>", {class:'fa fa-backward'});
+        var iadelante = $("<i/>", {class:'fa fa-forward'});
+        var iff = $("<i/>", {class:'fa fa-fast-forward'});
+        var ifb = $("<i/>", {class:'fa fa-fast-backward'});
+        var tipoBusqueda = paginadorTabla.attr("data-tipo-busqueda");
+        var liAtras = $("<li/>");
+        var liAdelante = $("<li/>");
+        var liFF = $("<li/>");
+        var liFB = $("<li/>");
+
+        var aAdelante = $("<a/>", {href:"#"});
+        var aAtras = $("<a/>", {href:"#"});
+        var aFF = $("<a/>", {href:"#"});
+        var aFB = $("<a/>", {href:"#"});
+
+        var busqueda = function(){
+            if(tipoBusqueda === "programados"){
+                verPuestos();
+            } else if(tipoBusqueda === "libres"){
+                buscarPuestos();
+            }
+        };
+
+
+        var setearAtributos = function(){
+            paginadorTabla.attr("data-pagina-actual", paginaActual);
+            paginadorTabla.attr("data-total-registros", totalRegistros);
+            paginadorTabla.attr("data-total-paginas", totalPaginas);
+            var spanTotal = $(paginadorTabla.attr("data-target")).html(totalRegistros);
+        };
+
+        var adelante = function(){
+            paginaActual ++;
+            if(paginaActual > totalPaginas){ paginaActual = totalPaginas; }
+            setearAtributos();
+            busqueda();
+        };
+
+        var atras = function(){
+            paginaActual --;
+            if(paginaActual < 1){ paginaActual = 1; }
+            setearAtributos();
+            busqueda();
+        };
+
+        var ff = function(){
+            paginaActual = totalPaginas;
+            setearAtributos();
+            busqueda();
+        };
+
+        var fb = function(){
+            paginaActual = 1;
+            setearAtributos();
+            busqueda();
+        };
+
+        if(paginaActual === 1){
+            liFB.append($("<span/>").append(ifb)).addClass("disabled");
+            liAtras.append($("<span/>").append(iatras)).addClass("disabled");
+        } else {
+            liFB.append(aFB.append(ifb)).click(function(){ fb(); });
+            liAtras.append(aAtras.append(iatras)).click(function(){ atras(); });
+        }
+        if(paginaActual === totalPaginas){
+            liFF.append($("<span/>").append(iff)).addClass("disabled");
+            liAdelante.append($("<span/>").append(iadelante)).addClass("disabled");
+        } else {
+            liFF.append(aFF.append(iff)).click(function(){ ff(); });
+            liAdelante.append(aAdelante.append(iadelante)).click(function(){ adelante(); });
+        }
+
+        paginadorTabla.append(liFB, liAtras);
+
+        var irA = function(pagina){
+            paginaActual = parseInt(pagina);
+            setearAtributos();
+            busqueda();
+        };
+
+        for(var i = 1; i <= totalPaginas; i ++){
+            var li = $("<li/>");
+            var a = $("<a/>", {href:"#", 'data-pagina' : i});
+            a.text(i);
+            if(i == paginaActual) {
+                li.addClass("active");
+            } else {
+                a.click(function(){ irA($(this).attr("data-pagina")); });
+            }
+            li.append(a);
+            paginadorTabla.append(li);
+        }
+        paginadorTabla.append(liAdelante, liFF);
+        setearAtributos();
     };
 
     var limpiarCombo = function (combo) {
