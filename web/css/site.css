@@ -547,3 +547,9 @@ th.text-left, .summary{
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active{
     background-color: #057b7b !important;
 }
+form.condensed .row{
+    margin-top: 2px;
+}
+form.condensed .form-group{
+    margin-bottom: 0px;
+}

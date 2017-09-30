@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\TblMunicipios;
+use app\models\TblTiposDocumentos;
 use Yii;
 use app\models\TblClientes;
 use app\models\search\TblClientesSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -64,12 +67,15 @@ class ClientesController extends Controller
     public function actionCreate()
     {
         $model = new TblClientes();
-
+        $tiposDocumento = TblTiposDocumentos::find()->all();
+        $municipios = TblMunicipios::find()->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_cliente]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'tiposDocumentos' => ArrayHelper::map($tiposDocumento, "id_tipo_documento", "nombre"),
+                'municipios' => ArrayHelper::map($municipios, "id_municipio", "municipioMasDepartamento"),
             ]);
         }
     }

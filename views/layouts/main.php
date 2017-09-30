@@ -51,6 +51,7 @@ AppAsset::register($this);
             'options' => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'Administrativo', 'items' => [
+                    ['label' => 'Clientes', 'url' => ['/clientes/index']],
                     ['label' => 'Departamentos', 'url' => ['/departamentos/index']],
                     ['label' => 'Municipios', 'url' => ['/municipios/index']],
                     ['label' => 'Barrios', 'url' => ['/barrios/index']],
@@ -125,6 +126,9 @@ AppAsset::register($this);
     $(function(){
         $("select.select-2").select2({
             width : '100%',
+        });
+        $("select.select-2").on("select2:close", function (e) {
+            e.target.focus();
         });
     });
     

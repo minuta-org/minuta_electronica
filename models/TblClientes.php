@@ -102,6 +102,8 @@ class TblClientes extends \yii\db\ActiveRecord
             'id_origen_capital_opt_fk' => 'Origen Capital',
             'id_matricula_fk' => 'Matricula',
             'observaciones_cliente' => 'Observaciones',
+            'barrioUbicacionCompleta' => 'Barrio',
+            'nombreCorto' => 'Cliente'
         ];
     }
 
@@ -160,5 +162,10 @@ class TblClientes extends \yii\db\ActiveRecord
     public function getNombreCorto()
     {
         return $this->razon_social_cliente == ""? $this->getNombreCompleto() : $this->razon_social_cliente;
+    }
+
+    public function getBarrioUbicacionCompleta()
+    {
+        return $this->idBarrioFk->getUbicacionCompleta();
     }
 }
