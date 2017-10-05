@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\TblOpciones;
 
 /**
  * This is the model class for table "tbl_clientes".
@@ -42,12 +43,32 @@ use Yii;
  */
 class TblClientes extends \yii\db\ActiveRecord
 {
+    const DIMENSION = 1;
+    const ORG_JUDICIAL = 2;
+    const ORG_CAPITAL = 3;
+    const COBERTURA = 4;
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'tbl_clientes';
+    }
+    
+    public function beforeSave($insert) {
+	if(!parent::beforeSave($insert)){
+            return false;
+        }
+	# ToDo: Cambiar a matricula cargada de configuración.
+        $this->id_matricula_fk = 1;
+	$this->primer_nombre_cliente = strtoupper($this->primer_nombre_cliente);
+	$this->segundo_nombre_cliente = strtoupper($this->segundo_nombre_cliente);
+	$this->primer_apellido_cliente = strtoupper($this->primer_apellido_cliente);
+	$this->segundo_apellido_cliente = strtoupper($this->segundo_apellido_cliente);
+	$this->contacto_cliente = strtoupper($this->contacto_cliente);
+	
+        return true;
     }
 
     /**
@@ -56,7 +77,7 @@ class TblClientes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_documento_fk', 'nit_cliente', 'dv_cliente', 'razon_social_cliente', 'email_cliente', 'telefono_cliente', 'direccion_cliente', 'id_barrio_fk', 'id_sector_comercial_fk', 'id_sector_economico_fk', 'id_dimesion_opt_fk', 'id_origen_judicial_opt_fk', 'id_cobertura_opt_fk', 'id_origen_capital_opt_fk', 'id_matricula_fk'], 'required'],
+            [['id_tipo_documento_fk', 'nit_cliente', 'dv_cliente', 'email_cliente', 'telefono_cliente', 'direccion_cliente', 'id_barrio_fk', 'id_sector_comercial_fk', 'id_sector_economico_fk', 'id_dimesion_opt_fk', 'id_origen_judicial_opt_fk', 'id_cobertura_opt_fk', 'id_origen_capital_opt_fk'], 'required'],
             [['id_tipo_documento_fk', 'id_barrio_fk', 'id_sector_comercial_fk', 'id_sector_economico_fk', 'id_dimesion_opt_fk', 'id_origen_judicial_opt_fk', 'id_cobertura_opt_fk', 'id_origen_capital_opt_fk', 'id_matricula_fk'], 'integer'],
             [['observaciones_cliente'], 'string'],
             [['nit_cliente', 'sigla_cliente'], 'string', 'max' => 40],
@@ -167,5 +188,35 @@ class TblClientes extends \yii\db\ActiveRecord
     public function getBarrioUbicacionCompleta()
     {
         return $this->idBarrioFk->getUbicacionCompleta();
+    }
+    
+    public function getDimension()
+    {
+	return $this->getNombreOpcion(self::DIMENSION);
+    }
+    
+    public function getOrigenCapital()
+    {
+	return $this->getNombreOpcion(self::ORG_CAPITAL);
+    }
+    
+    public function getOrigenJudicial()
+    {
+	return $this->getNombreOpcion(self::ORG_JUDICIAL);
+    }    
+    
+    public function getCobertura()
+    {
+	return $this->getNombreOpcion(self::COBERTURA);
+    }
+    
+    public function getNombreOpcion($op)
+    {
+	switch ($op){
+	    case self::ORG_CAPITAL: return TblOpciones::getOpcionValor($this->id_origen_capital_opt_fk);
+	    case self::ORG_JUDICIAL: return TblOpciones::getOpcionValor($this->id_origen_judicial_opt_fk);
+	    case self::DIMENSION: return TblOpciones::getOpcionValor($this->id_dimesion_opt_fk);
+	    case self::COBERTURA: return TblOpciones::getOpcionValor($this->id_cobertura_opt_fk);
+	}
     }
 }

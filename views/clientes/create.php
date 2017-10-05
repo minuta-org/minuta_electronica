@@ -13,6 +13,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="clientes-create">
 
     <?= $this->render('_form', [
+	'municipioSeleccionado' => null,
+	'barrios' => [],
+	'dimensiones' => $dimensiones,
+	'origenesJudiciales' => $origenesJudiciales,
+	'coberturas' => $coberturas,
+	'origenesCapitales' => $origenesCapitales,
+	'sectoresEconomicos' => $sectoresEconomicos,
+	'sectoresComerciales' => $sectoresComerciales,
         'model' => $model,
         'tiposDocumentos' => $tiposDocumentos,
         'municipios' => $municipios,

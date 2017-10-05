@@ -6,6 +6,7 @@ use app\models\TblMunicipios;
 use app\models\TblTiposDocumentos;
 use Yii;
 use app\models\TblClientes;
+use app\models\TblOpciones;
 use app\models\search\TblClientesSearch;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -69,10 +70,19 @@ class ClientesController extends Controller
         $model = new TblClientes();
         $tiposDocumento = TblTiposDocumentos::find()->all();
         $municipios = TblMunicipios::find()->all();
+	$sectoresComerciales = \app\models\TblSectoresComerciales::find()->all();
+	$sectoresEconomicos = \app\models\TblSectoresEconomicos::find()->all();
+	
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_cliente]);
         } else {
             return $this->render('create', [
+		'dimensiones' => TblOpciones::getOpciones("dimension", true),
+		'origenesJudiciales' => TblOpciones::getOpciones("origen_judicial", true),
+		'coberturas' => TblOpciones::getOpciones("cobertura", true),
+		'origenesCapitales' => TblOpciones::getOpciones("origen_capital", true),
+		'sectoresEconomicos' => ArrayHelper::map($sectoresEconomicos, "id_sector_economico", "nombre_sector_economico"),
+		'sectoresComerciales' => ArrayHelper::map($sectoresComerciales, "id_sector_comercial", "nombre_sector_comercial"),
                 'model' => $model,
                 'tiposDocumentos' => ArrayHelper::map($tiposDocumento, "id_tipo_documento", "nombre"),
                 'municipios' => ArrayHelper::map($municipios, "id_municipio", "municipioMasDepartamento"),
@@ -89,12 +99,30 @@ class ClientesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+	$tiposDocumento = TblTiposDocumentos::find()->all();
+        $municipios = TblMunicipios::find()->all();
+	$sectoresComerciales = \app\models\TblSectoresComerciales::find()->all();
+	$sectoresEconomicos = \app\models\TblSectoresEconomicos::find()->all();
+	
+	$barrioSeleccionado = \app\models\TblBarrios::find()->where("id_barrio = '{$model->id_barrio_fk}'")->one();
+	$municipioSeleccioando = $barrioSeleccionado->idMunicipioFk;
+	$barrios = $municipioSeleccioando->tblBarrios;
+	
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id_cliente]);
         } else {
             return $this->render('update', [
+		'municipioSeleccionado' => $municipioSeleccioando->id_municipio,
+		'barrios' => ArrayHelper::map($barrios, "id_barrio", "nombre_barrio"),
+		'dimensiones' => TblOpciones::getOpciones("dimension", true),
+		'origenesJudiciales' => TblOpciones::getOpciones("origen_judicial", true),
+		'coberturas' => TblOpciones::getOpciones("cobertura", true),
+		'origenesCapitales' => TblOpciones::getOpciones("origen_capital", true),
+		'sectoresEconomicos' => ArrayHelper::map($sectoresEconomicos, "id_sector_economico", "nombre_sector_economico"),
+		'sectoresComerciales' => ArrayHelper::map($sectoresComerciales, "id_sector_comercial", "nombre_sector_comercial"),
                 'model' => $model,
+		'tiposDocumentos' => ArrayHelper::map($tiposDocumento, "id_tipo_documento", "nombre"),
+                'municipios' => ArrayHelper::map($municipios, "id_municipio", "municipioMasDepartamento"),
             ]);
         }
     }

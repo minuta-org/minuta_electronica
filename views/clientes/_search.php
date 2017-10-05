@@ -23,12 +23,8 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="panel-body" style="display:none">
             <div class="row">
-                <?= $form->field($model, 'nit_cliente') ?>
                 <?= $form->field($model, 'nombreCorto') ?>
-            </div>
-            <div class="row">
-                <?= $form->field($model, 'contacto_cliente') ?>
-                <?= $form->field($model, 'id_barrio_fk') ?>
+                <?= $form->field($model, 'nit_cliente') ?>
             </div>
             <div class="panel-footer text-right" style="display:none">
                 <?=  Html::submitButton('Buscar ' . Html::tag('i', '', ['class' => 'fa fa-search']), ['class' => 'btn btn-primary']) ?>

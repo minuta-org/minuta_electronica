@@ -57,13 +57,16 @@ class SupervisoresController extends Controller
 					->where("fecha_inicio_programacion_supervisor LIKE '%{$mesActual}%'")
 					->andWhere("id_supervisor_fk = {$supervisor->id_supervisor}")
 					->one();
-	$ultimoDia = intval(date("t"));
-	$dias = $this->getDiasProgramados($programacionMes, date_create("{$mesActual}-01"));	
+	$ultimoDia = intval(date("t"));	
+	$dias = $this->getDiasProgramados($programacionMes, date_create("{$mesActual}-01"));		
 	$total = $query->count();
 	$programacionDia = $query->limit($limite)
 				->offset(($pagina - 1) * $limite)
 				->all();
-	$totalPaginas = ceil($total / $limite);		
+	$totalPaginas = ceil($total / $limite);
+	if(!$programacionMes){
+	    $programacionMes = new \app\models\TblProgramacionSupervisores();
+	}
         return $this->render('consultar-programacion', [
             'programacionDia' => $programacionDia,
 	    'programacionMes' => $programacionMes,
@@ -83,10 +86,17 @@ class SupervisoresController extends Controller
     private function getDiasProgramados($programacion, $mes)
     {
 	$objProgramacion = new ProgramacionSupervisoresController("p", "p");
-	return [
-	    'diasProgramados' => $objProgramacion->getDiasProgramados($programacion->id_programacion_supervisor),
-	    'diasEncabezados' => $objProgramacion->getDiasMes($mes)
-	];
+	if($programacion){
+	    return [
+		'diasProgramados' => $objProgramacion->getDiasProgramados($programacion->id_programacion_supervisor),
+		'diasEncabezados' => $objProgramacion->getDiasMes($mes)
+	    ];
+	} else {
+	    return [
+		'diasProgramados' => $objProgramacion->getDiasProgramados(0),
+		'diasEncabezados' => $objProgramacion->getDiasMes($mes)
+	    ];	    
+	}
     }
 
     /**

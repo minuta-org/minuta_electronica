@@ -17,6 +17,7 @@ use Yii;
  * @property TblClientes[] $tblClientes
  * @property TblMatricula[] $tblMatriculas
  * @property TblSupervisores[] $tblSupervisores
+ * @property TblBarrios[] $tblBarrios
  */
 class TblBarrios extends \yii\db\ActiveRecord
 {

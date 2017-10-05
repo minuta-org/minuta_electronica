@@ -13,7 +13,17 @@ $this->params['breadcrumbs'][] = 'Actualizar';
 <div class="tbl-clientes-update">
     
     <?= $this->render('_form', [
+	'municipioSeleccionado' => $municipioSeleccionado,
+	'barrios' => $barrios,
+	'dimensiones' => $dimensiones,
+	'origenesJudiciales' => $origenesJudiciales,
+	'coberturas' => $coberturas,
+	'origenesCapitales' => $origenesCapitales,
+	'sectoresEconomicos' => $sectoresEconomicos,
+	'sectoresComerciales' => $sectoresComerciales,
         'model' => $model,
+        'tiposDocumentos' => $tiposDocumentos,
+        'municipios' => $municipios,
     ]) ?>
 
 </div>

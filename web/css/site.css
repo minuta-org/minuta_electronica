@@ -553,3 +553,6 @@ form.condensed .row{
 form.condensed .form-group{
     margin-bottom: 0px;
 }
+.col-sm-10 textarea.form-control {
+    width: 97%;
+}
