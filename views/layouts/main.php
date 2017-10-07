@@ -122,15 +122,6 @@ AppAsset::register($this);
             });
         });
     });
-
-    $(function(){
-        $("select.select-2").select2({
-            width : '100%',
-        });
-        $("select.select-2").on("select2:close", function (e) {
-            e.target.focus();
-        });
-    });
     
     $("[data-toggle='tooltip']").tooltip();
 

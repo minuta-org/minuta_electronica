@@ -420,6 +420,10 @@ i.fa {
     width: 70%;
 }
 
+.modal-x-wide .modal-dialog{
+    width: 90%;
+}
+
 /**
  * Sobre-escribimos archivos.
  */
@@ -479,8 +483,9 @@ i.fa {
     background-color: #2A51D2;
 }
 .action-column-sm{
-    max-width:10px;
+    max-width:20px;
     text-align: center;
+    padding: 3px 0px !important;
 }
 
 .row{
@@ -555,4 +560,27 @@ form.condensed .form-group{
 }
 .col-sm-10 textarea.form-control {
     width: 97%;
+}
+.mce-branding-powered-by{
+    display: none;
+}
+button.btn-xs, button.btn-sm i{
+    font-size: 12px;
+}
+.btn-sm.thin{
+    min-width: 10px;
+}
+.select-2-inactivo{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background-color: rgba(177, 171, 171, 0.43);
+    width: 100%;
+    height: 100%;
+    cursor: not-allowed;
+    border-radius: 5px;
+}
+
+h4{
+    font-weight: 600;
 }

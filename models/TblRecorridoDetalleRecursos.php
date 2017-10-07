@@ -65,6 +65,6 @@ class TblRecorridoDetalleRecursos extends \yii\db\ActiveRecord
      */
     public function getIdRecursoFk()
     {
-        return $this->hasOne(TblRecorridosSupervisores::className(), ['id_recorrido' => 'id_recurso_fk']);
+        return $this->hasOne(TblRecursos::className(), ['id_recurso' => 'id_recurso_fk']);
     }
 }

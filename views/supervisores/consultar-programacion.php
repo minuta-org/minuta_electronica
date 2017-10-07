@@ -86,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php $this->beginBlock('bloque-auxiliar') ?>
-<div id="modal-recorrido" class="modal fade modal-wide">
+<div id="modal-recorrido" class="modal fade modal-x-wide">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h4 class="modal-title"><span class="rec-puesto"></span></h4>
             </div>
             <div class="modal-body">
-                <?= $this->render('partials/_modalRecorrido') ?>
+                <?= $this->render('partials/_modalRecorrido', ['guardas' => $guardas, 'elementos' => $elementos]) ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -151,6 +151,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 id_puesto : idPuesto,
                 id_programacion: idProgramacion,
                 observacion: tinymce.get('recorrido_supervisor').getContent(),
+                detalle_guarda: {
+                    id: $("#select_guarda").val(),
+                    observacion: tinymce.get("recorrido_detalle_guarda").getContent()
+                },
+                elementos: getElementos(),
                 latitud: latitud,
                 longitud: longitud,
                 detalle: idDetalle,
@@ -159,15 +164,30 @@ $this->params['breadcrumbs'][] = $this->title;
             $("#modal-recorrido").modal("hide");
             if(data.error == false){
                 marcarPuestoVisitado(filaSeleccionada);
-            }            
+            }
         });
+    };
+
+    var getElementos = function(){
+        var elementos = {
+            id_elementos: [],
+            observaciones: []
+        };
+        var ids = $("input.el-id");
+        var observaciones = $("input.el-observacion");
+        $.each(ids, function(k,v){
+            elementos.id_elementos.push($(v).val());
+            //elementos.observaciones.push($(observaciones)[k].val());
+
+        });
+        return elementos;
     };
     
     var obtenerCoordenadas = function(position){
         if(!geo) return false;
         latitud = position.coords.latitude;
         longitud = position.coords.longitude;        
-    };  
+    };
     
     var marcarPuestoVisitado = function(id){
         var fila = $("tr[data-fila='" + id + "']");
@@ -176,7 +196,7 @@ $this->params['breadcrumbs'][] = $this->title;
         fila.addClass("puesto-visitado");
         celdaAccion.html(label);
         tablaProgDia.append(fila);
-	window.location.reload();
+	    window.location.reload();
     }
 </script>
 <?php $this->endBlock() ?>

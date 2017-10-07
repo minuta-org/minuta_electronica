@@ -334,6 +334,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?= $this->render('partials/_modal_novedad', ['tiposNovedades' => $tiposNovedades]) ?>
+<?= $this->render('partials/_modal_ver_reporte_supervisor', ['tiposNovedades' => $tiposNovedades]) ?>
 
 <?php $this->endBlock() ?>
 
@@ -588,6 +589,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         tr.append($("<td/>").text(v.zona));
                         tr.append($("<td/>").text(v.cuadrante));
                         tr.append($("<td/>", {class: 'action-column-sm text-center'}).html(v.estadoEtiqueta));
+
                         if(v.cambiar){
                             var check = $("<input/>", {class: 'check-reasignar', type: 'checkbox', name: 'puestos-no-visitados[]', value: v.id});
                             check.click(function(){
@@ -605,7 +607,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             });
                             tr.append($("<td/>", {class:'action-column-sm'}).html(boton));
                         } else {
-                            tr.append($("<td/>", {class: 'action-column-sm'}).text(""));
+                            var iconoVer = $("<i/>", {class: 'fa fa-eye'});
+                            var botonVer = $("<button/>", {class: 'btn btn-primary btn-sm thin'}).append(iconoVer);
+                            tr.append($("<td/>", {class: 'text-center action-column-sm'}).html(botonVer));
+                            botonVer.click(function(){
+                                verInformeSupervisor(v.id);
+                            });
                         }
                         tabla.append(tr);
                     });
@@ -618,6 +625,43 @@ $this->params['breadcrumbs'][] = $this->title;
     };
 
 
+    var verInformeSupervisor = function(id){
+        var parametros = {
+            'id-recorrido': id,
+        };
+        doAjax("<?= Url::toRoute(['supervisores/consultar-informe']) ?>", parametros)
+            .done(function(data){
+                if(data.error === false){
+                    var recorrido = data.informacion.recorrido;
+                    var detalleRecurso = data.informacion.detalleGuarda;
+                    var detalleElementos = data.informacion.elementos;
+
+                    // información del recorrido.
+                    $("#nov-codigo-puesto").html(recorrido.codigoPuesto);
+                    $("#nov-nombre-puesto").html(recorrido.nombrePuesto);
+                    $("#nov-cliente-puesto").html(recorrido.clientePuesto);
+                    $("#nov-cuadrante-puesto").html(recorrido.cuadrantePuesto);
+                    $("#nov-zona-puesto").html(recorrido.zonaPuesto);
+                    $("#novedad-recorrido").html(recorrido.observacion);
+
+                    // Información del recurso
+                    $("#nombre-recurso").html(detalleRecurso.recurso);
+                    $("#contenido-novedad-recurso").html(detalleRecurso.observacion);
+
+                    // Información de los elementos
+                    var tabla = $("#tbl-novedades-elementos-puesto").html("");
+                    $.each(detalleElementos, function(k,v){
+                        var fila = $("<tr/>");
+                        fila.append($("<td/>").html(v.nombre));
+                        fila.append($("<td/>").html(v.observacion));
+                        tabla.append(fila);
+                    });
+                    $("#modal-ver-reporte").modal("show");
+                } else {
+                    console.log("Error al consultar el informe del supervisor");
+                }
+            });
+    };
 
     /**
      * Esta función se encarga de llenar el combo de supervisores para reasignarles el puesto.

@@ -16,6 +16,7 @@ use Yii;
  * @property string $hora_recorrido_supervisor
  * @property double $longitud_recorrido_supervisor
  * @property double $latitud_recorrido_supervisor
+ * @property int $id_detalle_programacion_fk
  *
  * @property TblProgramacionSupervisores $idProgramacionFk
  * @property TblPuestos $idPuestoFk
@@ -36,7 +37,7 @@ class TblRecorridosSupervisores extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_programacion_fk', 'id_puesto_fk', 'observacion_recorrido_supervisor', 'fecha_recorrido_supervisor', 'hora_recorrido_supervisor'], 'required'],
+            [['id_programacion_fk', 'id_puesto_fk', 'observacion_recorrido_supervisor', 'fecha_recorrido_supervisor', 'hora_recorrido_supervisor', 'id_detalle_programacion_fk'], 'required'],
             [['id_programacion_fk', 'id_puesto_fk'], 'integer'],
             [['observacion_recorrido_supervisor', 'url_foto_recorrido_supervisor'], 'string'],
             [['fecha_recorrido_supervisor', 'hora_recorrido_supervisor'], 'safe'],

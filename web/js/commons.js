@@ -1,3 +1,14 @@
+var opcionesSelct2 = {
+    width : '100%'
+};
+$(function(){
+    $("select.select-2").select2(opcionesSelct2);
+    $("select.select-2").on("select2:close", function (e) {
+        e.target.focus();
+    });
+});
+
+
 var doAjax = function(url, data){
 	data['ajx-rqst'] = true;
     return $.ajax({
@@ -137,3 +148,19 @@ function  calcularDv(myNit) {
     y = x % 11;
     return (y > 1) ? 11 - y : y;
 }
+
+var limpiarSelect2 = function(select2){
+    select2.select2("destroy");
+    select2.select2(opcionesSelct2);
+    select2.on("select2:close", function (e) {
+        e.target.focus();
+    });
+};
+
+var select2Enable = function(select2, activo){
+    var contenedorSelect2 = select2.parent().find(".select2-container");
+    contenedorSelect2.find(".select-2-inactivo").remove();
+    if(!activo && contenedorSelect2.find(".select-2-inactivo").length === 0){
+        contenedorSelect2.append($("<div/>", {class: "select-2-inactivo"}));
+    }
+};
