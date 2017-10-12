@@ -11,6 +11,10 @@ abstract class Controller extends \yii\web\Controller{
         'site/logout',
     ];
     
+    /**
+     * Utilizamos esta función para poder ejecutar lógica antes de que se
+     * llame la  acción del controlador.
+     */
     public function beforeAction($action) {
         Yii::$app->session->open();
         if(!in_array($this->getRoute(), $this->excepcionesSesion) && Yii::$app->user->getIsGuest()){

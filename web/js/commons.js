@@ -8,7 +8,12 @@ $(function(){
     });
 });
 
-
+/**
+ * Alias para la función ajax de jquery.
+ * @param {string} url
+ * @param {json} data
+ * @returns {jqXHR}
+ */
 var doAjax = function(url, data){
 	data['ajx-rqst'] = true;
     return $.ajax({

@@ -60,16 +60,20 @@
 	});
     });
     
+    /**
+     * Esta función permite consultar la programación del día de un supervisor.
+     */
     var consultarProgramacionDia = function(){
 	$.ajax({
 	    type: 'POST',
 	    url : '<?= yii\helpers\Url::to(['ajax/consultar-programacion-dia-supervisor']) ?>',
 	    beforeSend: function(){
+		// Ocultamos el panel de programación del mes
 		$("#panel-programacion-mes").slideUp();
 	    },
 	    data: {
-		idProgramacion : $("#id-programacion").val(),
-		diaProgramado : diaProgramado,
+		idProgramacion : $("#id-programacion").val(), // este input se encuentra en el formulario.
+		diaProgramado : diaProgramado, // Esta variable es definida en el formulario.
 	    }
 	}).done(function(data){
 	    if(data.error){

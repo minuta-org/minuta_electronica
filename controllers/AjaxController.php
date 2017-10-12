@@ -9,7 +9,10 @@ use Yii;
 
 class AjaxController extends Controller
 {
-
+    /**
+     * Esta función es invocada vía ajax para buscar puestos en la ruta
+     * programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionBuscarPuestos()
     {
         $cliente = $_POST['cliente'];
@@ -79,6 +82,7 @@ class AjaxController extends Controller
 
     /**
      * Esta función permite previsualizar los puestos programados a un supervisor.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
      */
     public function actionPrevisualizarDia()
     {
@@ -109,6 +113,7 @@ class AjaxController extends Controller
 
     /**
      * Esta función permite ver los puestos que tiene programados un supervisor para determinado día.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
      */
     public function actionConsultarPuestosProgramadosSupervisor()
     {
@@ -146,6 +151,7 @@ class AjaxController extends Controller
 
     /**
      * Esta función permite eliminar los puestos programados a un supervisor.
+     * ruta : programacion-supervisores/programar?id={id-de-la-programacion}
      */
     public function actionEliminarPuestosProgramadosSupervisor()
     {
@@ -158,6 +164,10 @@ class AjaxController extends Controller
         ]);
     }
 
+    /**
+     * Esta función permite obtener las zonas de un cuadrante.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionGetZonasCuadrante()
     {
         $id = $_POST['id'];
@@ -172,7 +182,12 @@ class AjaxController extends Controller
         }
         $this->json(['options' => $opciones]);
     }
-
+    
+    /**
+     * Esta función permite obtener los supervisores a los cuales se les puede
+     * reasignar un puesto.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionConsultarSupervisoresReasignacion()
     {
         $idProgramacion = $_POST['id-programacion'];
@@ -203,6 +218,12 @@ class AjaxController extends Controller
         $this->json(['supervisores' => $supervisores]);
     }
 
+    /**
+     * Esta función valida si un rango de horas llega hasta el siguiente día.
+     * @param string $horaInicial
+     * @param string $horaFinal
+     * @return boolean
+     */
     private function validarSigDia($horaInicial, $horaFinal)
     {
         $fechaInicial = strtotime(date("Y-d-m") . " {$horaInicial}");
@@ -210,6 +231,11 @@ class AjaxController extends Controller
         return $fechaFinal < $fechaInicial;
     }
 
+    /**
+     * Esta función permite obtener la programación de un supervisor a la hora de 
+     * reasignarle un puesto.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionConsultarProgramacionSupervisoresReasignar()
     {
         $idSupervisor = $_POST['id-supervisor'];
@@ -245,12 +271,16 @@ class AjaxController extends Controller
         $this->json(['programaciones' => $programaciones, 'fecha_arranque' => $fechaAComparar]);
     }
 
+    /**
+     * Esta función permite los puestos programados a un supervisor.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionConsultarPuestosProgramacion()
     {
         $idProgramacion = $_POST['id'];
         $idSupervisor = $_POST['id-supervisor'];
         $fechaArranque = date_create($_POST['fecha-arranque']);
-        $dia = $_POST['dia']; #intval($fechaArranque->format("d"));
+        $dia = $_POST['dia']; 
         $idProgramacionActual = $_POST['id-programacion-actual'];
 
         $programacion = \app\models\TblProgramacionSupervisores::find()
@@ -303,6 +333,10 @@ class AjaxController extends Controller
     }
 
 
+    /**
+     * Esta función permite guardar los puestos asignados a un supervisor.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionGuardarPuestos()
     {
         $idProgramacion = $_POST['programacion'];
@@ -317,7 +351,11 @@ class AjaxController extends Controller
         }
         $this->json(['error' => false]);
     }
-
+    
+    /**
+     * Esta función permite reasignar un puesto a un guarda.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionGuardarReasignacionPuesto()
     {
         $ids = $_POST['ids'];
@@ -343,6 +381,10 @@ class AjaxController extends Controller
         ]);
     }
 
+    /**
+     * Esta función permite actualizar la novedad de un puesto programado a un supervisor.
+     * ruta: programacion-supervisores/programar?id={id-de-la-programacion}
+     */
     public function actionActualizarNovedadProgramacion()
     {
         $idDetalle = $_POST['idDetalle'];
@@ -354,6 +396,10 @@ class AjaxController extends Controller
         ]);
     }
 
+    /**
+     * Esta funcion permite consultar la programación de un supervisor en un día (día actual)
+     * ruta: /supervisores/consultar-programacion
+     */
     public function actionConsultarProgramacionDiaSupervisor()
     {
         $idProgramacion = $_POST['idProgramacion'];
@@ -379,6 +425,10 @@ class AjaxController extends Controller
             'programacion' => $programacionDia,
         ]);
     }
+    /**
+     * Esta función permite guardar la novedad reportada por un supervisor en un turno
+     * ruta: /supervisores/consultar-programacion
+     */
     public function actionGuardarNovedadTurno()
     {
         $dia = $_POST['dia'];

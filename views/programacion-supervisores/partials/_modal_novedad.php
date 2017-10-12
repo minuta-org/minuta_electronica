@@ -39,7 +39,9 @@
                 alert("Seleccione el tipo de novedad.");
                 return false;
             }
-
+	    /**
+	     * La función do ajax está definida en el layout main.
+	     */
             doAjax("<?= Url::to(['ajax/guardar-novedad-turno']) ?>", {
                 dia: dia,
                 idProgramacion: $("#id-programacion").val(),

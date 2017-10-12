@@ -61,7 +61,7 @@ class TblClientes extends \yii\db\ActiveRecord
             return false;
         }
 	# ToDo: Cambiar a matricula cargada de configuración.
-        $this->id_matricula_fk = 1;
+        $this->id_matricula_fk = 1; # Añadir a configuración de la aplicación.
 	$this->primer_nombre_cliente = strtoupper($this->primer_nombre_cliente);
 	$this->segundo_nombre_cliente = strtoupper($this->segundo_nombre_cliente);
 	$this->primer_apellido_cliente = strtoupper($this->primer_apellido_cliente);

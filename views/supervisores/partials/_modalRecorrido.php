@@ -41,13 +41,35 @@ use yii\helpers\Html;
                 <div role="tabpanel" class="tab-pane" id="novedades-guarda">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label for="" class="control-label">Guarda</label>
-                            <?= Html::dropDownList('detalle_guarda[id]', '', $guardas, ['id' => 'select_guarda', 'class' => 'select-2', 'prompt' => 'Seleccione un guarda']) ?>
+                            <div class="row">
+				<div class="col-sm-8">
+				    <label for="" class="control-label">Guarda</label>
+				    <?= Html::dropDownList('detalle_guarda[id]', '', $guardas, ['id' => 'select_guarda', 'class' => 'select-2', 'prompt' => 'Seleccione un guarda']) ?>
+				</div>
+				<div class="col-sm-4" id="contenedor-boton-agregar-guarda">
+				    <label for="" class="col-sm-12  control-label">&nbsp;</label>
+				    <button style="display: none;" id="btn-cancelar-guarda" class="btn btn-default btn-xs">Cancelar</button>
+				    <button style="display: none;" id="btn-editar-guarda" class="btn btn-primary btn-xs">Editar <i class="fa fa-pencil"></i></button>
+				    <button id="btn-agregar-guarda" class="btn btn-success btn-xs btn-block">Añadir <i class="fa fa-plus-circle"></i></button>
+				</div>
+			    </div>
+			    <div class="row">				
+				<div class="col-sm-12">
+				    <?= Html::textarea('detalle_elemento[observacion]', '', ['name' => 'detalle_guarda[observacion]', 'id' => 'recorrido_detalle_guarda', 'class' => 'tiny-editor', 'rows' => 20]) ?>
+				</div>
+			    </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <?= Html::textarea('detalle_elemento[observacion]', '', ['name' => 'detalle_guarda[observacion]', 'id' => 'recorrido_detalle_guarda', 'class' => 'tiny-editor', 'rows' => 20]) ?>
+                        <div class="col-sm-6">
+			    <table class="table table-bordered table-condensed">
+				<thead>
+				    <tr>
+					<th>Guarda</th>
+					<th>&nbsp;</th>
+				    </tr>
+				</thead>
+				<tbody id="tbl-guardas-novedad">
+				</tbody>
+			    </table>
                         </div>
                     </div>
                 </div>
@@ -120,7 +142,15 @@ use yii\helpers\Html;
         });
 
     });
+    
+    var agregarGuarda = function(){
+	var idGuarda = selectGuarda.val();
+    };
 
+    /**
+     * Función para agregar elementos a la tabla del modal.
+     * @returns {Boolean}
+     */
     var agregarElemento = function(){
         var idElemento = selectElemento.val();
         var observacion = tinymce.get("recorrido_detalle_elementos").getContent();
@@ -138,7 +168,7 @@ use yii\helpers\Html;
             }, 1000);
             return false;
         }
-
+	// Asignamos el foco al text area de observaciones en elementos.
         tinymce.execCommand('mceFocus',false,'id_of_textarea');
         var textoObservacion = observacion.length > maximoCaracteres? observacion.substring(0, maximoCaracteres) + "[...]" : observacion;
         var textoElemento = selectElemento.find("option:selected").text();
@@ -152,7 +182,7 @@ use yii\helpers\Html;
         var removerFila = function(){
             fila.remove();
         };
-
+	// Función invocada para iniciar el proceso de edición.
         var editar = function(){
             habilitarEdicion(fila);
         };
@@ -176,7 +206,11 @@ use yii\helpers\Html;
         tinymce.get("recorrido_detalle_elementos").setContent("");
         selectElemento.val("").select2("open");
     };
-
+    /**
+     * Esta función permite habilitar la edición de un registro de la tabla de elementos
+     * (En el modal, no en la base de datos).
+     * @param jQuery fila Fila (tr) del elemento que se va a editar
+     */
     var habilitarEdicion = function(fila){
         var contenedorSelectElemento = $("#campo-select-elemento");
         var contenedorBotones = $("#contenedor-boton-agregar");
@@ -187,7 +221,7 @@ use yii\helpers\Html;
         var inputObservacion = fila.find(".input-observacion input");
         var inputElemento = fila.find(".input-elemento input");
         var celdaObservacion = fila.find(".input-observacion span");
-
+	
         var finalizarEdicion = function(){
             contenedorSelectElemento.attr("class", "").addClass("col-sm-8");
             contenedorBotones.attr("class", "").addClass("col-sm-4 text-right");

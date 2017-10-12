@@ -339,19 +339,19 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php $this->endBlock() ?>
 
 <script>
-    var cliente = $("#select-cliente");
-    var cuadrante = $("#select-cuadrante");
-    var zona = $("#select-zona");
-    var celdaSeleccionada = null;
-    var puestosReasignar = [];
-    var numeroDiaReasignar = null;
-    var programacionReasignar = null;
-    var idDetalleNovedad = null;
-    var idSupervisor = $("#id-supervisor-programacion").val();
-    var checkTodos = $("#seleccionar-todos-puestos");
-    var checkTodosProgDia = $("#puestos-prog-dia");
+    var cliente = $("#select-cliente"); // Combo para seleccionar el cliente ( filtros )
+    var cuadrante = $("#select-cuadrante"); // Combo para seleccionar cuadrante (filtros)
+    var zona = $("#select-zona"); // Combo para seleccionar zona (filtros)
+    var celdaSeleccionada = null; // Guardamos el elemento jQuery del día seleccionado.
+    var puestosReasignar = []; // En este array guardamos los puestos seleccionados para ser reasignados.
+    var numeroDiaReasignar = null; // Guardamos el día seleccionado para reasignar.
+    var programacionReasignar = null; // Guardamos el id de la programación para reasignar.
+    var idDetalleNovedad = null; // id Del detalle de la novedad, guardado para editarla.
+    var idSupervisor = $("#id-supervisor-programacion").val(); // Id del supervisor ( capturado para enviarlo en los ajax requerido)
+    var checkTodos = $("#seleccionar-todos-puestos"); // botón de check all para puestos
+    var checkTodosProgDia = $("#puestos-prog-dia"); // botón de check all para puestos en programación del día.
 
-    var paginadorConsulta = $("#paginador-tabla");
+    var paginadorConsulta = $("#paginador-tabla"); // elemento paginador (los paginadores se construyen dinamicamente con base en la información filtrada)
     var paginadorProgramados = $("#paginador-tabla-prog-dia");
 
     $(function(){
@@ -380,6 +380,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dia' : celdaSeleccionada.attr("data-dia"),
             };
             $("#tabla-programacion-supervisores-reasignar").html("");
+	    // Este ajax permite traer las programaciones de los supervisores para realizar la reasignación
             doAjax("<?= Url::toRoute(['ajax/consultar-programacion-supervisores-reasignar']) ?>", parametros)
                 .done(function(data){
                     var tabla = $("#tabla-programaciones-supervisores tbody");
